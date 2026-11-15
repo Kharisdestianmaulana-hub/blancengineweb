@@ -1,0 +1,123 @@
+---
+import { Globe, FileSpreadsheet, PackageCheck } from "lucide-astro";
+
+const installerLangs = [
+  { code: "EN", name: "English" },
+  { code: "ID", name: "Bahasa Indonesia" },
+  { code: "JA", name: "Japanese" },
+  { code: "ES", name: "Spanish" },
+  { code: "ZH", name: "Simplified Chinese" },
+  { code: "KO", name: "Korean" },
+];
+
+const csvSample = [
+  {
+    key: "scene.intro.line_01",
+    context: "Alice (Happy)",
+    source: "Welcome to Blanc Engine!",
+    translation: "Selamat datang di Blanc Engine!",
+  },
+  {
+    key: "choice.rooftop",
+    context: "Choice Option",
+    source: "Go to the rooftop",
+    translation: "Pergi ke atap sekolah",
+  },
+  {
+    key: "ui.menu.new_game",
+    context: "Title Screen",
+    source: "New Game",
+    translation: "Permainan Baru",
+  },
+];
+---
+
+<section class="border-b border-border-default bg-bg-primary py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="grid items-start gap-8 lg:grid-cols-12">
+      <!-- Left: Explanation & 6-Language Installer -->
+      <div class="min-w-0 lg:col-span-5">
+        <div class="flex items-center gap-2">
+          <Globe class="h-4 w-4 text-accent-primary" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+            Global Distribution
+          </span>
+        </div>
+        <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          Multi-language localization and installer out of the box
+        </h2>
+        <p class="mt-3 text-sm leading-relaxed text-text-secondary sm:text-base">
+          Translate your entire game into any number of languages, edit strings in Excel or Google Sheets via CSV, and let players switch languages anytime in Settings with automatic CJK font support.
+        </p>
+
+        <div class="mt-6 rounded-lg border border-border-default bg-surface-primary p-4">
+          <div class="flex items-center gap-2">
+            <PackageCheck class="h-4 w-4 text-status-success" />
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-text-primary">
+              Built-in 6-Language Setup Wizard
+            </h3>
+          </div>
+          <p class="mt-1.5 text-xs leading-relaxed text-text-secondary">
+            Your exported <code class="font-mono text-text-primary">Setup.exe</code> ships with native wizard translations and automatically syncs the player's chosen language on first launch.
+          </p>
+          <div class="mt-3 flex flex-wrap gap-1.5">
+            {
+              installerLangs.map((lang) => (
+                <span class="inline-flex items-center gap-1 rounded border border-border-default bg-bg-secondary px-2 py-1 font-mono text-[11px] text-text-primary">
+                  <span class="text-accent-primary">{lang.code}</span>
+                  <span class="text-text-muted">{lang.name}</span>
+                </span>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: CSV Sync Preview Table -->
+      <div class="min-w-0 lg:col-span-7">
+        <div class="overflow-hidden rounded-lg border border-border-default bg-surface-primary">
+          <div class="flex items-center justify-between border-b border-border-default bg-bg-secondary px-4 py-3">
+            <div class="flex items-center gap-2">
+              <FileSpreadsheet class="h-4 w-4 text-accent-primary" />
+              <span class="font-mono text-xs font-semibold text-text-primary">
+                localization_export.csv
+              </span>
+            </div>
+            <span class="rounded border border-border-default bg-surface-primary px-2 py-0.5 font-mono text-[11px] text-text-muted">
+              RFC-4180 CSV
+            </span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-left font-mono text-xs">
+              <thead>
+                <tr class="border-b border-border-subtle bg-bg-primary text-[11px] uppercase tracking-wider text-text-muted">
+                  <th class="px-4 py-2.5">key</th>
+                  <th class="px-4 py-2.5">context</th>
+                  <th class="px-4 py-2.5">source</th>
+                  <th class="px-4 py-2.5 text-accent-primary">translation</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-border-subtle">
+                {
+                  csvSample.map((row) => (
+                    <tr class="hover:bg-surface-hover">
+                      <td class="whitespace-nowrap px-4 py-3 text-text-muted">{row.key}</td>
+                      <td class="whitespace-nowrap px-4 py-3 text-text-secondary">{row.context}</td>
+                      <td class="px-4 py-3 text-text-primary">{row.source}</td>
+                      <td class="px-4 py-3 text-status-success">{row.translation}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="border-t border-border-subtle bg-bg-secondary px-4 py-2.5 font-mono text-[11px] text-text-muted">
+            Click Sync Strings in blanc_editor to extract new dialogues and choices automatically.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,84 @@
+---
+import { PenTool, Palette, Rocket, Check } from "lucide-astro";
+
+const roles = [
+  {
+    icon: PenTool,
+    title: "Writers & Narrative Designers",
+    subtitle: "Focus purely on story and dialogue",
+    points: [
+      "Draft scripts in screenplay syntax with speaker and emotion tags.",
+      "Convert scripts directly into visual .bscene timelines.",
+      "Wire branching choices and endings visually in Story Flow.",
+    ],
+  },
+  {
+    icon: Palette,
+    title: "Artists & UI Designers",
+    subtitle: "Full control over visual presentation",
+    points: [
+      "Organize backgrounds, character sprites, BGM, SFX, and voices.",
+      "Customize Title Screen, Dialogue Box, and HUD with Live Preview.",
+      "Preview layouts and screen effects without writing stylesheets.",
+    ],
+  },
+  {
+    icon: Rocket,
+    title: "Solo & Indie Studios",
+    subtitle: "Ship polished builds to players",
+    points: [
+      "Pack and encrypt assets into a clean game.bpack archive.",
+      "Translate projects into unlimited languages via CSV sync.",
+      "Export Portable builds or a branded Windows Setup.exe.",
+    ],
+  },
+];
+---
+
+<section class="border-b border-border-default bg-bg-primary py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="max-w-2xl">
+      <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+        Who Is It For
+      </span>
+      <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+        Built for every role in visual novel creation
+      </h2>
+      <p class="mt-2 text-sm leading-relaxed text-text-secondary sm:text-base">
+        Whether you work solo or collaborate with a small team, each tool stays intuitive and distraction-free.
+      </p>
+    </div>
+
+    <div class="mt-10 grid gap-5 lg:grid-cols-3">
+      {
+        roles.map((role) => {
+          const Icon = role.icon;
+          return (
+            <article class="flex min-w-0 flex-col rounded-lg border border-border-default bg-surface-primary p-5">
+              <div class="flex items-center gap-3">
+                <div class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border-default bg-bg-secondary text-accent-primary">
+                  <Icon class="h-4 w-4" />
+                </div>
+                <div class="min-w-0">
+                  <h3 class="text-base font-semibold text-text-primary">{role.title}</h3>
+                  <p class="text-xs text-text-muted">{role.subtitle}</p>
+                </div>
+              </div>
+
+              <ul class="mt-5 space-y-2.5 border-t border-border-subtle pt-4">
+                {
+                  role.points.map((pt) => (
+                    <li class="flex items-start gap-2 text-xs leading-relaxed text-text-secondary sm:text-sm">
+                      <Check class="mt-0.5 h-4 w-4 shrink-0 text-status-success" />
+                      <span>{pt}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+            </article>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
