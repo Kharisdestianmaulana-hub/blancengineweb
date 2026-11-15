@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+:root {
+  /* Dark Theme (Default - from Blanc Engine Design_System.md) */
+  --bg-primary: #17191D;
+  --bg-secondary: #1E2126;
+  --surface-primary: #24282E;
+  --surface-elevated: #2B3037;
+  --surface-hover: #303640;
+  --border-default: #353B44;
+  --border-subtle: #2B3037;
+
+  --text-primary: #E6E9ED;
+  --text-secondary: #A0A7B2;
+  --text-muted: #737C89;
+  --text-on-accent: #FFFFFF;
+
+  --accent-primary: #7C8CFF;
+  --accent-hover: #8D9AFF;
+  --accent-pressed: #6879EB;
+  --accent-subtle: #292D3A;
+
+  --status-success: #55B88A;
+  --status-warning: #E6AD57;
+  --status-error: #E16F78;
+  --status-info: #69A9E8;
+}
+
+[data-theme="light"] {
+  --bg-primary: #F5F6F8;
+  --bg-secondary: #ECEEF2;
+  --surface-primary: #FFFFFF;
+  --surface-elevated: #FFFFFF;
+  --surface-hover: #F0F1F5;
+  --border-default: #D9DDE5;
+  --border-subtle: #E4E7ED;
+
+  --text-primary: #20242B;
+  --text-secondary: #626B78;
+  --text-muted: #89919D;
+  --text-on-accent: #FFFFFF;
+
+  --accent-primary: #6678ED;
+  --accent-hover: #5668DC;
+  --accent-pressed: #4859CC;
+  --accent-subtle: #ECEFFE;
+}
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-surface-primary: var(--surface-primary);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-hover: var(--surface-hover);
+  --color-border-default: var(--border-default);
+  --color-border-subtle: var(--border-subtle);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-on-accent: var(--text-on-accent);
+
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-pressed: var(--accent-pressed);
+  --color-accent-subtle: var(--accent-subtle);
+
+  --color-status-success: var(--status-success);
+  --color-status-warning: var(--status-warning);
+  --color-status-error: var(--status-error);
+  --color-status-info: var(--status-info);
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Flat design focus ring for WCAG 2.2 AA keyboard accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}

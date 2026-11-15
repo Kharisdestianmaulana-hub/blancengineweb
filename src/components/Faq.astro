@@ -1,0 +1,69 @@
+---
+import { HelpCircle, ChevronDown } from "lucide-astro";
+
+const faqs = [
+  {
+    question: "Do I need programming skills or Rust installed to use Blanc Engine?",
+    answer:
+      "No programming skills are required. Blanc Engine uses a visual no-code workflow (Story Setup screenplay syntax, block-based Scene Editor, Story Flow node graph, and UI Designer). You only need the Rust toolchain if you are building the engine from source instead of using a pre-built release.",
+  },
+  {
+    question: "What platforms does Blanc Engine support?",
+    answer:
+      "Windows 10 and 11 are the primary targets, including full support for generating standalone Setup.exe installers and Start Menu/Desktop shortcuts. Because Blanc Engine is built on Rust, Iced, and rodio, the core, editor, and runtime also compile on other desktop platforms supported by those libraries.",
+  },
+  {
+    question: "How can I distribute games made with Blanc Engine?",
+    answer:
+      "From the Export tab, you can package your project either as a Portable build (Game.exe with encrypted game.bpack or loose GameData/) or as a standalone Windows Installer (Setup.exe) featuring a 6-language setup wizard and a clean per-game uninstaller.",
+  },
+  {
+    question: "Does Blanc Engine support multi-language visual novels?",
+    answer:
+      "Yes. In the Localization tab, you can add any number of languages, translate UI labels, character names, and dialogues directly in the editor or via Export/Import CSV, and let players switch languages in Settings. The runtime also loads system CJK fonts automatically.",
+  },
+  {
+    question: "What license is Blanc Engine released under?",
+    answer:
+      "Blanc Engine is open-source software licensed under GPL-3.0-or-later. You can inspect the source code, report issues, or contribute pull requests on GitHub.",
+  },
+];
+---
+
+<section id="faq" class="bg-bg-secondary py-16 sm:py-20">
+  <div class="mx-auto max-w-4xl px-4 sm:px-6">
+    <div class="text-center">
+      <div class="inline-flex items-center gap-2">
+        <HelpCircle class="h-4 w-4 text-accent-primary" />
+        <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+          FAQ
+        </span>
+      </div>
+      <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+        Frequently Asked Questions
+      </h2>
+      <p class="mt-2 text-sm text-text-secondary sm:text-base">
+        Quick answers about workflow, exports, platform support, and licensing.
+      </p>
+    </div>
+
+    <div class="mt-10 space-y-3">
+      {
+        faqs.map((item, idx) => (
+          <details
+            class="group rounded-lg border border-border-default bg-surface-primary open:border-accent-primary"
+            open={idx === 0}
+          >
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left text-sm font-semibold text-text-primary transition-colors hover:bg-surface-hover sm:text-base">
+              <span>{item.question}</span>
+              <ChevronDown class="h-4 w-4 shrink-0 text-text-muted transition-transform group-open:rotate-180 group-open:text-accent-primary" />
+            </summary>
+            <div class="border-t border-border-subtle px-5 py-4 text-xs leading-relaxed text-text-secondary sm:text-sm">
+              {item.answer}
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

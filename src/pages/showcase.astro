@@ -1,0 +1,790 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import { Image, Maximize2, X, Plus, Search, RefreshCw, Gamepad2 } from "lucide-astro";
+
+const engineScreenshots = [
+  {
+    title: "Onboarding",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_ONBOARDING.png",
+    description:
+      "First-run onboarding flow introducing Blanc Engine's no-code visual novel workflow.",
+  },
+  {
+    title: "Project Hub",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_PROJECT_HUB.png",
+    description:
+      "Welcome screen to create new visual novel projects, open recent workspaces, or launch quick templates.",
+  },
+  {
+    title: "Application Settings",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_SETTINGS.png",
+    description:
+      "Global editor settings on the home hub for theme, interface language, and workspace preferences.",
+  },
+  {
+    title: "Submit Your Game (In-Editor)",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_SUBMIT_GAMES.png",
+    description:
+      "Built-in submission screen inside Blanc Engine to share finished visual novels directly to the community showcase.",
+  },
+  {
+    title: "Project Overview",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_OVERVIEW.png",
+    description:
+      "Central project dashboard summarizing scenes, assets, localization progress, and quick workspace actions.",
+  },
+  {
+    title: "Asset Manager",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_ASSETS_MANAGER.png",
+    description:
+      "Organize backgrounds, character sprites, BGM, SFX, voices, and UI assets with grid/list views and audio preview.",
+  },
+  {
+    title: "Story Setup (Screenplay Editor)",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_STORY_SETUP.png",
+    description:
+      "Screenplay-style script editor with speaker, emotion, scene, and choice tags that convert directly into visual scenes.",
+  },
+  {
+    title: "Scene Editor (Action Timeline)",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_SCENE_EDITOR.png",
+    description:
+      "Block-based visual timeline for backgrounds, character positioning, dialogue, choices, timers, and screen effects.",
+  },
+  {
+    title: "Story Flow (Node Graph)",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_STORYFLOW.png",
+    description:
+      "Interactive node canvas connecting Main Menu, Scenes, Choice branches, Pause Menu, Settings, and Ending nodes.",
+  },
+  {
+    title: "UI Designer (Live Preview)",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_UI_DESIGNER.png",
+    description:
+      "Real-time customization for Title Screen, Gameplay HUD, Dialogue Box, Save/Load slots, and Backlog.",
+  },
+  {
+    title: "Localization & CSV Manager",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_LOCALIZATION.png",
+    description:
+      "Developer-controlled multi-language tooling with completion tracking and Export/Import CSV support.",
+  },
+  {
+    title: "Project Settings",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_SETTINGS_PROJECT.png",
+    description:
+      "Configure project metadata, window resolution, default language, and runtime behavior.",
+  },
+  {
+    title: "Export Game Pipeline",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_EXPORT_GAME.png",
+    description:
+      "Package games into Portable builds (Game.exe + encrypted game.bpack) or a standalone Windows Setup.exe.",
+  },
+  {
+    title: "Learn & Documentation",
+    tag: "blanc_editor",
+    src: "/screenshots/SS_LEARN_AND_DOCS.png",
+    description:
+      "Built-in reference and workflow guide inside the editor for quick onboarding.",
+  },
+  {
+    title: "Gameplay Runtime (Single Character)",
+    tag: "blanc_runtime",
+    src: "/screenshots/SS_GAMEPLAY_1_CHARACTER.png",
+    description:
+      "Standalone Rust player rendering character sprites, typewriter dialogue, and quick-action HUD controls.",
+  },
+  {
+    title: "Gameplay Runtime (Multi-Character)",
+    tag: "blanc_runtime",
+    src: "/screenshots/SS_GAMEPLAY_2_CHARACTER.png",
+    description:
+      "Multi-character stage positioning, expression transitions, and customizable dialogue box styling.",
+  },
+  {
+    title: "Windows Setup Wizard",
+    tag: "blanc_installer",
+    src: "/screenshots/SS_SETUP_WIZARD.png",
+    description:
+      "Single-file Setup.exe with 6-language installer UI, custom sidebar artwork, progress bar, and clean uninstaller.",
+  },
+];
+---
+
+<BaseLayout
+  title="Showcase: Games Made With Blanc Engine"
+  description="Explore visual novels created with Blanc Engine, submit your own game, and inspect engine screenshots."
+>
+  <Navbar />
+
+  <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12">
+    <!-- Page Header -->
+    <div class="flex flex-col justify-between gap-4 border-b border-border-default pb-6 sm:flex-row sm:items-end">
+      <div>
+        <div class="flex items-center gap-2">
+          <Gamepad2 class="h-4 w-4 text-accent-primary" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+            Community Showcase
+          </span>
+        </div>
+        <h1 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          Games Made With Blanc Engine
+        </h1>
+        <p class="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary sm:text-base">
+          Discover visual novels built by creators using Blanc Engine, or submit your own project directly to the directory.
+        </p>
+      </div>
+
+      <button
+        id="open-submit-modal"
+        type="button"
+        class="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-md bg-accent-primary px-4 text-sm font-semibold text-text-on-accent transition-colors hover:bg-accent-hover active:bg-accent-pressed cursor-pointer"
+      >
+        <Plus class="h-4 w-4" />
+        <span>Submit Your Game</span>
+      </button>
+    </div>
+
+    <!-- Main Section Tabs -->
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
+      <div class="inline-flex rounded-md border border-border-default bg-bg-secondary p-1" role="tablist" aria-label="Showcase views">
+        <button
+          type="button"
+          data-showcase-tab="games"
+          aria-selected="true"
+          class="inline-flex items-center gap-1.5 rounded px-3.5 py-1.5 text-xs font-medium bg-accent-subtle text-accent-primary cursor-pointer"
+        >
+          <Gamepad2 class="h-3.5 w-3.5" />
+          <span>Community Games</span>
+        </button>
+        <button
+          type="button"
+          data-showcase-tab="engine"
+          aria-selected="false"
+          class="inline-flex items-center gap-1.5 rounded px-3.5 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer"
+        >
+          <Image class="h-3.5 w-3.5" />
+          <span>Engine Screenshots</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 1: Community Games Directory -->
+    <section id="panel-games" class="mt-6">
+      <!-- Search & Filter Bar -->
+      <div class="flex flex-col justify-between gap-3 rounded-lg border border-border-default bg-bg-secondary p-3 sm:flex-row sm:items-center">
+        <div class="relative flex-1">
+          <Search class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-text-muted" />
+          <input
+            id="game-search"
+            type="search"
+            placeholder="Search by title, author, or genre..."
+            class="h-9 w-full rounded-md border border-border-default bg-surface-primary pr-3 pl-9 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none sm:text-sm"
+          />
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="inline-flex rounded-md border border-border-default bg-surface-primary p-0.5" role="group" aria-label="Filter by status">
+            <button type="button" data-status-filter="all" class="rounded px-2.5 py-1 text-xs font-medium bg-accent-subtle text-accent-primary cursor-pointer">
+              All
+            </button>
+            <button type="button" data-status-filter="Released" class="rounded px-2.5 py-1 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer">
+              Released
+            </button>
+            <button type="button" data-status-filter="Demo" class="rounded px-2.5 py-1 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer">
+              Demo
+            </button>
+            <button type="button" data-status-filter="In Development" class="rounded px-2.5 py-1 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer">
+              In Dev
+            </button>
+          </div>
+
+          <button
+            id="refresh-games"
+            type="button"
+            aria-label="Refresh games list"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border-default bg-surface-primary text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+          >
+            <RefreshCw class="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Games Grid -->
+      <div id="games-grid" class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="col-span-full rounded-lg border border-border-default bg-surface-primary p-6 text-sm text-text-secondary">
+          Loading community games...
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: Engine Screenshots -->
+    <section id="panel-engine" class="mt-6 hidden">
+      <div class="grid gap-6 md:grid-cols-2">
+        {
+          engineScreenshots.map((item) => (
+            <article class="flex flex-col rounded-lg border border-border-default bg-surface-primary">
+              <div class="flex items-center justify-between border-b border-border-subtle bg-bg-secondary px-4 py-2.5">
+                <h2 class="text-sm font-semibold text-text-primary">{item.title}</h2>
+                <span class="rounded border border-border-default bg-surface-primary px-2 py-0.5 font-mono text-[11px] text-text-muted">
+                  {item.tag}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                data-lightbox-src={item.src}
+                data-lightbox-title={item.title}
+                aria-label={`Inspect ${item.title}`}
+                class="group relative block w-full overflow-hidden bg-bg-primary p-3 text-left cursor-pointer"
+              >
+                <div class="overflow-hidden rounded border border-border-subtle">
+                  <img
+                    src={item.src}
+                    alt={item.title}
+                    class="aspect-video w-full object-cover object-top transition-opacity group-hover:opacity-90"
+                    loading="lazy"
+                  />
+                </div>
+                <span class="absolute right-5 bottom-5 inline-flex items-center gap-1 rounded border border-border-default bg-bg-secondary px-2 py-1 font-mono text-[11px] text-text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                  <Maximize2 class="h-3 w-3 text-accent-primary" />
+                  Zoom
+                </span>
+              </button>
+
+              <p class="border-t border-border-subtle px-4 py-3 text-xs leading-relaxed text-text-secondary sm:text-sm">
+                {item.description}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+
+  <!-- Flat Lightbox Modal -->
+  <div
+    id="lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lightbox-title"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-bg-primary/90 p-4"
+  >
+    <div class="w-full max-w-5xl rounded-lg border border-border-default bg-surface-primary">
+      <div class="flex items-center justify-between border-b border-border-default bg-bg-secondary px-4 py-2.5">
+        <p id="lightbox-title" class="text-sm font-semibold text-text-primary"></p>
+        <button
+          id="lightbox-close"
+          type="button"
+          aria-label="Close preview"
+          class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border-default bg-surface-primary text-text-secondary hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+        >
+          <X class="h-4 w-4" />
+        </button>
+      </div>
+      <div class="p-3 sm:p-4">
+        <img id="lightbox-img" src="" alt="" class="max-h-[78vh] w-full rounded border border-border-subtle object-contain bg-bg-primary" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Game Modal (Native Flat UI -> Google Forms) -->
+  <div
+    id="submit-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="submit-modal-title"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-bg-primary/90 p-4"
+  >
+    <div class="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-lg border border-border-default bg-surface-primary">
+      <div class="sticky top-0 flex items-center justify-between border-b border-border-default bg-bg-secondary px-5 py-3.5">
+        <div>
+          <h2 id="submit-modal-title" class="text-base font-semibold text-text-primary">
+            Submit Your Game
+          </h2>
+          <p class="text-xs text-text-secondary">
+            Built a visual novel with Blanc Engine? Share it with the community.
+          </p>
+        </div>
+        <button
+          id="close-submit-modal"
+          type="button"
+          aria-label="Close submit form"
+          class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border-default bg-surface-primary text-text-secondary hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+        >
+          <X class="h-4 w-4" />
+        </button>
+      </div>
+
+      <form id="submit-game-form" class="space-y-4 p-5">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="field-title" class="block text-xs font-medium text-text-primary">
+              Game Title <span class="text-status-error">*</span>
+            </label>
+            <input
+              id="field-title"
+              name="entry.897757391"
+              type="text"
+              required
+              placeholder="Echoes of Memories"
+              class="mt-1.5 h-9 w-full rounded-md border border-border-default bg-bg-primary px-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="field-author" class="block text-xs font-medium text-text-primary">
+              Author / Studio <span class="text-status-error">*</span>
+            </label>
+            <input
+              id="field-author"
+              name="entry.203269822"
+              type="text"
+              required
+              placeholder="Your Name or Studio"
+              class="mt-1.5 h-9 w-full rounded-md border border-border-default bg-bg-primary px-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="field-status" class="block text-xs font-medium text-text-primary">
+              Status <span class="text-status-error">*</span>
+            </label>
+            <select
+              id="field-status"
+              name="entry.771996666"
+              required
+              class="mt-1.5 h-9 w-full rounded-md border border-border-default bg-bg-primary px-3 text-sm text-text-primary focus:border-accent-primary focus:outline-none"
+            >
+              <option value="Released">Released</option>
+              <option value="Demo">Demo</option>
+              <option value="In Development">In Development</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="field-genre" class="block text-xs font-medium text-text-primary">
+              Genre / Tags <span class="text-status-error">*</span>
+            </label>
+            <input
+              id="field-genre"
+              name="entry.1232348967"
+              type="text"
+              required
+              placeholder="Mystery, Romance, Slice of Life"
+              class="mt-1.5 h-9 w-full rounded-md border border-border-default bg-bg-primary px-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="field-cover" class="block text-xs font-medium text-text-primary">
+            Cover Image URL (16:9 recommended) <span class="text-status-error">*</span>
+          </label>
+          <input
+            id="field-cover"
+            name="entry.908982358"
+            type="url"
+            required
+            placeholder="https://example.com/cover.png"
+            class="mt-1.5 h-9 w-full rounded-md border border-border-default bg-bg-primary px-3 font-mono text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label for="field-url" class="block text-xs font-medium text-text-primary">
+            Game / Download URL <span class="text-status-error">*</span>
+          </label>
+          <input
+            id="field-url"
+            name="entry.153994697"
+            type="url"
+            required
+            placeholder="https://yourname.itch.io/your-game"
+            class="mt-1.5 h-9 w-full rounded-md border border-border-default bg-bg-primary px-3 font-mono text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label for="field-desc" class="block text-xs font-medium text-text-primary">
+            Short Description <span class="text-status-error">*</span>
+          </label>
+          <textarea
+            id="field-desc"
+            name="entry.255430852"
+            rows="3"
+            required
+            placeholder="A brief 1-2 sentence summary of your visual novel..."
+            class="mt-1.5 w-full rounded-md border border-border-default bg-bg-primary p-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+          ></textarea>
+        </div>
+
+        <div id="submit-feedback" class="hidden rounded-md border px-3.5 py-2.5 text-xs"></div>
+
+        <div class="flex items-center justify-end gap-2 border-t border-border-subtle pt-4">
+          <button
+            id="cancel-submit"
+            type="button"
+            class="h-9 rounded-md border border-border-default bg-bg-secondary px-4 text-xs font-medium text-text-secondary hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            id="submit-btn"
+            type="submit"
+            class="h-9 rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover disabled:opacity-50 cursor-pointer"
+          >
+            Submit Game
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  const FORM_ACTION_URL =
+    "https://docs.google.com/forms/d/e/1FAIpQLSfX7ScWucadKsJ9BJ3rEfILWfAh6baSW9ISZy8YiWNd6KlzqQ/formResponse";
+  const SHEET_GVIZ_URL =
+    "https://docs.google.com/spreadsheets/d/1VCNAuxsX3QyiQtOONYbZYZIUbRRhjrd9oaMddh_8O7g/gviz/tq?tqx=out:json&gid=658897965&headers=1";
+
+  interface ShowcaseGame {
+    title: string;
+    author: string;
+    status: string;
+    genre: string;
+    cover: string;
+    url: string;
+    description: string;
+  }
+
+  let gamesList: ShowcaseGame[] = [];
+  let statusFilter = "all";
+  let searchQuery = "";
+
+  const gamesGrid = document.getElementById("games-grid");
+  const searchInput = document.getElementById("game-search") as HTMLInputElement | null;
+  const refreshGamesBtn = document.getElementById("refresh-games");
+  const statusButtons = document.querySelectorAll<HTMLButtonElement>("[data-status-filter]");
+
+  function escapeHtml(str: string): string {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function statusBadgeStyle(status: string): string {
+    const s = status.toLowerCase();
+    if (s === "released") return "border-status-success text-status-success";
+    if (s === "demo") return "border-accent-primary text-accent-primary";
+    return "border-status-warning text-status-warning";
+  }
+
+  function renderGames() {
+    if (!gamesGrid) return;
+
+    const q = searchQuery.trim().toLowerCase();
+    const filtered = gamesList.filter((g) => {
+      const matchesStatus = statusFilter === "all" || g.status.toLowerCase() === statusFilter.toLowerCase();
+      const matchesQuery =
+        !q ||
+        g.title.toLowerCase().includes(q) ||
+        g.author.toLowerCase().includes(q) ||
+        g.genre.toLowerCase().includes(q) ||
+        g.description.toLowerCase().includes(q);
+      return matchesStatus && matchesQuery;
+    });
+
+    if (gamesList.length === 0) {
+      gamesGrid.innerHTML = `
+        <div class="col-span-full rounded-lg border border-border-default bg-surface-primary p-8 text-center">
+          <p class="text-base font-semibold text-text-primary">No approved games yet</p>
+          <p class="mt-1.5 text-sm text-text-secondary">
+            Be the first creator to showcase a visual novel built with Blanc Engine.
+          </p>
+          <button
+            type="button"
+            onclick="document.getElementById('open-submit-modal')?.click()"
+            class="mt-4 inline-flex h-9 items-center rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent hover:bg-accent-hover cursor-pointer"
+          >
+            Submit the First Game
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    if (filtered.length === 0) {
+      gamesGrid.innerHTML = `
+        <div class="col-span-full rounded-lg border border-border-default bg-surface-primary p-6 text-center text-sm text-text-secondary">
+          No games match your current search or filter.
+        </div>
+      `;
+      return;
+    }
+
+    gamesGrid.innerHTML = filtered
+      .map((game) => {
+        const tags = game.genre
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean)
+          .slice(0, 3);
+
+        return `
+          <article class="flex flex-col justify-between overflow-hidden rounded-lg border border-border-default bg-surface-primary transition-colors hover:border-accent-primary">
+            <div>
+              <div class="aspect-video w-full overflow-hidden border-b border-border-subtle bg-bg-primary">
+                <img
+                  src="${escapeHtml(game.cover)}"
+                  alt="${escapeHtml(game.title)}"
+                  class="h-full w-full object-cover"
+                  loading="lazy"
+                  onerror="this.src='/screenshots/SS_GAMEPLAY_1_CHARACTER.png'"
+                />
+              </div>
+
+              <div class="p-4">
+                <div class="flex items-start justify-between gap-2">
+                  <h2 class="text-base font-semibold text-text-primary">${escapeHtml(game.title)}</h2>
+                  <span class="shrink-0 rounded border ${statusBadgeStyle(game.status)} bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium">
+                    ${escapeHtml(game.status)}
+                  </span>
+                </div>
+                <p class="mt-0.5 font-mono text-xs text-text-muted">by ${escapeHtml(game.author)}</p>
+                <p class="mt-2.5 line-clamp-2 text-xs leading-relaxed text-text-secondary sm:text-sm">
+                  ${escapeHtml(game.description)}
+                </p>
+
+                ${
+                  tags.length > 0
+                    ? `<div class="mt-3 flex flex-wrap gap-1.5">
+                        ${tags
+                          .map(
+                            (tag) =>
+                              `<span class="rounded border border-border-subtle bg-bg-secondary px-2 py-0.5 font-mono text-[11px] text-text-secondary">${escapeHtml(tag)}</span>`
+                          )
+                          .join("")}
+                      </div>`
+                    : ""
+                }
+              </div>
+            </div>
+
+            <div class="border-t border-border-subtle bg-bg-secondary px-4 py-2.5">
+              <a
+                href="${escapeHtml(game.url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex w-full items-center justify-center rounded-md border border-border-default bg-surface-primary px-3 py-1.5 text-xs font-semibold text-text-primary transition-colors hover:border-accent-primary hover:text-accent-primary"
+              >
+                Play / Download
+              </a>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+  }
+
+  async function fetchGames() {
+    if (!gamesGrid) return;
+    try {
+      const res = await fetch(SHEET_GVIZ_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?/);
+      if (!match) throw new Error("Invalid sheet response");
+
+      const json = JSON.parse(match[1]);
+      const rows = json?.table?.rows || [];
+
+      const parsed: ShowcaseGame[] = [];
+      for (const row of rows) {
+        const c = row.c || [];
+        const getVal = (idx: number) => (c[idx] && c[idx].v != null ? String(c[idx].v).trim() : "");
+        const approvedRaw = getVal(8).toLowerCase();
+        const isApproved = approvedRaw === "true" || approvedRaw === "1" || approvedRaw === "yes";
+
+        const title = getVal(1);
+        if (!title || title.toLowerCase() === "game title" || !isApproved) continue;
+
+        parsed.push({
+          title,
+          author: getVal(2) || "Unknown Creator",
+          status: getVal(3) || "Released",
+          genre: getVal(4),
+          cover: getVal(5),
+          url: getVal(6) || "#",
+          description: getVal(7),
+        });
+      }
+
+      gamesList = parsed.reverse();
+      renderGames();
+    } catch {
+      gamesGrid.innerHTML = `
+        <div class="col-span-full rounded-lg border border-border-default bg-surface-primary p-6 text-sm text-text-secondary">
+          Unable to load games directory right now. Make sure the Google Sheet is shared as "Anyone with the link (Viewer)".
+        </div>
+      `;
+    }
+  }
+
+  searchInput?.addEventListener("input", () => {
+    searchQuery = searchInput.value;
+    renderGames();
+  });
+
+  statusButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      statusFilter = btn.getAttribute("data-status-filter") || "all";
+      statusButtons.forEach((b) => {
+        const active = b.getAttribute("data-status-filter") === statusFilter;
+        b.classList.toggle("bg-accent-subtle", active);
+        b.classList.toggle("text-accent-primary", active);
+        b.classList.toggle("text-text-secondary", !active);
+      });
+      renderGames();
+    });
+  });
+
+  refreshGamesBtn?.addEventListener("click", fetchGames);
+  fetchGames();
+
+  // Main Tabs: Community Games vs Engine Screenshots
+  const showcaseTabs = document.querySelectorAll<HTMLButtonElement>("[data-showcase-tab]");
+  const panelGames = document.getElementById("panel-games");
+  const panelEngine = document.getElementById("panel-engine");
+
+  showcaseTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.getAttribute("data-showcase-tab");
+      showcaseTabs.forEach((t) => {
+        const active = t.getAttribute("data-showcase-tab") === target;
+        t.setAttribute("aria-selected", String(active));
+        t.classList.toggle("bg-accent-subtle", active);
+        t.classList.toggle("text-accent-primary", active);
+        t.classList.toggle("text-text-secondary", !active);
+      });
+      panelGames?.classList.toggle("hidden", target !== "games");
+      panelEngine?.classList.toggle("hidden", target !== "engine");
+    });
+  });
+
+  // Submit Game Modal -> Google Forms POST
+  const submitModal = document.getElementById("submit-modal");
+  const openSubmitBtn = document.getElementById("open-submit-modal");
+  const closeSubmitBtn = document.getElementById("close-submit-modal");
+  const cancelSubmitBtn = document.getElementById("cancel-submit");
+  const submitForm = document.getElementById("submit-game-form") as HTMLFormElement | null;
+  const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement | null;
+  const submitFeedback = document.getElementById("submit-feedback");
+
+  function openSubmitModal() {
+    submitFeedback?.classList.add("hidden");
+    submitModal?.classList.remove("hidden");
+    submitModal?.classList.add("flex");
+  }
+
+  function closeSubmitModal() {
+    submitModal?.classList.add("hidden");
+    submitModal?.classList.remove("flex");
+  }
+
+  openSubmitBtn?.addEventListener("click", openSubmitModal);
+  closeSubmitBtn?.addEventListener("click", closeSubmitModal);
+  cancelSubmitBtn?.addEventListener("click", closeSubmitModal);
+  submitModal?.addEventListener("click", (e) => {
+    if (e.target === submitModal) closeSubmitModal();
+  });
+
+  submitForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!submitForm || !submitBtn || !submitFeedback) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+    submitFeedback.classList.add("hidden");
+
+    try {
+      const formData = new FormData(submitForm);
+      await fetch(FORM_ACTION_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: formData,
+      });
+
+      submitForm.reset();
+      submitFeedback.className =
+        "rounded-md border border-status-success bg-bg-secondary px-3.5 py-2.5 text-xs text-status-success";
+      submitFeedback.textContent =
+        "Game submitted successfully! It will appear in the showcase once approved.";
+      submitFeedback.classList.remove("hidden");
+    } catch {
+      submitFeedback.className =
+        "rounded-md border border-status-error bg-bg-secondary px-3.5 py-2.5 text-xs text-status-error";
+      submitFeedback.textContent =
+        "Network error while submitting. Please check your connection and try again.";
+      submitFeedback.classList.remove("hidden");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Game";
+    }
+  });
+
+  // Lightbox for Engine Screenshots
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img") as HTMLImageElement | null;
+  const lightboxTitle = document.getElementById("lightbox-title");
+  const lightboxClose = document.getElementById("lightbox-close");
+
+  document.querySelectorAll<HTMLButtonElement>("[data-lightbox-src]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!lightbox || !lightboxImg || !lightboxTitle) return;
+      lightboxImg.src = btn.getAttribute("data-lightbox-src") || "";
+      lightboxImg.alt = btn.getAttribute("data-lightbox-title") || "";
+      lightboxTitle.textContent = btn.getAttribute("data-lightbox-title") || "";
+      lightbox.classList.remove("hidden");
+      lightbox.classList.add("flex");
+    });
+  });
+
+  function closeLightbox() {
+    lightbox?.classList.add("hidden");
+    lightbox?.classList.remove("flex");
+  }
+
+  lightboxClose?.addEventListener("click", closeLightbox);
+  lightbox?.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeLightbox();
+      closeSubmitModal();
+    }
+  });
+</script>

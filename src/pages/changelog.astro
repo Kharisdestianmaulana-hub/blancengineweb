@@ -1,0 +1,152 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import { History, GitPullRequest, CheckCircle2 } from "lucide-astro";
+
+const releases = [
+  {
+    version: "0.1.0",
+    date: "2026-11-14",
+    status: "Initial Release",
+    groups: [
+      {
+        crate: "blanc_core",
+        items: [
+          "Project manifest (.blanc), scene (.bscene), screenplay parser (.bst), and StoryFlowGraph serialization.",
+          "Encrypted .bpack asset archive writer and reader.",
+          "Multi-language localization manifest (locales/manifest.json), string tables, and RFC-4180 CSV export/import.",
+          "Windows executable .ico resource embedding and standalone installer payload packaging.",
+          "Customizable RuntimeUiConfig and design tokens.",
+        ],
+      },
+      {
+        crate: "blanc_editor",
+        items: [
+          "Project Welcome screen, Overview, Asset Manager, Story Setup converter, Scene Editor, Story Flow canvas, UI Designer with live preview, Localization, Settings, and Export pipeline.",
+          "Background asynchronous export with sticky progress bar, custom wizard sidebar artwork, and per-language Terms & Privacy Policy editor.",
+        ],
+      },
+      {
+        crate: "blanc_runtime",
+        items: [
+          "Stage rendering, typewriter dialogue reveal, character positioning, screen effects (FadeIn, FadeOut, FlashWhite, Shake), and rodio BGM/SFX playback.",
+          "Save/Load slots with scene thumbnails, Quick Save (F5), Quick Load (F9), and Dialogue History (B).",
+          "Auto-Play (A) with configurable delay and Skip (S) with Read Only (persistent read_history.json) and All Text modes.",
+          "Dynamic Language selector in Settings, installer language auto-sync on first launch, Windows CJK font loading, and gamepad (gilrs) navigation.",
+        ],
+      },
+      {
+        crate: "blanc_installer",
+        items: [
+          "Standalone Windows Setup Wizard with 6-language UI (en, id, ja, es, zh, ko), progress bar, Start Menu & Desktop shortcuts, and clean per-game Uninstall <Game>.exe.",
+        ],
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Changelog: Blanc Engine Releases & Contributing"
+  description="Version history, release notes, and contribution guide for Blanc Engine."
+>
+  <Navbar />
+
+  <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12">
+    <div class="border-b border-border-default pb-6">
+      <div class="flex items-center gap-2">
+        <History class="h-4 w-4 text-accent-primary" />
+        <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+          Release History
+        </span>
+      </div>
+      <h1 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+        Changelog & Contributing
+      </h1>
+      <p class="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary sm:text-base">
+        Following Keep a Changelog and Semantic Versioning.
+      </p>
+    </div>
+
+    <div class="mt-8 grid gap-8 lg:grid-cols-12">
+      <!-- Left: Changelog Timeline -->
+      <div class="space-y-6 lg:col-span-8">
+        {
+          releases.map((rel) => (
+            <article class="rounded-lg border border-border-default bg-surface-primary">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-border-default bg-bg-secondary px-5 py-3.5">
+                <div class="flex items-center gap-2.5">
+                  <span class="font-mono text-base font-bold text-text-primary">v{rel.version}</span>
+                  <span class="rounded border border-status-success bg-bg-primary px-2 py-0.5 font-mono text-[11px] font-medium text-status-success">
+                    {rel.status}
+                  </span>
+                </div>
+                <span class="font-mono text-xs text-text-muted">{rel.date}</span>
+              </div>
+
+              <div class="space-y-5 p-5">
+                {
+                  rel.groups.map((group) => (
+                    <div>
+                      <h2 class="inline-block rounded border border-border-subtle bg-bg-secondary px-2 py-0.5 font-mono text-xs font-semibold text-accent-primary">
+                        {group.crate}
+                      </h2>
+                      <ul class="mt-2.5 space-y-2">
+                        {
+                          group.items.map((item) => (
+                            <li class="flex items-start gap-2 text-sm leading-relaxed text-text-secondary">
+                              <CheckCircle2 class="mt-0.5 h-4 w-4 shrink-0 text-status-success" />
+                              <span>{item}</span>
+                            </li>
+                          ))
+                        }
+                      </ul>
+                    </div>
+                  ))
+                }
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <!-- Right: Contributing Guide -->
+      <aside class="space-y-5 lg:col-span-4">
+        <div class="rounded-lg border border-border-default bg-surface-primary p-5">
+          <div class="flex items-center gap-2">
+            <GitPullRequest class="h-4 w-4 text-accent-primary" />
+            <h2 class="text-base font-semibold text-text-primary">Contributing</h2>
+          </div>
+          <p class="mt-2 text-xs leading-relaxed text-text-secondary sm:text-sm">
+            Every contribution, from bug reports and documentation improvements to new engine features, is welcome.
+          </p>
+
+          <div class="mt-4 space-y-3 text-xs text-text-secondary">
+            <div class="rounded border border-border-subtle bg-bg-secondary p-3">
+              <p class="font-semibold text-text-primary">1. Build & Test Workspace</p>
+              <pre class="mt-2 overflow-x-auto font-mono text-[11px] text-text-primary"><code>cargo build --workspace
+cargo test --workspace</code></pre>
+            </div>
+            <div class="rounded border border-border-subtle bg-bg-secondary p-3">
+              <p class="font-semibold text-text-primary">2. Format & Lint</p>
+              <pre class="mt-2 overflow-x-auto font-mono text-[11px] text-text-primary"><code>cargo fmt
+cargo clippy --workspace</code></pre>
+            </div>
+          </div>
+
+          <a
+            href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-4 inline-flex w-full items-center justify-center rounded-md border border-border-default bg-bg-secondary px-3 py-2 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover"
+          >
+            Report Bug or Request Feature
+          </a>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

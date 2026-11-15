@@ -1,0 +1,515 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import { Download, Terminal, Package, ExternalLink, RefreshCw } from "lucide-astro";
+---
+
+<BaseLayout
+  title="Download: Blanc Engine Releases"
+  description="Download the latest Stable, Beta/Preview, and previous versions of Blanc Engine from GitHub Releases."
+>
+  <Navbar />
+
+  <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12">
+    <!-- Header -->
+    <div class="flex flex-col justify-between gap-4 border-b border-border-default pb-6 sm:flex-row sm:items-end">
+      <div>
+        <div class="flex items-center gap-2">
+          <Download class="h-4 w-4 text-accent-primary" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+            GitHub Releases
+          </span>
+        </div>
+        <h1 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          Download Blanc Engine
+        </h1>
+        <p class="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary sm:text-base">
+          Get the latest stable release, test upcoming beta/preview builds, or browse previous versions directly from GitHub Releases.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button
+          id="refresh-releases"
+          type="button"
+          class="inline-flex h-9 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+        >
+          <RefreshCw class="h-3.5 w-3.5" />
+          <span>Refresh</span>
+        </button>
+        <a
+          href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/releases"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex h-9 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover"
+        >
+          <span>GitHub Releases</span>
+          <ExternalLink class="h-3.5 w-3.5 text-text-muted" />
+        </a>
+      </div>
+    </div>
+
+    <!-- Latest Release Highlight -->
+    <section class="mt-8" aria-label="Latest Release">
+      <div id="latest-release-container" class="rounded-lg border border-border-default bg-surface-primary p-6">
+        <!-- Loading State -->
+        <div class="flex items-center gap-3 text-sm text-text-secondary">
+          <span class="inline-block h-2.5 w-2.5 rounded-full bg-accent-primary"></span>
+          <span>Fetching latest release from GitHub...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Previous Versions & Beta/Preview Archive -->
+    <section class="mt-10" aria-label="Release History">
+      <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h2 class="text-lg font-semibold text-text-primary">Previous Versions & Archive</h2>
+          <p class="mt-1 text-xs text-text-secondary sm:text-sm">
+            Filter between Stable releases and Beta / Preview builds. Click a version to view downloadable files.
+          </p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="inline-flex rounded-md border border-border-default bg-bg-secondary p-1" role="tablist" aria-label="Filter releases">
+          <button
+            type="button"
+            data-release-filter="all"
+            aria-selected="true"
+            class="rounded px-3 py-1.5 text-xs font-medium bg-accent-subtle text-accent-primary cursor-pointer"
+          >
+            All
+          </button>
+          <button
+            type="button"
+            data-release-filter="stable"
+            aria-selected="false"
+            class="rounded px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer"
+          >
+            Stable
+          </button>
+          <button
+            type="button"
+            data-release-filter="preview"
+            aria-selected="false"
+            class="rounded px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer"
+          >
+            Beta / Preview
+          </button>
+        </div>
+      </div>
+
+      <div id="release-list-container" class="mt-4 space-y-2.5">
+        <div class="rounded-lg border border-border-default bg-surface-primary p-5 text-sm text-text-secondary">
+          Loading release archive...
+        </div>
+      </div>
+    </section>
+
+    <!-- Build From Source & Distribution Formats -->
+    <section class="mt-12 grid gap-6 border-t border-border-default pt-10 lg:grid-cols-2">
+      <div class="rounded-lg border border-border-default bg-surface-primary p-5">
+        <div class="flex items-center gap-2">
+          <Terminal class="h-4 w-4 text-accent-primary" />
+          <h2 class="text-base font-semibold text-text-primary">Build From Source (Rust)</h2>
+        </div>
+        <p class="mt-2 text-xs leading-relaxed text-text-secondary sm:text-sm">
+          While binaries are being packaged or if you want the latest commit, compile the workspace with Cargo (Rust 2021 edition):
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-md border border-border-subtle bg-bg-primary p-3.5 font-mono text-xs leading-relaxed text-text-primary"><code>git clone https://github.com/Kharisdestianmaulana-hub/blanc-engine.git
+cd blanc-engine
+cargo build --workspace --release
+cargo run -p blanc_editor --release</code></pre>
+      </div>
+
+      <div class="rounded-lg border border-border-default bg-surface-primary p-5">
+        <div class="flex items-center gap-2">
+          <Package class="h-4 w-4 text-accent-primary" />
+          <h2 class="text-base font-semibold text-text-primary">Release Package Formats</h2>
+        </div>
+        <div class="mt-4 space-y-3">
+          <div class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-text-primary">Windows Installer (.exe)</span>
+              <span class="font-mono text-[11px] text-status-success">Recommended</span>
+            </div>
+            <p class="mt-1 text-xs text-text-secondary">
+              Guided setup wizard with Start Menu shortcuts, application icon, and clean uninstaller.
+            </p>
+          </div>
+          <div class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-text-primary">Portable Archive (.zip)</span>
+              <span class="font-mono text-[11px] text-text-muted">No Install</span>
+            </div>
+            <p class="mt-1 text-xs text-text-secondary">
+              Extract and run directly from any folder or USB drive without modifying Windows registry entries.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  interface GitHubAsset {
+    name: string;
+    size: number;
+    browser_download_url: string;
+    download_count: number;
+  }
+
+  interface GitHubRelease {
+    tag_name: string;
+    name: string;
+    prerelease: boolean;
+    draft: boolean;
+    published_at: string;
+    html_url: string;
+    body: string;
+    assets: GitHubAsset[];
+  }
+
+  const API_URL = "https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases";
+  const RELEASES_PAGE = "https://github.com/Kharisdestianmaulana-hub/blanc-engine/releases";
+
+  const latestContainer = document.getElementById("latest-release-container");
+  const listContainer = document.getElementById("release-list-container");
+  const refreshBtn = document.getElementById("refresh-releases");
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>("[data-release-filter]");
+
+  let allReleases: GitHubRelease[] = [];
+  let activeFilter: "all" | "stable" | "preview" = "all";
+
+  function escapeHtml(str: string): string {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function formatBytes(bytes: number): string {
+    if (!bytes) return "0 MB";
+    const mb = bytes / (1024 * 1024);
+    return mb >= 1 ? `${mb.toFixed(1)} MB` : `${(bytes / 1024).toFixed(0)} KB`;
+  }
+
+  function formatDate(iso: string): string {
+    if (!iso) return "";
+    return new Date(iso).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  }
+
+  function renderMarkdown(md: string): string {
+    if (!md) return "";
+    const lines = md.replace(/\r\n/g, "\n").split("\n");
+    const out: string[] = [];
+    let inList = false;
+
+    const inlineFormat = (text: string) => {
+      let s = escapeHtml(text);
+      s = s.replace(/`([^`]+)`/g, '<code class="rounded border border-border-subtle bg-bg-secondary px-1 py-0.5 font-mono text-[11px] text-text-primary">$1</code>');
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-text-primary">$1</strong>');
+      s = s.replace(/\*([^*]+)\*/g, '<em class="italic">$1</em>');
+      return s;
+    };
+
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line) {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        continue;
+      }
+      if (/^---+$/.test(line)) {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        out.push('<hr class="my-3 border-border-subtle" />');
+        continue;
+      }
+      if (line.startsWith("### ")) {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        out.push(`<h4 class="mt-3 mb-1.5 text-xs font-semibold uppercase tracking-wider text-accent-primary">${inlineFormat(line.slice(4))}</h4>`);
+        continue;
+      }
+      if (line.startsWith("## ") || line.startsWith("# ")) {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        const content = line.replace(/^#+\s+/, "");
+        out.push(`<h3 class="mt-2 mb-1.5 text-sm font-semibold text-text-primary">${inlineFormat(content)}</h3>`);
+        continue;
+      }
+      if (line.startsWith("- ") || line.startsWith("* ")) {
+        if (!inList) {
+          out.push('<ul class="my-1.5 list-disc space-y-1 pl-5 text-xs leading-relaxed text-text-secondary">');
+          inList = true;
+        }
+        out.push(`<li>${inlineFormat(line.slice(2))}</li>`);
+        continue;
+      }
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      out.push(`<p class="my-1.5 text-xs leading-relaxed text-text-secondary">${inlineFormat(line)}</p>`);
+    }
+
+    if (inList) out.push("</ul>");
+    return out.join("");
+  }
+
+  function renderAssetsHtml(assets: GitHubAsset[], releaseUrl: string): string {
+    if (!assets || assets.length === 0) {
+      return `
+        <div class="rounded-md border border-border-subtle bg-bg-secondary px-3.5 py-2.5 text-xs text-text-secondary">
+          No binary assets attached to this release yet.
+          <a href="${escapeHtml(releaseUrl)}" target="_blank" rel="noopener noreferrer" class="ml-1 font-medium text-accent-primary hover:underline">View on GitHub</a>
+        </div>
+      `;
+    }
+
+    return assets
+      .map((asset) => {
+        const lower = asset.name.toLowerCase();
+        const typeBadge = lower.includes("setup")
+          ? '<span class="rounded border border-status-success bg-bg-primary px-1.5 py-0.5 font-mono text-[10px] text-status-success">Installer</span>'
+          : lower.includes("portable")
+          ? '<span class="rounded border border-border-default bg-bg-primary px-1.5 py-0.5 font-mono text-[10px] text-text-muted">Portable</span>'
+          : "";
+
+        return `
+        <a
+          href="${escapeHtml(asset.browser_download_url)}"
+          class="flex items-center justify-between gap-3 rounded-md border border-border-default bg-bg-secondary px-3.5 py-2.5 text-xs transition-colors hover:border-accent-primary hover:bg-surface-hover"
+        >
+          <span class="flex min-w-0 items-center gap-2">
+            <span class="truncate font-mono font-medium text-text-primary">${escapeHtml(asset.name)}</span>
+            ${typeBadge}
+          </span>
+          <span class="flex shrink-0 items-center gap-2">
+            <span class="font-mono text-[11px] text-text-muted">${formatBytes(asset.size)}</span>
+            <span class="rounded bg-accent-primary px-2 py-0.5 font-semibold text-text-on-accent">Download</span>
+          </span>
+        </a>
+      `;
+      })
+      .join("");
+  }
+
+  function renderLatest(releases: GitHubRelease[]) {
+    if (!latestContainer) return;
+
+    if (releases.length === 0) {
+      latestContainer.className = "rounded-lg border border-border-default bg-surface-primary p-6";
+      latestContainer.innerHTML = `
+        <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div>
+            <span class="inline-block rounded border border-status-warning bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium text-status-warning">
+              Preparing Release
+            </span>
+            <h2 class="mt-2 text-lg font-semibold text-text-primary">No pre-built .exe releases published yet</h2>
+            <p class="mt-1 text-sm text-text-secondary">
+              Once a release is published on GitHub Releases, downloadable Windows installers and portable builds will appear here automatically.
+            </p>
+          </div>
+          <a
+            href="${RELEASES_PAGE}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-10 shrink-0 items-center justify-center rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover"
+          >
+            Check GitHub Releases
+          </a>
+        </div>
+      `;
+      return;
+    }
+
+    const latestStable = releases.find((r) => !r.prerelease) || releases[0];
+    const isPreview = latestStable.prerelease;
+    const badgeClass = isPreview
+      ? "border-status-warning text-status-warning"
+      : "border-status-success text-status-success";
+    const badgeText = isPreview ? "Beta / Preview" : "Stable";
+
+    latestContainer.className = "rounded-lg border border-accent-primary bg-surface-primary p-6";
+    latestContainer.innerHTML = `
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle pb-4">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <span class="rounded border border-accent-primary bg-accent-subtle px-2 py-0.5 font-mono text-[11px] font-semibold text-accent-primary">
+            Latest
+          </span>
+          <span class="rounded border ${badgeClass} bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium">
+            ${badgeText}
+          </span>
+          <h2 class="font-mono text-xl font-bold text-text-primary">${escapeHtml(latestStable.tag_name)}</h2>
+          ${latestStable.name && latestStable.name !== latestStable.tag_name ? `<span class="text-sm text-text-secondary">${escapeHtml(latestStable.name)}</span>` : ""}
+        </div>
+        <span class="font-mono text-xs text-text-muted">${formatDate(latestStable.published_at)}</span>
+      </div>
+
+      <div class="mt-4 grid gap-2.5 sm:grid-cols-2">
+        ${renderAssetsHtml(latestStable.assets, latestStable.html_url)}
+      </div>
+
+      ${
+        latestStable.body
+          ? `<details class="mt-4 rounded-md border border-border-subtle bg-bg-primary">
+              <summary class="cursor-pointer px-3.5 py-2 text-xs font-medium text-text-secondary hover:text-text-primary">
+                Release Notes
+              </summary>
+              <div class="border-t border-border-subtle px-4 py-3">
+                ${renderMarkdown(latestStable.body)}
+              </div>
+            </details>`
+          : ""
+      }
+    `;
+  }
+
+  function renderList() {
+    if (!listContainer) return;
+
+    const latestShown = allReleases.find((r) => !r.prerelease) || allReleases[0];
+    const previousOnly =
+      activeFilter === "all" && latestShown
+        ? allReleases.filter((r) => r.tag_name !== latestShown.tag_name)
+        : allReleases;
+
+    const filtered = previousOnly.filter((r) => {
+      if (activeFilter === "stable") return !r.prerelease;
+      if (activeFilter === "preview") return r.prerelease;
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      const msg =
+        activeFilter === "all" && allReleases.length <= 1
+          ? "No previous versions yet. Future releases will be archived here automatically."
+          : "No releases found in this category yet.";
+      listContainer.innerHTML = `
+        <div class="rounded-lg border border-border-default bg-surface-primary p-5 text-sm text-text-secondary">
+          ${msg}
+        </div>
+      `;
+      return;
+    }
+
+    listContainer.innerHTML = filtered
+      .map((rel) => {
+        const badgeClass = rel.prerelease
+          ? "border-status-warning text-status-warning"
+          : "border-status-success text-status-success";
+        const badgeText = rel.prerelease ? "Beta / Preview" : "Stable";
+        const assetCount = rel.assets ? rel.assets.length : 0;
+
+        return `
+          <details class="group rounded-lg border border-border-default bg-surface-primary">
+            <summary class="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-surface-hover">
+              <div class="flex flex-wrap items-center gap-2.5">
+                <span class="font-mono text-sm font-bold text-text-primary">${escapeHtml(rel.tag_name)}</span>
+                <span class="rounded border ${badgeClass} bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium">
+                  ${badgeText}
+                </span>
+                ${rel.name && rel.name !== rel.tag_name ? `<span class="text-xs text-text-secondary">${escapeHtml(rel.name)}</span>` : ""}
+              </div>
+              <div class="flex items-center gap-4 font-mono text-xs text-text-muted">
+                <span>${assetCount} file${assetCount === 1 ? "" : "s"}</span>
+                <span>${formatDate(rel.published_at)}</span>
+              </div>
+            </summary>
+
+            <div class="space-y-3 border-t border-border-subtle p-4">
+              <div class="grid gap-2 sm:grid-cols-2">
+                ${renderAssetsHtml(rel.assets, rel.html_url)}
+              </div>
+              ${
+                rel.body
+                  ? `<div class="max-h-60 overflow-auto rounded border border-border-subtle bg-bg-primary px-4 py-3">${renderMarkdown(rel.body)}</div>`
+                  : ""
+              }
+            </div>
+          </details>
+        `;
+      })
+      .join("");
+  }
+
+  async function loadReleases() {
+    try {
+      const res = await fetch(API_URL, {
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
+      const data: GitHubRelease[] = await res.json();
+      allReleases = data.filter((r) => !r.draft);
+      renderLatest(allReleases);
+      renderList();
+    } catch {
+      if (latestContainer) {
+        latestContainer.className = "rounded-lg border border-border-default bg-surface-primary p-6";
+        latestContainer.innerHTML = `
+          <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+              <span class="inline-block rounded border border-status-info bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium text-status-info">
+                GitHub Releases
+              </span>
+              <h2 class="mt-2 text-base font-semibold text-text-primary">Unable to load releases from GitHub API</h2>
+              <p class="mt-1 text-sm text-text-secondary">
+                You can browse and download all Stable and Beta/Preview releases directly on GitHub.
+              </p>
+            </div>
+            <a
+              href="${RELEASES_PAGE}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex h-10 shrink-0 items-center justify-center rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover"
+            >
+              Open GitHub Releases
+            </a>
+          </div>
+        `;
+      }
+      if (listContainer) {
+        listContainer.innerHTML = "";
+      }
+    }
+  }
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const val = btn.getAttribute("data-release-filter") as "all" | "stable" | "preview";
+      activeFilter = val;
+
+      filterBtns.forEach((b) => {
+        const active = b.getAttribute("data-release-filter") === val;
+        b.setAttribute("aria-selected", String(active));
+        b.classList.toggle("bg-accent-subtle", active);
+        b.classList.toggle("text-accent-primary", active);
+        b.classList.toggle("text-text-secondary", !active);
+      });
+
+      renderList();
+    });
+  });
+
+  refreshBtn?.addEventListener("click", loadReleases);
+  loadReleases();
+</script>

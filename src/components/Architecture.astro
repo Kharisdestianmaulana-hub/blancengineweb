@@ -1,0 +1,111 @@
+---
+import { Terminal, Box, Keyboard } from "lucide-astro";
+
+const crates = [
+  {
+    name: "blanc_core",
+    role: "Core Engine",
+    detail: "Data models (Project, Scene, StoryFlowGraph), .bpack encryption, CSV localization, and Windows icon/installer packing.",
+  },
+  {
+    name: "blanc_editor",
+    role: "Desktop GUI",
+    detail: "No-code visual novel editor built with Rust + Iced 0.13 following the Dark Neutral + Indigo Design System.",
+  },
+  {
+    name: "blanc_runtime",
+    role: "Player (Game.exe)",
+    detail: "Standalone runtime with rodio audio, gilrs gamepad input, CJK font loading, and persistent read_history.json.",
+  },
+  {
+    name: "blanc_installer",
+    role: "Setup Stub",
+    detail: "Single-file Windows Setup Wizard and clean uninstaller with 6 built-in languages and registry integration.",
+  },
+];
+
+const shortcuts = [
+  { key: "Space / Enter", action: "Advance dialogue" },
+  { key: "A", action: "Toggle Auto-Play" },
+  { key: "S", action: "Toggle Skip" },
+  { key: "B", action: "Dialogue Backlog" },
+  { key: "H", action: "Hide / show UI" },
+  { key: "F5 / F9", action: "Quick Save / Load" },
+];
+---
+
+<section id="architecture" class="border-b border-border-default bg-bg-secondary py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="grid gap-10 lg:grid-cols-2">
+      <!-- Workspace Crates -->
+      <div>
+        <div class="flex items-center gap-2">
+          <Box class="h-4 w-4 text-accent-primary" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+            Workspace Architecture
+          </span>
+        </div>
+        <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary">
+          Modular Rust Workspace
+        </h2>
+        <p class="mt-2 text-sm text-text-secondary">
+          Cleanly split into four focused Cargo crates for fast compilation and clear separation between editor and runtime.
+        </p>
+
+        <div class="mt-6 space-y-3">
+          {
+            crates.map((crate) => (
+              <div class="rounded-md border border-border-default bg-surface-primary p-4">
+                <div class="flex items-center justify-between">
+                  <code class="font-mono text-sm font-semibold text-accent-primary">{crate.name}</code>
+                  <span class="rounded border border-border-default bg-bg-secondary px-2 py-0.5 font-mono text-[11px] text-text-secondary">
+                    {crate.role}
+                  </span>
+                </div>
+                <p class="mt-1.5 text-xs leading-relaxed text-text-secondary sm:text-sm">
+                  {crate.detail}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Get Started + Runtime Shortcuts -->
+      <div id="get-started" class="flex flex-col justify-between gap-6">
+        <div class="rounded-lg border border-border-default bg-surface-primary p-5">
+          <div class="flex items-center gap-2">
+            <Terminal class="h-4 w-4 text-accent-primary" />
+            <h3 class="text-base font-semibold text-text-primary">Clone & Build Locally</h3>
+          </div>
+          <p class="mt-2 text-sm text-text-secondary">
+            Requires Rust 2021 edition (stable toolchain). Building the full workspace ensures the editor can package <code class="font-mono text-xs text-text-primary">blanc_runtime</code> and <code class="font-mono text-xs text-text-primary">blanc_installer</code>.
+          </p>
+          <pre class="mt-4 overflow-x-auto rounded-md border border-border-subtle bg-bg-primary p-3.5 font-mono text-xs leading-relaxed text-text-primary"><code>git clone https://github.com/Kharisdestianmaulana-hub/blanc-engine.git
+cd blanc-engine
+cargo build --workspace
+cargo run -p blanc_editor</code></pre>
+        </div>
+
+        <div class="rounded-lg border border-border-default bg-surface-primary p-5">
+          <div class="flex items-center gap-2">
+            <Keyboard class="h-4 w-4 text-accent-primary" />
+            <h3 class="text-base font-semibold text-text-primary">Runtime Keyboard Shortcuts</h3>
+          </div>
+          <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {
+              shortcuts.map((item) => (
+                <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2">
+                  <span class="text-xs text-text-secondary">{item.action}</span>
+                  <kbd class="rounded border border-border-default bg-surface-primary px-1.5 py-0.5 font-mono text-[11px] font-medium text-text-primary">
+                    {item.key}
+                  </kbd>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

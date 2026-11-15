@@ -1,0 +1,132 @@
+---
+import { Users, ExternalLink } from "lucide-astro";
+---
+
+<section id="contributors" class="border-b border-border-default bg-bg-primary py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <div class="max-w-2xl">
+        <div class="flex items-center gap-2">
+          <Users class="h-4 w-4 text-accent-primary" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+            Open Source Team
+          </span>
+        </div>
+        <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          Contributors
+        </h2>
+        <p class="mt-2 text-sm leading-relaxed text-text-secondary sm:text-base">
+          People building and maintaining Blanc Engine on GitHub.
+        </p>
+      </div>
+
+      <a
+        href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/graphs/contributors"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3.5 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover"
+      >
+        <span>View on GitHub</span>
+        <ExternalLink class="h-3.5 w-3.5 text-text-muted" />
+      </a>
+    </div>
+
+    <div id="contributors-grid" class="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div class="col-span-full rounded-lg border border-border-default bg-surface-primary p-5 text-sm text-text-secondary">
+        Loading contributors from GitHub...
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  interface GitHubContributor {
+    login: string;
+    avatar_url: string;
+    html_url: string;
+    contributions: number;
+    type: string;
+  }
+
+  const CONTRIBUTORS_API =
+    "https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/contributors?per_page=30";
+  const CONTRIBUTORS_URL =
+    "https://github.com/Kharisdestianmaulana-hub/blanc-engine/graphs/contributors";
+
+  const grid = document.getElementById("contributors-grid");
+
+  function escapeHtml(str: string): string {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  async function loadContributors() {
+    if (!grid) return;
+
+    try {
+      const res = await fetch(CONTRIBUTORS_API, {
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data: GitHubContributor[] = await res.json();
+      const contributors = data.filter((c) => c.type !== "Bot");
+
+      if (contributors.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full rounded-lg border border-border-default bg-surface-primary p-5 text-sm text-text-secondary">
+            No contributors found yet.
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = contributors
+        .map(
+          (user) => `
+          <a
+            href="${escapeHtml(user.html_url)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-3.5 rounded-lg border border-border-default bg-surface-primary p-4 transition-colors hover:border-accent-primary hover:bg-surface-hover"
+          >
+            <img
+              src="${escapeHtml(user.avatar_url)}"
+              alt="${escapeHtml(user.login)}"
+              class="h-11 w-11 shrink-0 rounded-md border border-border-subtle bg-bg-secondary object-cover"
+              loading="lazy"
+            />
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-sm font-semibold text-text-primary">${escapeHtml(user.login)}</p>
+              <p class="mt-0.5 font-mono text-xs text-text-muted">
+                ${user.contributions} commit${user.contributions === 1 ? "" : "s"}
+              </p>
+            </div>
+          </a>
+        `
+        )
+        .join("");
+    } catch {
+      grid.innerHTML = `
+        <div class="col-span-full flex flex-col justify-between gap-3 rounded-lg border border-border-default bg-surface-primary p-5 sm:flex-row sm:items-center">
+          <p class="text-sm text-text-secondary">
+            Unable to load contributors from GitHub API right now.
+          </p>
+          <a
+            href="${CONTRIBUTORS_URL}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-border-default bg-bg-secondary px-3.5 text-xs font-medium text-text-primary hover:bg-surface-hover"
+          >
+            Open GitHub Contributors
+          </a>
+        </div>
+      `;
+    }
+  }
+
+  loadContributors();
+</script>

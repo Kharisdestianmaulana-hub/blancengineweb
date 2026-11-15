@@ -1,0 +1,31 @@
+---
+import { Github } from "lucide-astro";
+---
+
+<footer class="fixed inset-x-0 bottom-0 z-40 h-11 border-t border-border-default bg-bg-secondary">
+  <div class="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+    <div class="flex min-w-0 items-center gap-2.5">
+      <img src="/logo.png" alt="Blanc Engine" class="h-5 w-5 shrink-0 rounded object-contain" />
+      <span class="truncate text-xs font-semibold text-text-primary">Blanc Engine</span>
+      <span class="hidden font-mono text-[11px] text-text-muted sm:inline">
+        · GPL-3.0-or-later
+      </span>
+    </div>
+
+    <div class="flex shrink-0 items-center gap-4 text-xs font-medium text-text-secondary">
+      <a href="/docs" class="hidden transition-colors hover:text-text-primary sm:inline">Docs</a>
+      <a href="/showcase" class="hidden transition-colors hover:text-text-primary sm:inline">Showcase</a>
+      <a href="/changelog" class="hidden transition-colors hover:text-text-primary sm:inline">Changelog</a>
+      <a href="/download" class="hidden transition-colors hover:text-text-primary sm:inline">Download</a>
+      <a
+        href="https://github.com/Kharisdestianmaulana-hub/blanc-engine"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 transition-colors hover:text-accent-primary"
+      >
+        <Github class="h-3.5 w-3.5" />
+        <span>GitHub</span>
+      </a>
+    </div>
+  </div>
+</footer>

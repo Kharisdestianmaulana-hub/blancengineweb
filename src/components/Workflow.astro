@@ -1,0 +1,74 @@
+---
+const steps = [
+  {
+    num: "01",
+    title: "Write Screenplay",
+    tag: "Story Setup",
+    description:
+      "Draft your story in a clean screenplay-style editor using natural tags for speakers, emotions, music, and branching choices, then convert directly into visual scenes.",
+    code: `[Scene: Rooftop_Sunset]
+[BGM: evening_breeze.ogg]
+Aoi (Happy): "Ready to ship our first visual novel?"
+[Choice: "Start right now" | "Review the flow"]`,
+  },
+  {
+    num: "02",
+    title: "Design Flow & UI",
+    tag: "Visual Editor",
+    description:
+      "Connect Main Menu, Scenes, Choices, and Endings in the Story Flow node graph, fine-tune action blocks in the timeline, and customize HUDs with Live Preview.",
+    code: `MainMenu -> IntroScene
+  ├─ Choice A -> Route_Studio
+  └─ Choice B -> Route_Rooftop -> Ending_01`,
+  },
+  {
+    num: "03",
+    title: "Export & Distribute",
+    tag: "Export Pipeline",
+    description:
+      "Package into a Portable build (Game.exe + encrypted game.bpack) or a single-file Windows Setup.exe with 6-language installer UI and clean uninstaller.",
+    code: `dist/
+├── MyVisualNovel_Setup.exe   (6-lang wizard)
+└── portable/
+    ├── Game.exe
+    └── game.bpack            (encrypted)`,
+  },
+];
+---
+
+<section id="workflow" class="border-b border-border-default bg-bg-secondary py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="max-w-2xl">
+      <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+        Creator Workflow
+      </span>
+      <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+        Three focused steps from draft to playable build
+      </h2>
+      <p class="mt-2 text-sm leading-relaxed text-text-secondary sm:text-base">
+        Designed so writers and artists can ship complete desktop games without touching boilerplate code.
+      </p>
+    </div>
+
+    <div class="mt-10 grid gap-5 lg:grid-cols-3">
+      {
+        steps.map((step) => (
+          <article class="flex flex-col justify-between rounded-lg border border-border-default bg-surface-primary p-5">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-sm font-semibold text-accent-primary">{step.num}</span>
+                <span class="rounded border border-border-default bg-bg-secondary px-2 py-0.5 font-mono text-[11px] text-text-secondary">
+                  {step.tag}
+                </span>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-text-primary">{step.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-text-secondary">{step.description}</p>
+            </div>
+
+            <pre class="mt-5 overflow-x-auto rounded-md border border-border-subtle bg-bg-primary p-3 font-mono text-xs leading-relaxed text-text-secondary"><code>{step.code}</code></pre>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

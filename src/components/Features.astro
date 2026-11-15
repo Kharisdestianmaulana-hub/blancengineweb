@@ -1,0 +1,93 @@
+---
+import {
+  GitBranch,
+  LayoutTemplate,
+  ListOrdered,
+  Languages,
+  Gamepad2,
+  PackageCheck,
+} from "lucide-astro";
+
+const features = [
+  {
+    icon: GitBranch,
+    title: "Story Flow Node Graph",
+    badge: "blanc_editor",
+    description:
+      "Interactive node-based graph connecting Main Menu, Scenes, Choice branches, Pause Menu, Settings, and Ending nodes.",
+  },
+  {
+    icon: LayoutTemplate,
+    title: "Live-Preview UI Designer",
+    badge: "blanc_editor",
+    description:
+      "Customize Title Screen, Gameplay HUD, Dialogue Box, Save/Load slots, and Backlog with instant live preview.",
+  },
+  {
+    icon: ListOrdered,
+    title: "Block-Based Scene Editor",
+    badge: "Timeline",
+    description:
+      "Arrange backgrounds, character expressions, dialogue, choices, wait timers, and screen effects (FadeIn, FlashWhite, Shake).",
+  },
+  {
+    icon: Languages,
+    title: "Localization & CSV Pipeline",
+    badge: "Multi-Lang",
+    description:
+      "Add unlimited languages, translate UI labels, character names, and dialogues, track completion, and Export/Import CSV.",
+  },
+  {
+    icon: Gamepad2,
+    title: "Standalone Rust Runtime",
+    badge: "blanc_runtime",
+    description:
+      "Typewriter text reveal, rodio BGM/SFX audio, Auto-Play, Skip (Read Only / All Text), Quick Save/Load, CJK fonts, and gamepad support.",
+  },
+  {
+    icon: PackageCheck,
+    title: "6-Language Windows Installer",
+    badge: "blanc_installer",
+    description:
+      "Generates a standalone Setup.exe with progress bar, 6 built-in wizard languages, Start Menu shortcuts, and clean uninstaller.",
+  },
+];
+---
+
+<section id="features" class="border-b border-border-default bg-bg-primary py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="max-w-2xl">
+      <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+        Capabilities
+      </span>
+      <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+        Everything needed for visual novel production
+      </h2>
+      <p class="mt-2 text-sm leading-relaxed text-text-secondary sm:text-base">
+        An integrated desktop suite separating visual authoring from a lightweight, distributable runtime player.
+      </p>
+    </div>
+
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        features.map((feat) => {
+          const Icon = feat.icon;
+          return (
+            <div class="rounded-lg border border-border-default bg-surface-primary p-5 transition-colors hover:border-accent-primary hover:bg-surface-hover">
+              <div class="flex items-center justify-between">
+                <div class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border-default bg-bg-secondary text-accent-primary">
+                  <Icon class="h-4 w-4" />
+                </div>
+                <span class="rounded border border-border-subtle bg-bg-secondary px-2 py-0.5 font-mono text-[11px] text-text-muted">
+                  {feat.badge}
+                </span>
+              </div>
+              <h3 class="mt-4 text-base font-semibold text-text-primary">{feat.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-text-secondary">{feat.description}</p>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
