@@ -109,7 +109,7 @@ import { Download, Terminal, Package, ExternalLink, RefreshCw } from "lucide-ast
 
     <!-- Build From Source & Distribution Formats -->
     <section class="mt-12 grid gap-6 border-t border-border-default pt-10 lg:grid-cols-2">
-      <div class="rounded-lg border border-border-default bg-surface-primary p-5">
+      <div class="min-w-0 rounded-lg border border-border-default bg-surface-primary p-5">
         <div class="flex items-center gap-2">
           <Terminal class="h-4 w-4 text-accent-primary" />
           <h2 class="text-base font-semibold text-text-primary">Build From Source (Rust)</h2>
@@ -123,7 +123,7 @@ cargo build --workspace --release
 cargo run -p blanc_editor --release</code></pre>
       </div>
 
-      <div class="rounded-lg border border-border-default bg-surface-primary p-5">
+      <div class="min-w-0 rounded-lg border border-border-default bg-surface-primary p-5">
         <div class="flex items-center gap-2">
           <Package class="h-4 w-4 text-accent-primary" />
           <h2 class="text-base font-semibold text-text-primary">Release Package Formats</h2>
@@ -297,9 +297,9 @@ cargo run -p blanc_editor --release</code></pre>
         return `
         <a
           href="${escapeHtml(asset.browser_download_url)}"
-          class="flex items-center justify-between gap-3 rounded-md border border-border-default bg-bg-secondary px-3.5 py-2.5 text-xs transition-colors hover:border-accent-primary hover:bg-surface-hover"
+          class="flex min-w-0 flex-wrap items-center justify-between gap-2 rounded-md border border-border-default bg-bg-secondary px-3.5 py-2.5 text-xs transition-colors hover:border-accent-primary hover:bg-surface-hover sm:flex-nowrap sm:gap-3"
         >
-          <span class="flex min-w-0 items-center gap-2">
+          <span class="flex min-w-0 flex-1 items-center gap-2">
             <span class="truncate font-mono font-medium text-text-primary">${escapeHtml(asset.name)}</span>
             ${typeBadge}
           </span>
