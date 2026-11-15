@@ -2,9 +2,9 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
-import { History, GitPullRequest, CheckCircle2 } from "lucide-astro";
+import { History, GitPullRequest, CheckCircle2, ExternalLink } from "lucide-astro";
 
-const releases = [
+const fallbackReleases = [
   {
     version: "0.1.0",
     date: "2026-11-14",
@@ -49,66 +49,86 @@ const releases = [
 
 <BaseLayout
   title="Changelog: Blanc Engine Releases & Contributing"
-  description="Version history, release notes, and contribution guide for Blanc Engine."
+  description="Live release notes from GitHub Releases, version history, and contribution guide for Blanc Engine."
 >
   <Navbar />
 
   <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12">
-    <div class="border-b border-border-default pb-6">
-      <div class="flex items-center gap-2">
-        <History class="h-4 w-4 text-accent-primary" />
-        <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
-          Release History
-        </span>
+    <div class="flex flex-col justify-between gap-4 border-b border-border-default pb-6 sm:flex-row sm:items-end">
+      <div>
+        <div class="flex items-center gap-2">
+          <History class="h-4 w-4 text-accent-primary" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+            Release History
+          </span>
+        </div>
+        <h1 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          Changelog & Contributing
+        </h1>
+        <p class="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary sm:text-base">
+          Synced with GitHub Releases, following Keep a Changelog and Semantic Versioning.
+        </p>
       </div>
-      <h1 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
-        Changelog & Contributing
-      </h1>
-      <p class="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary sm:text-base">
-        Following Keep a Changelog and Semantic Versioning.
-      </p>
+
+      <a
+        href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/releases"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover"
+      >
+        <span>GitHub Releases</span>
+        <ExternalLink class="h-3.5 w-3.5 text-text-muted" />
+      </a>
     </div>
 
     <div class="mt-8 grid gap-8 lg:grid-cols-12">
-      <!-- Left: Changelog Timeline -->
+      <!-- Left: Live GitHub Releases Changelog + Static Fallback -->
       <div class="space-y-6 lg:col-span-8">
-        {
-          releases.map((rel) => (
-            <article class="rounded-lg border border-border-default bg-surface-primary">
-              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-border-default bg-bg-secondary px-5 py-3.5">
-                <div class="flex items-center gap-2.5">
-                  <span class="font-mono text-base font-bold text-text-primary">v{rel.version}</span>
-                  <span class="rounded border border-status-success bg-bg-primary px-2 py-0.5 font-mono text-[11px] font-medium text-status-success">
-                    {rel.status}
-                  </span>
-                </div>
-                <span class="font-mono text-xs text-text-muted">{rel.date}</span>
-              </div>
+        <div id="changelog-releases" class="space-y-6">
+          <div class="rounded-lg border border-border-default bg-surface-primary p-5 text-sm text-text-secondary">
+            Loading release notes from GitHub...
+          </div>
+        </div>
 
-              <div class="space-y-5 p-5">
-                {
-                  rel.groups.map((group) => (
-                    <div>
-                      <h2 class="inline-block rounded border border-border-subtle bg-bg-secondary px-2 py-0.5 font-mono text-xs font-semibold text-accent-primary">
-                        {group.crate}
-                      </h2>
-                      <ul class="mt-2.5 space-y-2">
-                        {
-                          group.items.map((item) => (
-                            <li class="flex items-start gap-2 text-sm leading-relaxed text-text-secondary">
-                              <CheckCircle2 class="mt-0.5 h-4 w-4 shrink-0 text-status-success" />
-                              <span>{item}</span>
-                            </li>
-                          ))
-                        }
-                      </ul>
-                    </div>
-                  ))
-                }
-              </div>
-            </article>
-          ))
-        }
+        <div id="changelog-fallback" class="hidden space-y-6">
+          {
+            fallbackReleases.map((rel) => (
+              <article class="rounded-lg border border-border-default bg-surface-primary">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-border-default bg-bg-secondary px-5 py-3.5">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-mono text-base font-bold text-text-primary">v{rel.version}</span>
+                    <span class="rounded border border-status-success bg-bg-primary px-2 py-0.5 font-mono text-[11px] font-medium text-status-success">
+                      {rel.status}
+                    </span>
+                  </div>
+                  <span class="font-mono text-xs text-text-muted">{rel.date}</span>
+                </div>
+
+                <div class="space-y-5 p-5">
+                  {
+                    rel.groups.map((group) => (
+                      <div>
+                        <h2 class="inline-block rounded border border-border-subtle bg-bg-secondary px-2 py-0.5 font-mono text-xs font-semibold text-accent-primary">
+                          {group.crate}
+                        </h2>
+                        <ul class="mt-2.5 space-y-2">
+                          {
+                            group.items.map((item) => (
+                              <li class="flex items-start gap-2 text-sm leading-relaxed text-text-secondary">
+                                <CheckCircle2 class="mt-0.5 h-4 w-4 shrink-0 text-status-success" />
+                                <span>{item}</span>
+                              </li>
+                            ))
+                          }
+                        </ul>
+                      </div>
+                    ))
+                  }
+                </div>
+              </article>
+            ))
+          }
+        </div>
       </div>
 
       <!-- Right: Contributing Guide -->
@@ -136,9 +156,7 @@ cargo clippy --workspace</code></pre>
           </div>
 
           <a
-            href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/issues"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/feedback"
             class="mt-4 inline-flex w-full items-center justify-center rounded-md border border-border-default bg-bg-secondary px-3 py-2 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover"
           >
             Report Bug or Request Feature
@@ -150,3 +168,165 @@ cargo clippy --workspace</code></pre>
 
   <Footer />
 </BaseLayout>
+
+<script>
+  interface GitHubRelease {
+    tag_name: string;
+    name: string;
+    prerelease: boolean;
+    draft: boolean;
+    published_at: string;
+    html_url: string;
+    body: string;
+  }
+
+  const RELEASES_API = "https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases";
+  const container = document.getElementById("changelog-releases");
+  const fallback = document.getElementById("changelog-fallback");
+
+  function esc(str: string): string {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function formatDate(iso: string): string {
+    if (!iso) return "";
+    return new Date(iso).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  }
+
+  function renderMarkdown(md: string): string {
+    if (!md) return '<p class="text-sm text-text-muted">No release notes provided.</p>';
+    const lines = md.replace(/\r\n/g, "\n").split("\n");
+    const out: string[] = [];
+    let inList = false;
+
+    const inlineFormat = (text: string) => {
+      let s = esc(text);
+      s = s.replace(/`([^`]+)`/g, '<code class="rounded border border-border-subtle bg-bg-primary px-1.5 py-0.5 font-mono text-xs text-text-primary">$1</code>');
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-text-primary">$1</strong>');
+      s = s.replace(/\*([^*]+)\*/g, '<em class="italic">$1</em>');
+      return s;
+    };
+
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line) {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        continue;
+      }
+      if (/^---+$/.test(line)) {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        out.push('<hr class="my-4 border-border-subtle" />');
+        continue;
+      }
+      if (line.startsWith("### ")) {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        out.push(`<h3 class="mt-4 mb-2 inline-block rounded border border-border-subtle bg-bg-secondary px-2 py-0.5 font-mono text-xs font-semibold text-accent-primary">${inlineFormat(line.slice(4))}</h3>`);
+        continue;
+      }
+      if (line.startsWith("## ") || line.startsWith("# ")) {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        const content = line.replace(/^#+\s+/, "");
+        out.push(`<h2 class="mt-2 mb-2 text-base font-semibold text-text-primary">${inlineFormat(content)}</h2>`);
+        continue;
+      }
+      if (line.startsWith("- ") || line.startsWith("* ")) {
+        if (!inList) {
+          out.push('<ul class="my-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-text-secondary">');
+          inList = true;
+        }
+        out.push(`<li>${inlineFormat(line.slice(2))}</li>`);
+        continue;
+      }
+      if (inList) {
+        out.push("</ul>");
+        inList = false;
+      }
+      out.push(`<p class="my-2 text-sm leading-relaxed text-text-secondary">${inlineFormat(line)}</p>`);
+    }
+
+    if (inList) out.push("</ul>");
+    return out.join("");
+  }
+
+  async function loadChangelog() {
+    if (!container) return;
+
+    try {
+      const res = await fetch(RELEASES_API, {
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data: GitHubRelease[] = await res.json();
+      const releases = data.filter((r) => !r.draft);
+
+      if (releases.length === 0) {
+        container.classList.add("hidden");
+        fallback?.classList.remove("hidden");
+        return;
+      }
+
+      container.innerHTML = releases
+        .map((rel, idx) => {
+          const badgeClass = rel.prerelease
+            ? "border-status-warning text-status-warning"
+            : "border-status-success text-status-success";
+          const badgeText = rel.prerelease ? "Beta / Preview" : "Stable";
+
+          return `
+            <article class="rounded-lg border border-border-default bg-surface-primary">
+              <div class="flex flex-wrap items-center justify-between gap-3 border-b border-border-default bg-bg-secondary px-5 py-3.5">
+                <div class="flex flex-wrap items-center gap-2.5">
+                  ${
+                    idx === 0
+                      ? '<span class="rounded border border-accent-primary bg-accent-subtle px-2 py-0.5 font-mono text-[11px] font-semibold text-accent-primary">Latest</span>'
+                      : ""
+                  }
+                  <span class="font-mono text-base font-bold text-text-primary">${esc(rel.tag_name)}</span>
+                  <span class="rounded border ${badgeClass} bg-bg-primary px-2 py-0.5 font-mono text-[11px] font-medium">
+                    ${badgeText}
+                  </span>
+                </div>
+                <div class="flex items-center gap-3 font-mono text-xs text-text-muted">
+                  <span>${formatDate(rel.published_at)}</span>
+                  <a href="${esc(rel.html_url)}" target="_blank" rel="noopener noreferrer" class="text-accent-primary hover:underline">
+                    GitHub
+                  </a>
+                </div>
+              </div>
+
+              <div class="p-5">
+                ${renderMarkdown(rel.body)}
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+    } catch {
+      container.classList.add("hidden");
+      fallback?.classList.remove("hidden");
+    }
+  }
+
+  loadChangelog();
+</script>
