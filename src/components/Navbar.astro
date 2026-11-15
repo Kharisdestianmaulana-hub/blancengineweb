@@ -1,5 +1,5 @@
 ---
-import { Moon, Sun, Github, Download, Menu, X } from "lucide-astro";
+import { Moon, Sun, Github, Download, Menu, X, Star } from "lucide-astro";
 
 const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
 
@@ -65,6 +65,10 @@ const navLinks = [
       >
         <Github class="h-4 w-4 text-text-secondary" />
         <span>GitHub</span>
+        <span id="nav-star-wrap" class="hidden items-center gap-1 border-l border-border-default pl-2 font-mono text-xs text-text-secondary">
+          <Star class="h-3 w-3 text-status-warning" />
+          <span id="nav-star-count"></span>
+        </span>
       </a>
 
       <a
@@ -151,4 +155,37 @@ const navLinks = [
     openIcon?.classList.toggle("hidden", !isHidden);
     closeIcon?.classList.toggle("hidden", Boolean(isHidden));
   });
+
+  const starWrap = document.getElementById("nav-star-wrap");
+  const starCount = document.getElementById("nav-star-count");
+
+  async function loadNavbarStars() {
+    if (!starWrap || !starCount) return;
+    try {
+      const cached = sessionStorage.getItem("blanc-gh-stars");
+      if (cached !== null) {
+        starCount.textContent = cached;
+        starWrap.classList.remove("hidden");
+        starWrap.classList.add("inline-flex");
+        return;
+      }
+
+      const res = await fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine", {
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (typeof data.stargazers_count === "number") {
+        const val = String(data.stargazers_count);
+        sessionStorage.setItem("blanc-gh-stars", val);
+        starCount.textContent = val;
+        starWrap.classList.remove("hidden");
+        starWrap.classList.add("inline-flex");
+      }
+    } catch {
+      // Silently keep plain GitHub button when offline
+    }
+  }
+
+  loadNavbarStars();
 </script>
