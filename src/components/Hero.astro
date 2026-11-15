@@ -1,5 +1,5 @@
 ---
-import { ArrowRight, Github, Layers, Cpu, ShieldCheck } from "lucide-astro";
+import { ArrowRight, Github, Layers, Cpu, ShieldCheck, Download } from "lucide-astro";
 
 const previews = [
   {
@@ -52,6 +52,13 @@ const previews = [
             <ShieldCheck class="h-3.5 w-3.5" />
             GPL-3.0
           </span>
+          <a
+            href="/download"
+            class="inline-flex items-center gap-1.5 rounded border border-border-default bg-surface-primary px-2.5 py-1 font-mono text-xs font-medium text-text-primary transition-colors hover:border-accent-primary hover:bg-surface-hover"
+          >
+            <Download class="h-3.5 w-3.5 text-accent-primary" />
+            <span id="hero-total-downloads">0 downloads</span>
+          </a>
         </div>
 
         <!-- Headline -->
@@ -162,4 +169,42 @@ const previews = [
       });
     });
   });
+
+  const heroDownloadsEl = document.getElementById("hero-total-downloads");
+
+  async function loadHeroTotalDownloads() {
+    if (!heroDownloadsEl) return;
+    try {
+      const cached = sessionStorage.getItem("blanc-gh-total-downloads");
+      if (cached !== null) {
+        const n = Number(cached);
+        heroDownloadsEl.textContent = `${n.toLocaleString("en-US")} download${n === 1 ? "" : "s"}`;
+        return;
+      }
+
+      const res = await fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases", {
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      if (!res.ok) return;
+      const releases = await res.json();
+      if (!Array.isArray(releases)) return;
+
+      let total = 0;
+      for (const rel of releases) {
+        if (rel.draft || !Array.isArray(rel.assets)) continue;
+        for (const asset of rel.assets) {
+          if (typeof asset.download_count === "number") {
+            total += asset.download_count;
+          }
+        }
+      }
+
+      sessionStorage.setItem("blanc-gh-total-downloads", String(total));
+      heroDownloadsEl.textContent = `${total.toLocaleString("en-US")} download${total === 1 ? "" : "s"}`;
+    } catch {
+      // Keep fallback count
+    }
+  }
+
+  loadHeroTotalDownloads();
 </script>
