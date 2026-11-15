@@ -76,12 +76,14 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans);
 }
 
 body {
+  overflow-x: clip;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
