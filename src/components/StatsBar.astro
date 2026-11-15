@@ -1,0 +1,90 @@
+---
+import { Tag, Star, Cpu, Scale } from "lucide-astro";
+---
+
+<section class="border-b border-border-default bg-bg-secondary py-5" aria-label="Project highlights">
+  <div class="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 sm:px-6 lg:grid-cols-4">
+    <a
+      href="/download"
+      class="flex items-center gap-3 rounded-md border border-border-default bg-surface-primary px-4 py-3 transition-colors hover:border-accent-primary hover:bg-surface-hover"
+    >
+      <Tag class="h-4 w-4 shrink-0 text-accent-primary" />
+      <div class="min-w-0">
+        <p class="font-mono text-[11px] uppercase tracking-wider text-text-muted">Latest Release</p>
+        <p id="stat-release" class="truncate font-mono text-sm font-semibold text-text-primary">v0.1.0-beta</p>
+      </div>
+    </a>
+
+    <a
+      href="https://github.com/Kharisdestianmaulana-hub/blanc-engine"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center gap-3 rounded-md border border-border-default bg-surface-primary px-4 py-3 transition-colors hover:border-accent-primary hover:bg-surface-hover"
+    >
+      <Star class="h-4 w-4 shrink-0 text-status-warning" />
+      <div class="min-w-0">
+        <p class="font-mono text-[11px] uppercase tracking-wider text-text-muted">GitHub Stars</p>
+        <p id="stat-stars" class="truncate font-mono text-sm font-semibold text-text-primary">Open Source</p>
+      </div>
+    </a>
+
+    <a
+      href="#architecture"
+      class="flex items-center gap-3 rounded-md border border-border-default bg-surface-primary px-4 py-3 transition-colors hover:border-accent-primary hover:bg-surface-hover"
+    >
+      <Cpu class="h-4 w-4 shrink-0 text-status-info" />
+      <div class="min-w-0">
+        <p class="font-mono text-[11px] uppercase tracking-wider text-text-muted">Engine Stack</p>
+        <p class="truncate font-mono text-sm font-semibold text-text-primary">Rust + Iced 0.13</p>
+      </div>
+    </a>
+
+    <a
+      href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/blob/main/LICENSE"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="flex items-center gap-3 rounded-md border border-border-default bg-surface-primary px-4 py-3 transition-colors hover:border-accent-primary hover:bg-surface-hover"
+    >
+      <Scale class="h-4 w-4 shrink-0 text-status-success" />
+      <div class="min-w-0">
+        <p class="font-mono text-[11px] uppercase tracking-wider text-text-muted">License</p>
+        <p class="truncate font-mono text-sm font-semibold text-text-primary">GPL-3.0-or-later</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<script>
+  const REPO_API = "https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine";
+  const RELEASES_API = "https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases?per_page=1";
+
+  const starEl = document.getElementById("stat-stars");
+  const releaseEl = document.getElementById("stat-release");
+
+  async function loadStats() {
+    try {
+      const [repoRes, relRes] = await Promise.all([
+        fetch(REPO_API, { headers: { Accept: "application/vnd.github+json" } }),
+        fetch(RELEASES_API, { headers: { Accept: "application/vnd.github+json" } }),
+      ]);
+
+      if (repoRes.ok && starEl) {
+        const repo = await repoRes.json();
+        if (typeof repo.stargazers_count === "number") {
+          starEl.textContent = `${repo.stargazers_count} star${repo.stargazers_count === 1 ? "" : "s"}`;
+        }
+      }
+
+      if (relRes.ok && releaseEl) {
+        const rels = await relRes.json();
+        if (Array.isArray(rels) && rels[0]?.tag_name) {
+          releaseEl.textContent = rels[0].tag_name;
+        }
+      }
+    } catch {
+      // Keep fallback labels when offline or rate-limited
+    }
+  }
+
+  loadStats();
+</script>
