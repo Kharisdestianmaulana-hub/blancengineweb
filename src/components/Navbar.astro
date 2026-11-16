@@ -140,10 +140,10 @@ const navLinks = [
     </div>
   </div>
 
-  <!-- Sticky Release Announcement Banner (below navbar, hidden in scrolled pill mode) -->
+  <!-- Sticky Release Announcement Banner (connects to pill navbar on desktop scroll) -->
   <div
     id="release-banner"
-    class="hidden border-b border-border-default bg-accent-subtle"
+    class="hidden w-full border-b border-border-default bg-accent-subtle transition-all duration-200"
     role="region"
     aria-label="Latest release announcement"
   >
@@ -153,7 +153,7 @@ const navLinks = [
           id="release-banner-close"
           type="button"
           aria-label="Dismiss release announcement"
-          class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded border border-border-default bg-surface-primary text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+          class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border-default bg-surface-primary text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
         >
           <X class="h-3.5 w-3.5" />
         </button>
@@ -174,7 +174,7 @@ const navLinks = [
 
       <a
         href="/download"
-        class="inline-flex h-7 shrink-0 items-center gap-1 rounded bg-accent-primary px-2.5 text-[11px] font-semibold text-text-on-accent transition-colors hover:bg-accent-hover sm:px-3 sm:text-xs"
+        class="inline-flex h-7 shrink-0 items-center gap-1 rounded-full bg-accent-primary px-3 text-[11px] font-semibold text-text-on-accent transition-colors hover:bg-accent-hover sm:text-xs"
       >
         <span>Download</span>
         <ArrowRight class="h-3 w-3" />
@@ -217,6 +217,8 @@ const navLinks = [
     const isDesktop = window.innerWidth >= 768;
     const isScrolled = window.scrollY > 24;
     const pillActive = isDesktop && isScrolled;
+    const connectedPill = pillActive && bannerEligible;
+    const singlePill = pillActive && !bannerEligible;
 
     if (siteHeader && navShell && navInner) {
       siteHeader.classList.toggle("md:pt-3", pillActive);
@@ -224,8 +226,10 @@ const navLinks = [
 
       navShell.classList.toggle("md:mx-auto", pillActive);
       navShell.classList.toggle("md:max-w-5xl", pillActive);
-      navShell.classList.toggle("md:rounded-full", pillActive);
       navShell.classList.toggle("md:border", pillActive);
+      navShell.classList.toggle("md:rounded-full", singlePill);
+      navShell.classList.toggle("md:rounded-t-3xl", connectedPill);
+      navShell.classList.toggle("md:border-b-0", connectedPill);
       navShell.classList.toggle("border-b", !pillActive);
 
       navInner.classList.toggle("h-14", pillActive);
@@ -237,8 +241,13 @@ const navLinks = [
       navDownloadBtn.classList.toggle("rounded-md", !pillActive);
     }
 
-    if (releaseBanner && bannerEligible) {
-      releaseBanner.classList.toggle("hidden", pillActive);
+    if (releaseBanner) {
+      releaseBanner.classList.toggle("hidden", !bannerEligible);
+      releaseBanner.classList.toggle("md:mx-auto", connectedPill);
+      releaseBanner.classList.toggle("md:max-w-5xl", connectedPill);
+      releaseBanner.classList.toggle("md:border", connectedPill);
+      releaseBanner.classList.toggle("md:rounded-b-3xl", connectedPill);
+      releaseBanner.classList.toggle("border-b", !connectedPill);
     }
   }
 
@@ -268,7 +277,7 @@ const navLinks = [
     releaseBannerClose?.addEventListener("click", () => {
       bannerEligible = false;
       localStorage.setItem("blanc-dismissed-release", tag);
-      releaseBanner.classList.add("hidden");
+      updateNavbarMode();
     });
   }
 
