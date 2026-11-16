@@ -8,6 +8,8 @@ import { Download, Terminal, Package, ExternalLink, RefreshCw, PlayCircle } from
 <BaseLayout
   title="Download: Blanc Engine Releases"
   description="Download the latest Stable, Beta/Preview, and previous versions of Blanc Engine from GitHub Releases."
+  ogImage="/screenshots/SS_SETUP_WIZARD.png"
+  breadcrumbs={[{ name: "Home", path: "/" }, { name: "Download", path: "/download/" }]}
 >
   <Navbar />
 
@@ -483,11 +485,28 @@ cargo run -p blanc_editor --release</code></pre>
 
   async function loadReleases() {
     try {
-      const res = await fetch(API_URL, {
-        headers: { Accept: "application/vnd.github+json" },
-      });
-      if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
-      const data: GitHubRelease[] = await res.json();
+      let data: GitHubRelease[] = [];
+
+      try {
+        const statsRes = await fetch("/api/github-stats");
+        if (statsRes.ok) {
+          const stats = await statsRes.json();
+          if (Array.isArray(stats.releases) && stats.releases.length > 0) {
+            data = stats.releases;
+          }
+        }
+      } catch {
+        // Fallback to direct GitHub API in local dev
+      }
+
+      if (data.length === 0) {
+        const res = await fetch(API_URL, {
+          headers: { Accept: "application/vnd.github+json" },
+        });
+        if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
+        data = await res.json();
+      }
+
       allReleases = data.filter((r) => !r.draft);
       renderLatest(allReleases);
       renderList();

@@ -157,16 +157,34 @@ const previews = [
 
   const heroDownloadsEl = document.getElementById("hero-total-downloads");
 
+  function setDownloadsText(n: number) {
+    if (!heroDownloadsEl) return;
+    heroDownloadsEl.textContent = `${n.toLocaleString("en-US")} download${n === 1 ? "" : "s"}`;
+  }
+
   async function loadHeroTotalDownloads() {
     if (!heroDownloadsEl) return;
-    try {
-      const cached = sessionStorage.getItem("blanc-gh-total-downloads");
-      if (cached !== null) {
-        const n = Number(cached);
-        heroDownloadsEl.textContent = `${n.toLocaleString("en-US")} download${n === 1 ? "" : "s"}`;
-        return;
-      }
 
+    const savedLast = localStorage.getItem("blanc-last-total-downloads");
+    if (savedLast !== null && !Number.isNaN(Number(savedLast))) {
+      setDownloadsText(Number(savedLast));
+    }
+
+    try {
+      const apiRes = await fetch("/api/github-stats");
+      if (apiRes.ok) {
+        const stats = await apiRes.json();
+        if (typeof stats.totalDownloads === "number") {
+          localStorage.setItem("blanc-last-total-downloads", String(stats.totalDownloads));
+          setDownloadsText(stats.totalDownloads);
+          return;
+        }
+      }
+    } catch {
+      // Fallback to direct GitHub API in local dev
+    }
+
+    try {
       const res = await fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases", {
         headers: { Accept: "application/vnd.github+json" },
       });
@@ -184,10 +202,10 @@ const previews = [
         }
       }
 
-      sessionStorage.setItem("blanc-gh-total-downloads", String(total));
-      heroDownloadsEl.textContent = `${total.toLocaleString("en-US")} download${total === 1 ? "" : "s"}`;
+      localStorage.setItem("blanc-last-total-downloads", String(total));
+      setDownloadsText(total);
     } catch {
-      // Keep fallback count
+      // Keep last known count
     }
   }
 

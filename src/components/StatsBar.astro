@@ -48,6 +48,19 @@ import { Tag, Sparkles, HeartHandshake } from "lucide-astro";
   async function loadLatestReleaseTag() {
     if (!releaseEl) return;
     try {
+      const apiRes = await fetch("/api/github-stats");
+      if (apiRes.ok) {
+        const stats = await apiRes.json();
+        if (typeof stats.latestTag === "string" && stats.latestTag) {
+          releaseEl.textContent = stats.latestTag;
+          return;
+        }
+      }
+    } catch {
+      // Fallback below
+    }
+
+    try {
       const res = await fetch(RELEASES_API, {
         headers: { Accept: "application/vnd.github+json" },
       });

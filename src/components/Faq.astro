@@ -28,7 +28,22 @@ const faqs = [
       "Yes, Blanc Engine is completely free and open-source (licensed under GPL-3.0-or-later). Download the latest release for Windows and start creating right away.",
   },
 ];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer,
+    },
+  })),
+};
 ---
+
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
 <section id="faq" class="bg-bg-secondary py-16 sm:py-20">
   <div class="mx-auto max-w-4xl px-4 sm:px-6">

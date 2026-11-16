@@ -22,7 +22,7 @@ const navLinks = [
         <img src="/logo.png" alt="Blanc Engine Logo" class="h-8 w-8 rounded-md object-contain" />
         <span class="text-base font-semibold tracking-tight">Blanc Engine</span>
         <span id="nav-version-tag" class="hidden rounded border border-border-default bg-accent-subtle px-1.5 py-0.5 font-mono text-[11px] font-medium text-accent-primary sm:inline-block">
-          v0.1.0-beta
+          v0.1.0
         </span>
       </a>
 
@@ -282,65 +282,73 @@ const navLinks = [
   }
 
   async function loadNavbarMeta() {
-    if (starWrap && starCount) {
+    let stars: number | null = null;
+    let latestTag: string | null = null;
+
+    try {
+      const apiRes = await fetch("/api/github-stats");
+      if (apiRes.ok) {
+        const stats = await apiRes.json();
+        if (typeof stats.stars === "number") stars = stats.stars;
+        if (typeof stats.latestTag === "string" && stats.latestTag) latestTag = stats.latestTag;
+      }
+    } catch {
+      // Fallback below
+    }
+
+    if (stars === null || !latestTag) {
       try {
-        const cachedStars = sessionStorage.getItem("blanc-gh-stars");
-        if (cachedStars !== null) {
-          starCount.textContent = cachedStars;
-          starWrap.classList.remove("hidden");
-          starWrap.classList.add("inline-flex");
-        } else {
-          const res = await fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine", {
-            headers: { Accept: "application/vnd.github+json" },
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (typeof data.stargazers_count === "number") {
-              const val = String(data.stargazers_count);
-              sessionStorage.setItem("blanc-gh-stars", val);
-              starCount.textContent = val;
-              starWrap.classList.remove("hidden");
-              starWrap.classList.add("inline-flex");
-            }
+        const cachedRaw = sessionStorage.getItem("blanc-gh-meta-v3");
+        if (cachedRaw) {
+          const parsed = JSON.parse(cachedRaw) as { stars?: number; tag?: string; ts: number };
+          if (Date.now() - parsed.ts < 2 * 60 * 1000) {
+            if (stars === null && typeof parsed.stars === "number") stars = parsed.stars;
+            if (!latestTag && parsed.tag) latestTag = parsed.tag;
           }
         }
       } catch {
-        // Silently keep plain GitHub button when offline
+        // Ignore storage errors
       }
     }
 
-    try {
-      let latestTag = "";
-      const cachedRaw = sessionStorage.getItem("blanc-gh-release-tag-v2");
-      if (cachedRaw) {
-        const parsed = JSON.parse(cachedRaw) as { tag: string; ts: number };
-        if (parsed?.tag && Date.now() - parsed.ts < 5 * 60 * 1000) {
-          latestTag = parsed.tag;
+    if (stars === null || !latestTag) {
+      try {
+        const [repoRes, relRes] = await Promise.all([
+          fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine", {
+            headers: { Accept: "application/vnd.github+json" },
+          }),
+          fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases?per_page=1", {
+            headers: { Accept: "application/vnd.github+json" },
+          }),
+        ]);
+        if (repoRes.ok) {
+          const repo = await repoRes.json();
+          if (typeof repo.stargazers_count === "number") stars = repo.stargazers_count;
         }
-      }
-
-      if (!latestTag) {
-        const relRes = await fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases?per_page=1", {
-          headers: { Accept: "application/vnd.github+json" },
-        });
         if (relRes.ok) {
           const rels = await relRes.json();
-          if (Array.isArray(rels) && rels[0]?.tag_name) {
-            latestTag = String(rels[0].tag_name);
-            sessionStorage.setItem(
-              "blanc-gh-release-tag-v2",
-              JSON.stringify({ tag: latestTag, ts: Date.now() })
-            );
-          }
+          if (Array.isArray(rels) && rels[0]?.tag_name) latestTag = String(rels[0].tag_name);
         }
+        if (stars !== null || latestTag) {
+          sessionStorage.setItem(
+            "blanc-gh-meta-v3",
+            JSON.stringify({ stars, tag: latestTag, ts: Date.now() })
+          );
+        }
+      } catch {
+        // Keep fallback
       }
+    }
 
-      if (latestTag) {
-        if (navVersionTag) navVersionTag.textContent = latestTag;
-        showReleaseBannerIfNeeded(latestTag);
-      }
-    } catch {
-      // Keep fallback tag
+    if (starWrap && starCount && stars !== null) {
+      starCount.textContent = String(stars);
+      starWrap.classList.remove("hidden");
+      starWrap.classList.add("inline-flex");
+    }
+
+    if (latestTag) {
+      if (navVersionTag) navVersionTag.textContent = latestTag;
+      showReleaseBannerIfNeeded(latestTag);
     }
   }
 
