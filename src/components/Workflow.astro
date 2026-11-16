@@ -1,37 +1,42 @@
 ---
+import { Check } from "lucide-astro";
+
 const steps = [
   {
     num: "01",
-    title: "Write Screenplay",
+    title: "Write Your Story",
     tag: "Story Setup",
     description:
-      "Draft your story in a clean screenplay-style editor using natural tags for speakers, emotions, music, and branching choices, then convert directly into visual scenes.",
-    code: `[Scene: Rooftop_Sunset]
-[BGM: evening_breeze.ogg]
-Aoi (Happy): "Ready to ship our first visual novel?"
-[Choice: "Start right now" | "Review the flow"]`,
+      "Type your script like a simple movie screenplay with speaker names, emotions, background music, and player choices.",
+    highlights: [
+      "Natural dialogue format, no coding syntax",
+      "Automatic conversion into editable visual scenes",
+      "Built-in support for branching choices",
+    ],
   },
   {
     num: "02",
-    title: "Design Flow & UI",
+    title: "Design Flow & Menus",
     tag: "Visual Editor",
     description:
-      "Connect Main Menu, Scenes, Choices, and Endings in the Story Flow node graph, fine-tune action blocks in the timeline, and customize HUDs with Live Preview.",
-    code: `MainMenu -> IntroScene
-  ├─ Choice A -> Route_Studio
-  └─ Choice B -> Route_Rooftop -> Ending_01`,
+      "Connect chapters and endings on a visual map, adjust character expressions, and style your Title Screen and Dialogue Box with live preview.",
+    highlights: [
+      "Drag-and-drop Story Flow map for routes and endings",
+      "Live preview for Title Screen, HUD, and Save/Load menus",
+      "Easy visual effects like Fade, Flash, and Shake",
+    ],
   },
   {
     num: "03",
-    title: "Export & Distribute",
-    tag: "Export Pipeline",
+    title: "Share Your Game",
+    tag: "One-Click Export",
     description:
-      "Package into a Portable build (Game.exe + encrypted game.bpack) or a single-file Windows Setup.exe with 6-language installer UI and clean uninstaller.",
-    code: `dist/
-├── MyVisualNovel_Setup.exe   (6-lang wizard)
-└── portable/
-    ├── Game.exe
-    └── game.bpack            (encrypted)`,
+      "Export a standalone Windows game or a branded Setup installer so anyone can play your visual novel right away.",
+    highlights: [
+      "Portable build for instant play from a folder",
+      "Windows Setup.exe with custom icon and uninstaller",
+      "Built-in multi-language support via Excel/CSV",
+    ],
   },
 ];
 ---
@@ -40,13 +45,13 @@ Aoi (Happy): "Ready to ship our first visual novel?"
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
     <div class="max-w-2xl">
       <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
-        Creator Workflow
+        How It Works
       </span>
       <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
-        Three focused steps from draft to playable build
+        Three simple steps from story idea to playable game
       </h2>
       <p class="mt-2 text-sm leading-relaxed text-text-secondary sm:text-base">
-        Designed so writers and artists can ship complete desktop games without touching boilerplate code.
+        Made for writers, artists, and indie creators who want to focus on storytelling.
       </p>
     </div>
 
@@ -65,7 +70,16 @@ Aoi (Happy): "Ready to ship our first visual novel?"
               <p class="mt-2 text-sm leading-relaxed text-text-secondary">{step.description}</p>
             </div>
 
-            <pre class="mt-5 overflow-x-auto rounded-md border border-border-subtle bg-bg-primary p-3 font-mono text-xs leading-relaxed text-text-secondary"><code>{step.code}</code></pre>
+            <ul class="mt-5 space-y-2 border-t border-border-subtle pt-4">
+              {
+                step.highlights.map((item) => (
+                  <li class="flex items-start gap-2 text-xs leading-relaxed text-text-secondary">
+                    <Check class="mt-0.5 h-3.5 w-3.5 shrink-0 text-status-success" />
+                    <span>{item}</span>
+                  </li>
+                ))
+              }
+            </ul>
           </article>
         ))
       }
