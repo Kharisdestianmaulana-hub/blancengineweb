@@ -1,5 +1,5 @@
 ---
-import { ArrowRight, Github, Layers, Cpu, ShieldCheck, Download } from "lucide-astro";
+import { ArrowRight, Github, Download } from "lucide-astro";
 
 const previews = [
   {
@@ -38,31 +38,8 @@ const previews = [
     <div class="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
       <!-- Left: Copy & Actions -->
       <div class="min-w-0 lg:col-span-5">
-        <!-- Top Badges -->
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="inline-flex items-center gap-1.5 rounded border border-accent-primary bg-accent-subtle px-2.5 py-1 font-mono text-xs font-medium text-accent-primary">
-            <Layers class="h-3.5 w-3.5" />
-            No-Code Suite
-          </span>
-          <span class="inline-flex items-center gap-1.5 rounded border border-border-default bg-surface-primary px-2.5 py-1 font-mono text-xs font-medium text-text-secondary">
-            <Cpu class="h-3.5 w-3.5" />
-            Rust 2021 · Iced 0.13
-          </span>
-          <span class="inline-flex items-center gap-1.5 rounded border border-border-default bg-surface-primary px-2.5 py-1 font-mono text-xs font-medium text-status-success">
-            <ShieldCheck class="h-3.5 w-3.5" />
-            GPL-3.0
-          </span>
-          <a
-            href="/download"
-            class="inline-flex items-center gap-1.5 rounded border border-border-default bg-surface-primary px-2.5 py-1 font-mono text-xs font-medium text-text-primary transition-colors hover:border-accent-primary hover:bg-surface-hover"
-          >
-            <Download class="h-3.5 w-3.5 text-accent-primary" />
-            <span id="hero-total-downloads">0 downloads</span>
-          </a>
-        </div>
-
         <!-- Headline -->
-        <h1 class="mt-6 text-3xl font-bold leading-tight tracking-tight text-text-primary sm:text-4xl xl:text-5xl">
+        <h1 class="text-3xl font-bold leading-tight tracking-tight text-text-primary sm:text-4xl xl:text-5xl">
           Build Visual Novels From Screenplay to <span class="text-accent-primary">Setup.exe</span>, Zero Code.
         </h1>
         <p class="mt-4 text-base leading-relaxed text-text-secondary">
@@ -88,6 +65,16 @@ const previews = [
             <span>Explore on GitHub</span>
           </a>
         </div>
+
+        <!-- Plain Metadata Text -->
+        <p class="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs text-text-muted">
+          <span>No-Code Visual Novel Suite</span>
+          <span aria-hidden="true">·</span>
+          <a href="/download" class="inline-flex items-center gap-1.5 text-text-secondary transition-colors hover:text-accent-primary">
+            <Download class="h-3.5 w-3.5 text-accent-primary" />
+            <span id="hero-total-downloads">0 downloads</span>
+          </a>
+        </p>
       </div>
 
       <!-- Right: Flat Interactive Screenshot Showcase -->
