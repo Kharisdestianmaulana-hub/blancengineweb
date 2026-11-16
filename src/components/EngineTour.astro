@@ -1,0 +1,183 @@
+---
+import { FileText, GitBranch, LayoutTemplate, Languages, PackageCheck, Check } from "lucide-astro";
+
+const modules = [
+  {
+    id: "story",
+    label: "Story Setup & Scenes",
+    icon: FileText,
+    src: "/screenshots/SS_STORY_SETUP.png",
+    alt: "Blanc Engine Story Setup Screenplay Editor",
+    summary: "Write dialogue in screenplay syntax or arrange visual action blocks on a timeline.",
+    points: [
+      "Convert screenplay tags into .bscene files in one click.",
+      "Fine-tune sprites, expressions, timers, and screen effects.",
+    ],
+  },
+  {
+    id: "flow",
+    label: "Story Flow Graph",
+    icon: GitBranch,
+    src: "/screenshots/SS_STORYFLOW.png",
+    alt: "Blanc Engine Story Flow Node Graph",
+    summary: "Connect menus, scenes, choices, and endings on an interactive node canvas.",
+    points: [
+      "Visual branching wires with grid snap and auto-align.",
+      "Instant overview of every route and ending.",
+    ],
+  },
+  {
+    id: "ui",
+    label: "Live UI Designer",
+    icon: LayoutTemplate,
+    src: "/screenshots/SS_UI_DESIGNER.png",
+    alt: "Blanc Engine Live Preview UI Designer",
+    summary: "Customize your Title Screen, Dialogue Box, and HUD with real-time preview.",
+    points: [
+      "Style Save/Load slots, Pause, Settings, and Backlog screens.",
+      "Zero CSS or layout code required.",
+    ],
+  },
+  {
+    id: "l10n",
+    label: "Localization & CSV",
+    icon: Languages,
+    src: "/screenshots/SS_LOCALIZATION.png",
+    alt: "Blanc Engine Localization Manager",
+    summary: "Support unlimited languages with built-in string sync and CSV import/export.",
+    points: [
+      "Edit translations in Excel or Google Sheets via RFC-4180 CSV.",
+      "Runtime language switcher with automatic CJK font loading.",
+    ],
+  },
+  {
+    id: "export",
+    label: "Export & Setup.exe",
+    icon: PackageCheck,
+    src: "/screenshots/SS_EXPORT_GAME.png",
+    alt: "Blanc Engine Export Game Pipeline",
+    summary: "Package finished games into Portable builds or a 6-language Windows Setup.exe.",
+    points: [
+      "Encrypted game.bpack asset archive protection.",
+      "Includes custom icon, Terms/Privacy editor, and clean uninstaller.",
+    ],
+  },
+];
+---
+
+<section id="features" class="border-b border-border-default bg-bg-primary py-16 sm:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="max-w-2xl">
+      <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+        Interactive Tour
+      </span>
+      <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+        Explore every module inside the editor
+      </h2>
+    </div>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-12">
+      <!-- Left: Interactive Module Tabs -->
+      <div class="flex flex-col gap-2 lg:col-span-4" role="tablist" aria-label="Blanc Engine modules">
+        {
+          modules.map((mod, idx) => {
+            const Icon = mod.icon;
+            return (
+              <button
+                type="button"
+                role="tab"
+                data-tour-tab={mod.id}
+                aria-selected={idx === 0 ? "true" : "false"}
+                class:list={[
+                  "flex items-start gap-3 rounded-lg border p-4 text-left transition-colors cursor-pointer",
+                  idx === 0
+                    ? "border-accent-primary bg-accent-subtle text-text-primary"
+                    : "border-border-default bg-surface-primary text-text-secondary hover:bg-surface-hover hover:text-text-primary",
+                ]}
+              >
+                <Icon
+                  class:list={[
+                    "mt-0.5 h-4 w-4 shrink-0",
+                    idx === 0 ? "text-accent-primary" : "text-text-muted",
+                  ]}
+                  data-tour-icon
+                />
+                <div class="min-w-0">
+                  <p class="text-sm font-semibold">{mod.label}</p>
+                  <p class="mt-1 line-clamp-2 text-xs text-text-secondary">{mod.summary}</p>
+                </div>
+              </button>
+            );
+          })
+        }
+      </div>
+
+      <!-- Right: Screenshot & Concise Details -->
+      <div class="min-w-0 lg:col-span-8">
+        {
+          modules.map((mod, idx) => (
+            <div
+              data-tour-panel={mod.id}
+              class:list={[
+                "rounded-lg border border-border-default bg-surface-primary p-4",
+                idx !== 0 && "hidden",
+              ]}
+            >
+              <div class="overflow-hidden rounded-md border border-border-subtle bg-bg-primary">
+                <img
+                  src={mod.src}
+                  alt={mod.alt}
+                  class="aspect-video w-full object-cover object-top"
+                  loading={idx === 0 ? "eager" : "lazy"}
+                />
+              </div>
+
+              <div class="mt-4 flex flex-col gap-2 border-t border-border-subtle pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <ul class="space-y-1.5">
+                  {
+                    mod.points.map((pt) => (
+                      <li class="flex items-start gap-2 text-xs text-text-secondary sm:text-sm">
+                        <Check class="mt-0.5 h-4 w-4 shrink-0 text-status-success" />
+                        <span>{pt}</span>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const tourTabs = document.querySelectorAll<HTMLButtonElement>("[data-tour-tab]");
+  const tourPanels = document.querySelectorAll<HTMLElement>("[data-tour-panel]");
+
+  tourTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.getAttribute("data-tour-tab");
+
+      tourTabs.forEach((t) => {
+        const active = t.getAttribute("data-tour-tab") === target;
+        t.setAttribute("aria-selected", String(active));
+        t.classList.toggle("border-accent-primary", active);
+        t.classList.toggle("bg-accent-subtle", active);
+        t.classList.toggle("text-text-primary", active);
+        t.classList.toggle("border-border-default", !active);
+        t.classList.toggle("bg-surface-primary", !active);
+        t.classList.toggle("text-text-secondary", !active);
+
+        const icon = t.querySelector("[data-tour-icon]");
+        icon?.classList.toggle("text-accent-primary", active);
+        icon?.classList.toggle("text-text-muted", !active);
+      });
+
+      tourPanels.forEach((panel) => {
+        panel.classList.toggle("hidden", panel.getAttribute("data-tour-panel") !== target);
+      });
+    });
+  });
+</script>

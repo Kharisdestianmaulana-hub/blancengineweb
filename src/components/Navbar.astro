@@ -1,5 +1,5 @@
 ---
-import { Moon, Sun, Github, Download, Menu, X, Star } from "lucide-astro";
+import { Moon, Sun, Github, Download, Menu, X, Star, ArrowRight } from "lucide-astro";
 
 const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
 
@@ -95,6 +95,48 @@ const navLinks = [
     </div>
   </div>
 
+  <!-- Sticky Release Announcement Banner (below navbar) -->
+  <div
+    id="release-banner"
+    class="hidden border-t border-border-default bg-accent-subtle"
+    role="region"
+    aria-label="Latest release announcement"
+  >
+    <div class="mx-auto flex min-h-10 max-w-7xl items-center justify-between gap-2.5 px-4 py-1.5 sm:px-6">
+      <div class="flex min-w-0 flex-1 items-center gap-2.5">
+        <button
+          id="release-banner-close"
+          type="button"
+          aria-label="Dismiss release announcement"
+          class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded border border-border-default bg-surface-primary text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+        >
+          <X class="h-3.5 w-3.5" />
+        </button>
+
+        <p class="min-w-0 truncate text-xs text-text-primary">
+          <span class="font-mono font-semibold text-accent-primary sm:hidden">
+            New: <span id="release-banner-tag-mobile">v0.1.0-beta</span>
+          </span>
+          <span class="hidden sm:inline">
+            <span class="mr-1.5 rounded border border-accent-primary bg-surface-primary px-1.5 py-0.5 font-mono text-[11px] font-semibold text-accent-primary">
+              New Release
+            </span>
+            <span id="release-banner-tag-desktop" class="font-mono font-semibold">v0.1.0-beta</span>
+            <span class="text-text-secondary"> is now available.</span>
+          </span>
+        </p>
+      </div>
+
+      <a
+        href="/download"
+        class="inline-flex h-7 shrink-0 items-center gap-1 rounded bg-accent-primary px-2.5 text-[11px] font-semibold text-text-on-accent transition-colors hover:bg-accent-hover sm:px-3 sm:text-xs"
+      >
+        <span>Download</span>
+        <ArrowRight class="h-3 w-3" />
+      </a>
+    </div>
+  </div>
+
   <!-- Mobile Dropdown -->
   <div id="mobile-menu" class="hidden border-t border-border-default bg-bg-secondary px-4 py-3 md:hidden">
     <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
@@ -160,6 +202,28 @@ const navLinks = [
   const starWrap = document.getElementById("nav-star-wrap");
   const starCount = document.getElementById("nav-star-count");
   const navVersionTag = document.getElementById("nav-version-tag");
+  const releaseBanner = document.getElementById("release-banner");
+  const releaseBannerClose = document.getElementById("release-banner-close");
+  const releaseTagMobile = document.getElementById("release-banner-tag-mobile");
+  const releaseTagDesktop = document.getElementById("release-banner-tag-desktop");
+
+  function showReleaseBannerIfNeeded(tag: string) {
+    if (!releaseBanner || !tag) return;
+    const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
+    if (currentPath === "/download") return;
+
+    const dismissed = localStorage.getItem("blanc-dismissed-release");
+    if (dismissed === tag) return;
+
+    if (releaseTagMobile) releaseTagMobile.textContent = tag;
+    if (releaseTagDesktop) releaseTagDesktop.textContent = tag;
+    releaseBanner.classList.remove("hidden");
+
+    releaseBannerClose?.addEventListener("click", () => {
+      localStorage.setItem("blanc-dismissed-release", tag);
+      releaseBanner.classList.add("hidden");
+    });
+  }
 
   async function loadNavbarMeta() {
     if (starWrap && starCount) {
@@ -189,26 +253,38 @@ const navLinks = [
       }
     }
 
-    if (navVersionTag) {
-      try {
-        const cachedTag = sessionStorage.getItem("blanc-gh-release-tag");
-        if (cachedTag) {
-          navVersionTag.textContent = cachedTag;
-        } else {
-          const relRes = await fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases?per_page=1", {
-            headers: { Accept: "application/vnd.github+json" },
-          });
-          if (relRes.ok) {
-            const rels = await relRes.json();
-            if (Array.isArray(rels) && rels[0]?.tag_name) {
-              sessionStorage.setItem("blanc-gh-release-tag", rels[0].tag_name);
-              navVersionTag.textContent = rels[0].tag_name;
-            }
+    try {
+      let latestTag = "";
+      const cachedRaw = sessionStorage.getItem("blanc-gh-release-tag-v2");
+      if (cachedRaw) {
+        const parsed = JSON.parse(cachedRaw) as { tag: string; ts: number };
+        if (parsed?.tag && Date.now() - parsed.ts < 5 * 60 * 1000) {
+          latestTag = parsed.tag;
+        }
+      }
+
+      if (!latestTag) {
+        const relRes = await fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases?per_page=1", {
+          headers: { Accept: "application/vnd.github+json" },
+        });
+        if (relRes.ok) {
+          const rels = await relRes.json();
+          if (Array.isArray(rels) && rels[0]?.tag_name) {
+            latestTag = String(rels[0].tag_name);
+            sessionStorage.setItem(
+              "blanc-gh-release-tag-v2",
+              JSON.stringify({ tag: latestTag, ts: Date.now() })
+            );
           }
         }
-      } catch {
-        // Keep fallback tag
       }
+
+      if (latestTag) {
+        if (navVersionTag) navVersionTag.textContent = latestTag;
+        showReleaseBannerIfNeeded(latestTag);
+      }
+    } catch {
+      // Keep fallback tag
     }
   }
 
