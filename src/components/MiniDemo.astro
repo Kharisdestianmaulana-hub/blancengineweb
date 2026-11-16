@@ -1,0 +1,234 @@
+---
+import { Play, RotateCcw, ChevronRight } from "lucide-astro";
+---
+
+<section id="try-demo" class="border-b border-border-default bg-bg-secondary py-16 sm:py-20">
+  <div class="mx-auto max-w-5xl px-4 sm:px-6">
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <div>
+        <div class="flex items-center gap-2">
+          <Play class="h-4 w-4 text-accent-primary" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+            Interactive Demo
+          </span>
+        </div>
+        <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          Try a mini visual novel right here
+        </h2>
+        <p class="mt-2 text-sm text-text-secondary sm:text-base">
+          Click Next or pick a story choice below to see how your exported game feels to play.
+        </p>
+      </div>
+
+      <button
+        id="demo-restart"
+        type="button"
+        class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 text-xs font-medium text-text-secondary transition-colors hover:border-accent-primary hover:text-text-primary cursor-pointer"
+      >
+        <RotateCcw class="h-3.5 w-3.5" />
+        <span>Restart Scene</span>
+      </button>
+    </div>
+
+    <!-- Flat Visual Novel Stage -->
+    <div class="mt-8 overflow-hidden rounded-lg border border-border-default bg-surface-primary">
+      <!-- Top Bar -->
+      <div class="flex items-center justify-between border-b border-border-default bg-bg-primary px-4 py-2.5">
+        <span id="demo-scene-tag" class="font-mono text-xs text-text-muted">Scene: Classroom_Afternoon</span>
+        <span class="rounded border border-accent-primary bg-accent-subtle px-2 py-0.5 font-mono text-[11px] font-medium text-accent-primary">
+          Playable Preview
+        </span>
+      </div>
+
+      <!-- Stage Canvas -->
+      <div class="relative aspect-video w-full overflow-hidden bg-bg-primary">
+        <img
+          id="demo-bg-img"
+          src="/screenshots/SS_GAMEPLAY_1_CHARACTER.png"
+          alt="Blanc Engine Visual Novel Stage"
+          class="h-full w-full object-cover object-top"
+        />
+        <div class="absolute inset-0 bg-bg-primary/45"></div>
+
+        <!-- Choice Overlay (shown on choice step) -->
+        <div
+          id="demo-choices"
+          class="absolute inset-x-0 top-1/2 z-20 mx-auto hidden max-w-md -translate-y-1/2 space-y-2.5 px-4"
+        >
+          <button
+            type="button"
+            data-choice="rooftop"
+            class="w-full rounded-md border border-accent-primary bg-surface-primary px-4 py-3 text-left text-xs font-semibold text-text-primary transition-colors hover:bg-accent-subtle sm:text-sm cursor-pointer"
+          >
+            Go to the rooftop
+          </button>
+          <button
+            type="button"
+            data-choice="classroom"
+            class="w-full rounded-md border border-border-default bg-surface-primary px-4 py-3 text-left text-xs font-semibold text-text-primary transition-colors hover:border-accent-primary hover:bg-surface-hover sm:text-sm cursor-pointer"
+          >
+            Stay in the classroom
+          </button>
+        </div>
+
+        <!-- Dialogue Box -->
+        <div class="absolute inset-x-3 bottom-3 z-10 rounded-lg border border-border-default bg-bg-secondary/95 p-4 sm:inset-x-6 sm:bottom-5 sm:p-5">
+          <div class="flex items-center justify-between gap-2">
+            <span
+              id="demo-speaker"
+              class="inline-block rounded border border-accent-primary bg-accent-subtle px-2.5 py-0.5 text-xs font-semibold text-accent-primary"
+            >
+              Aoi
+            </span>
+            <span id="demo-step-indicator" class="font-mono text-[11px] text-text-muted">1 / 4</span>
+          </div>
+
+          <p id="demo-dialogue" class="mt-2.5 min-h-10 text-xs leading-relaxed text-text-primary sm:text-sm"></p>
+
+          <div class="mt-3 flex items-center justify-end gap-2">
+            <button
+              id="demo-next"
+              type="button"
+              class="inline-flex h-8 items-center gap-1 rounded bg-accent-primary px-3 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover cursor-pointer"
+            >
+              <span>Next</span>
+              <ChevronRight class="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  interface DemoNode {
+    scene: string;
+    img: string;
+    speaker: string;
+    text: string;
+    stepLabel: string;
+    hasChoices?: boolean;
+    nextId?: string;
+    isEnd?: boolean;
+  }
+
+  const nodes: Record<string, DemoNode> = {
+    start: {
+      scene: "Scene: Classroom_Afternoon",
+      img: "/screenshots/SS_GAMEPLAY_1_CHARACTER.png",
+      speaker: "Aoi",
+      text: "Hello! Everything you see here was built without writing a single line of code.",
+      stepLabel: "1 / 4",
+      nextId: "line2",
+    },
+    line2: {
+      scene: "Scene: Classroom_Afternoon",
+      img: "/screenshots/SS_GAMEPLAY_1_CHARACTER.png",
+      speaker: "Narrator",
+      text: "The afternoon sun streamed through the classroom windows as we prepared our first visual novel.",
+      stepLabel: "2 / 4",
+      nextId: "choice",
+    },
+    choice: {
+      scene: "Scene: Classroom_Afternoon",
+      img: "/screenshots/SS_GAMEPLAY_1_CHARACTER.png",
+      speaker: "Aoi",
+      text: "Where should we take the next scene?",
+      stepLabel: "Choice",
+      hasChoices: true,
+    },
+    rooftop: {
+      scene: "Scene: Rooftop_Sunset",
+      img: "/screenshots/SS_GAMEPLAY_2_CHARACTER.png",
+      speaker: "Aoi",
+      text: "Good pick! Up here on the rooftop, players can enjoy multi-character conversations at sunset.",
+      stepLabel: "Ending A",
+      isEnd: true,
+    },
+    classroom: {
+      scene: "Scene: Classroom_Evening",
+      img: "/screenshots/SS_GAMEPLAY_2_CHARACTER.png",
+      speaker: "Aoi",
+      text: "Cozy choice! You can branch into as many routes and endings as your story needs.",
+      stepLabel: "Ending B",
+      isEnd: true,
+    },
+  };
+
+  const sceneTag = document.getElementById("demo-scene-tag");
+  const bgImg = document.getElementById("demo-bg-img") as HTMLImageElement | null;
+  const speakerEl = document.getElementById("demo-speaker");
+  const dialogueEl = document.getElementById("demo-dialogue");
+  const stepEl = document.getElementById("demo-step-indicator");
+  const choicesEl = document.getElementById("demo-choices");
+  const nextBtn = document.getElementById("demo-next") as HTMLButtonElement | null;
+  const restartBtn = document.getElementById("demo-restart");
+
+  let currentId = "start";
+  let timerId: number | null = null;
+
+  function typeText(fullText: string) {
+    if (!dialogueEl) return;
+    if (timerId !== null) window.clearInterval(timerId);
+    dialogueEl.textContent = "";
+    let idx = 0;
+    timerId = window.setInterval(() => {
+      idx += 1;
+      dialogueEl.textContent = fullText.slice(0, idx);
+      if (idx >= fullText.length && timerId !== null) {
+        window.clearInterval(timerId);
+        timerId = null;
+      }
+    }, 18);
+  }
+
+  function renderNode(id: string) {
+    const node = nodes[id];
+    if (!node) return;
+    currentId = id;
+
+    if (sceneTag) sceneTag.textContent = node.scene;
+    if (bgImg) bgImg.src = node.img;
+    if (speakerEl) speakerEl.textContent = node.speaker;
+    if (stepEl) stepEl.textContent = node.stepLabel;
+
+    typeText(node.text);
+
+    if (choicesEl) {
+      choicesEl.classList.toggle("hidden", !node.hasChoices);
+    }
+
+    if (nextBtn) {
+      nextBtn.classList.toggle("hidden", Boolean(node.hasChoices));
+      nextBtn.textContent = node.isEnd ? "Play Again" : "Next";
+    }
+  }
+
+  nextBtn?.addEventListener("click", () => {
+    const node = nodes[currentId];
+    if (!node) return;
+    if (node.isEnd) {
+      renderNode("start");
+      return;
+    }
+    if (node.nextId) {
+      renderNode(node.nextId);
+    }
+  });
+
+  restartBtn?.addEventListener("click", () => {
+    renderNode("start");
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-choice]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-choice");
+      if (target && nodes[target]) {
+        renderNode(target);
+      }
+    });
+  });
+
+  renderNode("start");
+</script>

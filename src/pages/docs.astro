@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
-import { BookOpen, ArrowRight } from "lucide-astro";
+import { BookOpen, ArrowRight, Copy, Check } from "lucide-astro";
 
 const sections = [
   { id: "getting-started", title: "1. Project & Assets" },
@@ -88,7 +88,7 @@ const sections = [
         <section id="getting-started" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6">
           <h2 class="text-xl font-semibold text-text-primary">1. Creating a Project & Importing Assets</h2>
           <p class="mt-2 text-sm leading-relaxed text-text-secondary">
-            Launch <code class="rounded border border-border-subtle bg-bg-primary px-1.5 py-0.5 font-mono text-xs text-text-primary">blanc_editor</code> (or run <code class="rounded border border-border-subtle bg-bg-primary px-1.5 py-0.5 font-mono text-xs text-text-primary">cargo run -p blanc_editor</code> from source), create a new project or open an existing <code class="font-mono text-xs text-accent-primary">.blanc</code> manifest, and organize your media in the <strong>Asset Manager</strong>:
+            Download and open <strong>Blanc Engine</strong> (<code class="font-mono text-xs text-text-primary">Setup.exe</code> or <code class="font-mono text-xs text-text-primary">Portable.exe</code>), click <strong>New Project</strong> (or open an existing project), and import your assets in the <strong>Asset Manager</strong>:
           </p>
           <div class="mt-4 grid gap-3 sm:grid-cols-2">
             <div class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
@@ -111,11 +111,22 @@ const sections = [
         </section>
 
         <section id="story-setup" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6">
-          <h2 class="text-xl font-semibold text-text-primary">2. Writing in Story Setup</h2>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 class="text-xl font-semibold text-text-primary">2. Writing in Story Setup</h2>
+            <button
+              id="copy-sample-script"
+              type="button"
+              class="inline-flex h-8 items-center gap-1.5 rounded-md border border-border-default bg-bg-secondary px-2.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent-primary hover:text-text-primary cursor-pointer"
+            >
+              <Copy id="copy-icon" class="h-3.5 w-3.5" />
+              <Check id="copied-icon" class="hidden h-3.5 w-3.5 text-status-success" />
+              <span id="copy-label">Copy Sample Script</span>
+            </button>
+          </div>
           <p class="mt-2 text-sm leading-relaxed text-text-secondary">
-            In <strong>Story Setup</strong>, draft your script using Blanc Engine's screenplay syntax, then click <strong>Convert to Scenes</strong> to generate <code class="font-mono text-xs text-accent-primary">.bscene</code> files automatically.
+            In <strong>Story Setup</strong>, draft your story like a simple movie script, then click <strong>Convert to Scenes</strong> to turn it into editable visual scenes automatically.
           </p>
-          <pre class="mt-4 overflow-x-auto rounded-md border border-border-subtle bg-bg-primary p-4 font-mono text-xs leading-relaxed text-text-primary"><code>[Scene: Classroom_Afternoon]
+          <pre id="sample-script-code" class="mt-4 overflow-x-auto rounded-md border border-border-subtle bg-bg-primary p-4 font-mono text-xs leading-relaxed text-text-primary"><code>[Scene: Classroom_Afternoon]
 [BGM: peaceful_day]
 
 Alice (Happy): "Hello! Welcome to Blanc Engine."
@@ -247,5 +258,29 @@ Narrator: The afternoon sun streamed through the classroom windows.
       const id = link.getAttribute("data-doc-toc");
       if (id) setActiveToc(id);
     });
+  });
+
+  const copyBtn = document.getElementById("copy-sample-script");
+  const samplePre = document.getElementById("sample-script-code");
+  const copyIcon = document.getElementById("copy-icon");
+  const copiedIcon = document.getElementById("copied-icon");
+  const copyLabel = document.getElementById("copy-label");
+
+  copyBtn?.addEventListener("click", async () => {
+    const text = samplePre?.textContent?.trim() || "";
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      copyIcon?.classList.add("hidden");
+      copiedIcon?.classList.remove("hidden");
+      if (copyLabel) copyLabel.textContent = "Copied!";
+      setTimeout(() => {
+        copyIcon?.classList.remove("hidden");
+        copiedIcon?.classList.add("hidden");
+        if (copyLabel) copyLabel.textContent = "Copy Sample Script";
+      }, 2000);
+    } catch {
+      // Ignore clipboard errors
+    }
   });
 </script>
