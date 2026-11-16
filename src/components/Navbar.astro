@@ -4,7 +4,6 @@ import { Moon, Sun, Github, Download, Menu, X, Star, ArrowRight } from "lucide-a
 const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 const navLinks = [
-  { href: "/", label: "Home" },
   { href: "/docs", label: "Docs" },
   { href: "/showcase", label: "Showcase" },
   { href: "/changelog", label: "Changelog" },
@@ -12,93 +11,139 @@ const navLinks = [
 ];
 ---
 
-<header class="sticky top-0 z-50 border-b border-border-default bg-bg-secondary">
-  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-    <!-- Brand -->
-    <a href="/" class="flex items-center gap-2.5 rounded-md px-1 py-1 text-text-primary transition-colors hover:text-accent-primary">
-      <img src="/logo.png" alt="Blanc Engine Logo" class="h-8 w-8 rounded-md object-contain" />
-      <span class="text-base font-semibold tracking-tight">Blanc Engine</span>
-      <span id="nav-version-tag" class="hidden rounded border border-border-default bg-accent-subtle px-1.5 py-0.5 font-mono text-[11px] font-medium text-accent-primary sm:inline-block">
-        v0.1.0-beta
-      </span>
-    </a>
-
-    <!-- Desktop Navigation -->
-    <nav class="hidden items-center gap-1 md:flex" aria-label="Main navigation">
-      {
-        navLinks.map((link) => {
-          const isActive = pathname === link.href;
-          return (
-            <a
-              href={link.href}
-              aria-current={isActive ? "page" : undefined}
-              class:list={[
-                "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-accent-subtle text-accent-primary"
-                  : "text-text-secondary hover:bg-surface-hover hover:text-text-primary",
-              ]}
-            >
-              {link.label}
-            </a>
-          );
-        })
-      }
-    </nav>
-
-    <!-- Actions -->
-    <div class="flex items-center gap-2">
-      <button
-        id="theme-toggle"
-        type="button"
-        aria-label="Toggle Dark or Light theme"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border-default bg-surface-primary text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
-      >
-        <Sun class="hidden h-4 w-4 [html[data-theme='dark']_&]:block" />
-        <Moon class="hidden h-4 w-4 [html[data-theme='light']_&]:block" />
-      </button>
-
-      <a
-        href="https://github.com/Kharisdestianmaulana-hub/blanc-engine"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="hidden h-9 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 text-sm font-medium text-text-primary transition-colors hover:bg-surface-hover sm:inline-flex"
-      >
-        <Github class="h-4 w-4 text-text-secondary" />
-        <span>GitHub</span>
-        <span id="nav-star-wrap" class="hidden items-center gap-1 border-l border-border-default pl-2 font-mono text-xs text-text-secondary">
-          <Star class="h-3 w-3 text-status-warning" />
-          <span id="nav-star-count"></span>
+<header id="site-header" class="sticky top-0 z-50 w-full transition-all duration-200">
+  <div
+    id="nav-shell"
+    class="w-full border-b border-border-default bg-bg-secondary transition-all duration-200"
+  >
+    <div id="nav-inner" class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 transition-all duration-200">
+      <!-- Brand -->
+      <a href="/" class="flex items-center gap-2.5 rounded-md px-1 py-1 text-text-primary transition-colors hover:text-accent-primary">
+        <img src="/logo.png" alt="Blanc Engine Logo" class="h-8 w-8 rounded-md object-contain" />
+        <span class="text-base font-semibold tracking-tight">Blanc Engine</span>
+        <span id="nav-version-tag" class="hidden rounded border border-border-default bg-accent-subtle px-1.5 py-0.5 font-mono text-[11px] font-medium text-accent-primary sm:inline-block">
+          v0.1.0-beta
         </span>
       </a>
 
-      <a
-        href="/download"
-        aria-current={pathname === "/download" ? "page" : undefined}
-        class="inline-flex h-9 items-center gap-1.5 rounded-md bg-accent-primary px-3.5 text-sm font-semibold text-text-on-accent transition-colors hover:bg-accent-hover active:bg-accent-pressed"
-      >
-        <Download class="h-4 w-4" />
-        <span>Download</span>
-      </a>
+      <!-- Desktop Navigation -->
+      <nav class="hidden items-center gap-1 md:flex" aria-label="Main navigation">
+        {
+          navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <a
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                class:list={[
+                  "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-accent-subtle text-accent-primary"
+                    : "text-text-secondary hover:bg-surface-hover hover:text-text-primary",
+                ]}
+              >
+                {link.label}
+              </a>
+            );
+          })
+        }
+      </nav>
 
-      <!-- Mobile Menu Button -->
-      <button
-        id="mobile-menu-btn"
-        type="button"
-        aria-label="Toggle navigation menu"
-        aria-expanded="false"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border-default bg-surface-primary text-text-secondary hover:bg-surface-hover hover:text-text-primary md:hidden cursor-pointer"
-      >
-        <Menu id="menu-icon-open" class="h-4 w-4" />
-        <X id="menu-icon-close" class="hidden h-4 w-4" />
-      </button>
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+        <button
+          id="theme-toggle"
+          type="button"
+          aria-label="Toggle Dark or Light theme"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border-default bg-surface-primary text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+        >
+          <Sun class="hidden h-4 w-4 [html[data-theme='dark']_&]:block" />
+          <Moon class="hidden h-4 w-4 [html[data-theme='light']_&]:block" />
+        </button>
+
+        <a
+          href="https://github.com/Kharisdestianmaulana-hub/blanc-engine"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden h-9 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 text-sm font-medium text-text-primary transition-colors hover:bg-surface-hover sm:inline-flex"
+        >
+          <Github class="h-4 w-4 text-text-secondary" />
+          <span>GitHub</span>
+          <span id="nav-star-wrap" class="hidden items-center gap-1 border-l border-border-default pl-2 font-mono text-xs text-text-secondary">
+            <Star class="h-3 w-3 text-status-warning" />
+            <span id="nav-star-count"></span>
+          </span>
+        </a>
+
+        <a
+          id="nav-download-btn"
+          href="/download"
+          aria-current={pathname === "/download" ? "page" : undefined}
+          class="inline-flex h-9 items-center gap-1.5 rounded-md bg-accent-primary px-3.5 text-sm font-semibold text-text-on-accent transition-colors hover:bg-accent-hover active:bg-accent-pressed"
+        >
+          <Download class="h-4 w-4" />
+          <span>Download</span>
+        </a>
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="mobile-menu-btn"
+          type="button"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border-default bg-surface-primary text-text-secondary hover:bg-surface-hover hover:text-text-primary md:hidden cursor-pointer"
+        >
+          <Menu id="menu-icon-open" class="h-4 w-4" />
+          <X id="menu-icon-close" class="hidden h-4 w-4" />
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobile-menu" class="hidden border-t border-border-default bg-bg-secondary px-4 py-3 md:hidden">
+      <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
+        {
+          navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <a
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                class:list={[
+                  "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-accent-subtle text-accent-primary"
+                    : "text-text-secondary hover:bg-surface-hover hover:text-text-primary",
+                ]}
+              >
+                {link.label}
+              </a>
+            );
+          })
+        }
+        <a
+          href="/download"
+          class="rounded-md px-3 py-2 text-sm font-medium text-accent-primary hover:bg-surface-hover"
+        >
+          Download Releases
+        </a>
+        <a
+          href="https://github.com/Kharisdestianmaulana-hub/blanc-engine"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-hover hover:text-text-primary"
+        >
+          <Github class="h-4 w-4" />
+          <span>GitHub Repository</span>
+        </a>
+      </nav>
     </div>
   </div>
 
-  <!-- Sticky Release Announcement Banner (below navbar) -->
+  <!-- Sticky Release Announcement Banner (below navbar, hidden in scrolled pill mode) -->
   <div
     id="release-banner"
-    class="hidden border-t border-border-default bg-accent-subtle"
+    class="hidden border-b border-border-default bg-accent-subtle"
     role="region"
     aria-label="Latest release announcement"
   >
@@ -136,46 +181,6 @@ const navLinks = [
       </a>
     </div>
   </div>
-
-  <!-- Mobile Dropdown -->
-  <div id="mobile-menu" class="hidden border-t border-border-default bg-bg-secondary px-4 py-3 md:hidden">
-    <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
-      {
-        navLinks.map((link) => {
-          const isActive = pathname === link.href;
-          return (
-            <a
-              href={link.href}
-              aria-current={isActive ? "page" : undefined}
-              class:list={[
-                "rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-accent-subtle text-accent-primary"
-                  : "text-text-secondary hover:bg-surface-hover hover:text-text-primary",
-              ]}
-            >
-              {link.label}
-            </a>
-          );
-        })
-      }
-      <a
-        href="/download"
-        class="rounded-md px-3 py-2 text-sm font-medium text-accent-primary hover:bg-surface-hover"
-      >
-        Download Releases
-      </a>
-      <a
-        href="https://github.com/Kharisdestianmaulana-hub/blanc-engine"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-hover hover:text-text-primary"
-      >
-        <Github class="h-4 w-4" />
-        <span>GitHub Repository</span>
-      </a>
-    </nav>
-  </div>
 </header>
 
 <script>
@@ -199,10 +204,50 @@ const navLinks = [
     closeIcon?.classList.toggle("hidden", Boolean(isHidden));
   });
 
+  // Morphing Pill Navbar on desktop scroll
+  const siteHeader = document.getElementById("site-header");
+  const navShell = document.getElementById("nav-shell");
+  const navInner = document.getElementById("nav-inner");
+  const navDownloadBtn = document.getElementById("nav-download-btn");
+  const releaseBanner = document.getElementById("release-banner");
+
+  let bannerEligible = false;
+
+  function updateNavbarMode() {
+    const isDesktop = window.innerWidth >= 768;
+    const isScrolled = window.scrollY > 24;
+    const pillActive = isDesktop && isScrolled;
+
+    if (siteHeader && navShell && navInner) {
+      siteHeader.classList.toggle("md:pt-3", pillActive);
+      siteHeader.classList.toggle("md:px-6", pillActive);
+
+      navShell.classList.toggle("md:mx-auto", pillActive);
+      navShell.classList.toggle("md:max-w-5xl", pillActive);
+      navShell.classList.toggle("md:rounded-full", pillActive);
+      navShell.classList.toggle("md:border", pillActive);
+      navShell.classList.toggle("border-b", !pillActive);
+
+      navInner.classList.toggle("h-14", pillActive);
+      navInner.classList.toggle("h-16", !pillActive);
+    }
+
+    if (navDownloadBtn) {
+      navDownloadBtn.classList.toggle("md:rounded-full", pillActive);
+      navDownloadBtn.classList.toggle("rounded-md", !pillActive);
+    }
+
+    if (releaseBanner && bannerEligible) {
+      releaseBanner.classList.toggle("hidden", pillActive);
+    }
+  }
+
+  window.addEventListener("scroll", updateNavbarMode, { passive: true });
+  window.addEventListener("resize", updateNavbarMode, { passive: true });
+
   const starWrap = document.getElementById("nav-star-wrap");
   const starCount = document.getElementById("nav-star-count");
   const navVersionTag = document.getElementById("nav-version-tag");
-  const releaseBanner = document.getElementById("release-banner");
   const releaseBannerClose = document.getElementById("release-banner-close");
   const releaseTagMobile = document.getElementById("release-banner-tag-mobile");
   const releaseTagDesktop = document.getElementById("release-banner-tag-desktop");
@@ -215,11 +260,13 @@ const navLinks = [
     const dismissed = localStorage.getItem("blanc-dismissed-release");
     if (dismissed === tag) return;
 
+    bannerEligible = true;
     if (releaseTagMobile) releaseTagMobile.textContent = tag;
     if (releaseTagDesktop) releaseTagDesktop.textContent = tag;
-    releaseBanner.classList.remove("hidden");
+    updateNavbarMode();
 
     releaseBannerClose?.addEventListener("click", () => {
+      bannerEligible = false;
       localStorage.setItem("blanc-dismissed-release", tag);
       releaseBanner.classList.add("hidden");
     });
@@ -288,5 +335,6 @@ const navLinks = [
     }
   }
 
+  updateNavbarMode();
   loadNavbarMeta();
 </script>
