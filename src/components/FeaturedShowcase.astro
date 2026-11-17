@@ -111,7 +111,7 @@ import { Gamepad2, ArrowRight } from "lucide-astro";
           author: getVal(2) || "Unknown Creator",
           status: getVal(3) || "Released",
           cover: getVal(5),
-          url: `/showcase/?game=${encodeURIComponent(toSlug(title))}`,
+          url: `/showcase/game/?id=${encodeURIComponent(toSlug(title))}`,
           description: getVal(7),
         });
       }
