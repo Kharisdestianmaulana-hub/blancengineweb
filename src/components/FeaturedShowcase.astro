@@ -91,6 +91,12 @@ import { Gamepad2, ArrowRight } from "lucide-astro";
         description: string;
       }> = [];
 
+      const toSlug = (str: string) =>
+        str
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+
       for (const row of rows) {
         const c = row.c || [];
         const getVal = (idx: number) => (c[idx] && c[idx].v != null ? String(c[idx].v).trim() : "");
@@ -105,7 +111,7 @@ import { Gamepad2, ArrowRight } from "lucide-astro";
           author: getVal(2) || "Unknown Creator",
           status: getVal(3) || "Released",
           cover: getVal(5),
-          url: getVal(6) || "/showcase",
+          url: `/showcase/?game=${encodeURIComponent(toSlug(title))}`,
           description: getVal(7),
         });
       }
@@ -121,8 +127,6 @@ import { Gamepad2, ArrowRight } from "lucide-astro";
           (game) => `
           <a
             href="${esc(game.url)}"
-            target="_blank"
-            rel="noopener noreferrer"
             class="flex flex-col overflow-hidden rounded-lg border border-border-default bg-surface-primary transition-colors hover:border-accent-primary"
           >
             <div class="aspect-video w-full overflow-hidden border-b border-border-subtle bg-bg-primary">
