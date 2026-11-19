@@ -1,0 +1,634 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import {
+  Milestone,
+  Sparkles,
+  Clock,
+  RefreshCw,
+  Search,
+  ArrowRight,
+  MessageSquare,
+} from "lucide-astro";
+---
+
+<BaseLayout
+  title="Roadmap: Blanc Engine Upcoming Features & Development"
+  description="Explore what is currently in development, planned features, and upcoming milestones for Blanc Engine. Synced live with the core team."
+  ogImage="/screenshots/SS_OVERVIEW.png"
+  breadcrumbs={[{ name: "Home", path: "/" }, { name: "Roadmap", path: "/roadmap/" }]}
+>
+  <Navbar />
+
+  <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12">
+    <!-- Header -->
+    <div class="flex flex-col justify-between gap-4 border-b border-border-default pb-6 sm:flex-row sm:items-end">
+      <div>
+        <div class="flex items-center gap-2">
+          <Milestone class="h-4 w-4 text-accent-primary" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+            Development Roadmap
+          </span>
+        </div>
+        <h1 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          Blanc Engine Roadmap
+        </h1>
+        <p class="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary sm:text-base">
+          Planned improvements, upcoming releases, and active feature milestones. Synced directly with the core team.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button
+          id="refresh-roadmap-btn"
+          type="button"
+          class="inline-flex h-9 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+          title="Refresh roadmap data from Google Sheet"
+        >
+          <RefreshCw id="refresh-icon" class="h-3.5 w-3.5" />
+          <span>Refresh</span>
+        </button>
+
+        <a
+          href="/feedback"
+          class="inline-flex h-9 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover"
+        >
+          <Sparkles class="h-3.5 w-3.5 text-accent-primary" />
+          <span>Request Feature</span>
+        </a>
+
+        <a
+          href="/changelog"
+          class="inline-flex h-9 items-center gap-1.5 rounded-md bg-accent-primary px-3.5 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover"
+        >
+          <span>Changelog</span>
+          <ArrowRight class="h-3.5 w-3.5" />
+        </a>
+      </div>
+    </div>
+
+    <!-- Spotlight Banner: Upcoming Release (e.g. v0.1.1) -->
+    <div id="spotlight-card" class="hidden mt-8 rounded-lg border border-border-default bg-surface-primary p-5 sm:p-6">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-start gap-3.5">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border-default bg-accent-subtle text-accent-primary">
+            <Clock class="h-5 w-5" />
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-semibold uppercase tracking-wider text-text-muted">Next Milestone</span>
+              <span
+                id="spotlight-version"
+                class="rounded border border-border-default bg-accent-subtle px-2 py-0.5 font-mono text-xs font-bold text-accent-primary"
+              >
+                v0.1.1
+              </span>
+              <span
+                id="spotlight-status"
+                class="rounded border border-status-success px-2 py-0.5 text-[11px] font-semibold text-status-success"
+              >
+                Ready for Release
+              </span>
+            </div>
+            <h2 id="spotlight-title" class="mt-1 text-lg font-bold text-text-primary sm:text-xl">
+              Upcoming Release
+            </h2>
+            <p id="spotlight-subtitle" class="mt-0.5 text-xs text-text-secondary sm:text-sm">
+              Target Release: <span id="spotlight-date" class="font-medium text-text-primary">-</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 border-t border-border-subtle pt-3 sm:border-t-0 sm:pt-0">
+          <div class="flex flex-col items-start sm:items-end">
+            <span class="text-[11px] font-medium text-text-muted">Total Features In Flight</span>
+            <span id="spotlight-count" class="font-mono text-base font-bold text-text-primary">
+              0
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="mt-8 flex flex-col gap-3 rounded-lg border border-border-default bg-surface-primary p-3 sm:flex-row sm:items-center sm:justify-between">
+      <!-- Search Input -->
+      <div class="relative flex-1">
+        <Search class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+        <input
+          id="roadmap-search"
+          type="text"
+          placeholder="Search features, versions, or categories..."
+          class="h-9 w-full rounded-md border border-border-default bg-bg-secondary pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+        />
+      </div>
+
+      <!-- Status Filter Tabs -->
+      <div class="flex flex-wrap items-center gap-1" role="tablist" aria-label="Filter by status">
+        {
+          [
+            { id: "all", label: "All" },
+            { id: "completed", label: "Completed" },
+            { id: "in progress", label: "In Progress" },
+            { id: "coming soon", label: "Coming Soon" },
+            { id: "planned", label: "Planned" },
+          ].map((tab, idx) => (
+            <button
+              type="button"
+              data-status-filter={tab.id}
+              class:list={[
+                "h-8 rounded-md px-2.5 text-xs font-medium transition-colors cursor-pointer",
+                idx === 0
+                  ? "bg-accent-subtle text-accent-primary font-semibold"
+                  : "text-text-secondary hover:bg-surface-hover hover:text-text-primary",
+              ]}
+            >
+              {tab.label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Category Pills -->
+    <div id="category-bar" class="mt-3 hidden flex-wrap items-center gap-1.5">
+      <span class="mr-1 text-[11px] font-medium text-text-muted">Category:</span>
+      <button
+        type="button"
+        data-category-filter="all"
+        class="rounded border border-border-default bg-accent-subtle px-2 py-0.5 text-[11px] font-semibold text-accent-primary transition-colors cursor-pointer"
+      >
+        All
+      </button>
+    </div>
+
+    <!-- Roadmap Content Container -->
+    <div id="roadmap-container" class="mt-8 space-y-10">
+      <!-- Skeleton Loading State -->
+      <div id="roadmap-skeleton" class="space-y-6">
+        <div class="h-10 w-48 rounded bg-surface-primary animate-pulse"></div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="h-44 rounded-lg border border-border-default bg-surface-primary p-5 animate-pulse"></div>
+          <div class="h-44 rounded-lg border border-border-default bg-surface-primary p-5 animate-pulse"></div>
+          <div class="h-44 rounded-lg border border-border-default bg-surface-primary p-5 animate-pulse"></div>
+        </div>
+      </div>
+
+      <!-- Rendered Groups will be injected here -->
+      <div id="roadmap-groups" class="hidden space-y-10"></div>
+    </div>
+
+    <!-- Community Feedback CTA Card -->
+    <div class="mt-14 rounded-lg border border-border-default bg-surface-primary p-6 sm:p-8">
+      <div class="flex flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left">
+        <div>
+          <div class="inline-flex items-center gap-1.5 rounded-full border border-border-default bg-accent-subtle px-2.5 py-0.5 text-xs font-medium text-accent-primary">
+            <MessageSquare class="h-3 w-3" />
+            <span>Community Driven</span>
+          </div>
+          <h2 class="mt-2 text-xl font-bold tracking-tight text-text-primary">
+            Have a feature idea for Blanc Engine?
+          </h2>
+          <p class="mt-1 max-w-xl text-xs leading-relaxed text-text-secondary sm:text-sm">
+            The Blanc Engine roadmap is shaped together with the visual novel community. Submit feedback, report bugs, or propose new features directly to the core team.
+          </p>
+        </div>
+
+        <div class="flex shrink-0 flex-wrap items-center gap-3">
+          <a
+            href="/feedback"
+            class="inline-flex h-9 items-center justify-center rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover"
+          >
+            Request a Feature
+          </a>
+          <a
+            href="https://discord.gg/GcQMrRXa9Z"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex h-9 items-center justify-center rounded-md border border-border-default bg-surface-elevated px-4 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover"
+          >
+            Join Discord
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  const SHEET_GVIZ_URL =
+    "https://docs.google.com/spreadsheets/d/1VCNAuxsX3QyiQtOONYbZYZIUbRRhjrd9oaMddh_8O7g/gviz/tq?tqx=out:json&gid=49098070&headers=1";
+
+  interface RoadmapItem {
+    version: string;
+    targetDate: string;
+    status: string;
+    category: string;
+    title: string;
+    description: string;
+  }
+
+  let itemsList: RoadmapItem[] = [];
+  let statusFilter = "all";
+  let categoryFilter = "all";
+  let searchQuery = "";
+
+  const containerGroups = document.getElementById("roadmap-groups");
+  const skeletonEl = document.getElementById("roadmap-skeleton");
+  const searchInput = document.getElementById("roadmap-search") as HTMLInputElement | null;
+  const refreshBtn = document.getElementById("refresh-roadmap-btn");
+  const refreshIcon = document.getElementById("refresh-icon");
+  const categoryBar = document.getElementById("category-bar");
+
+  // Spotlight elements
+  const spotlightCard = document.getElementById("spotlight-card");
+  const spotlightVersion = document.getElementById("spotlight-version");
+  const spotlightStatus = document.getElementById("spotlight-status");
+  const spotlightTitle = document.getElementById("spotlight-title");
+  const spotlightDate = document.getElementById("spotlight-date");
+  const spotlightCount = document.getElementById("spotlight-count");
+
+  function escapeHtml(str: string): string {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function formatDateString(rawVal: string, formattedVal?: string): string {
+    if (formattedVal && !formattedVal.startsWith("Date(")) {
+      const parsed = new Date(formattedVal);
+      if (!isNaN(parsed.getTime())) {
+        return parsed.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+      return formattedVal;
+    }
+
+    const match = rawVal.match(/Date\((\d+),\s*(\d+),\s*(\d+)\)/);
+    if (match) {
+      const y = parseInt(match[1], 10);
+      const m = parseInt(match[2], 10);
+      const d = parseInt(match[3], 10);
+      const dateObj = new Date(y, m, d);
+      if (!isNaN(dateObj.getTime())) {
+        return dateObj.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+    }
+
+    return rawVal;
+  }
+
+  function getStatusClasses(status: string) {
+    const s = (status || "").toLowerCase().trim();
+    if (s === "in progress" || s === "progress") {
+      return {
+        badge: "border-accent-primary text-accent-primary bg-accent-subtle",
+        dot: "bg-accent-primary",
+        label: "In Progress",
+      };
+    }
+    if (s === "coming soon" || s === "soon") {
+      return {
+        badge: "border-status-info text-status-info bg-surface-primary",
+        dot: "bg-status-info",
+        label: "Coming Soon",
+      };
+    }
+    if (s === "completed" || s === "done" || s === "released") {
+      return {
+        badge: "border-status-success text-status-success bg-surface-primary",
+        dot: "bg-status-success",
+        label: "Completed",
+      };
+    }
+    return {
+      badge: "border-status-warning text-status-warning bg-surface-primary",
+      dot: "bg-status-warning",
+      label: s ? status : "Planned",
+    };
+  }
+
+  function updateCategoriesList() {
+    if (!categoryBar) return;
+    const categories = new Set<string>();
+    itemsList.forEach((item) => {
+      if (item.category) categories.add(item.category.trim());
+    });
+
+    if (categories.size === 0) {
+      categoryBar.classList.add("hidden");
+      categoryBar.classList.remove("flex");
+      return;
+    }
+
+    categoryBar.classList.remove("hidden");
+    categoryBar.classList.add("flex");
+
+    const categoryArray = ["all", ...Array.from(categories)];
+    categoryBar.innerHTML = `
+      <span class="mr-1 text-[11px] font-medium text-text-muted">Category:</span>
+      ${categoryArray
+        .map(
+          (cat) => `
+        <button
+          type="button"
+          data-category-filter="${escapeHtml(cat)}"
+          class="rounded border border-border-default px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer ${
+            cat.toLowerCase() === categoryFilter.toLowerCase()
+              ? "bg-accent-subtle text-accent-primary font-semibold"
+              : "text-text-secondary hover:bg-surface-hover hover:text-text-primary"
+          }"
+        >
+          ${escapeHtml(cat === "all" ? "All" : cat)}
+        </button>
+      `
+        )
+        .join("")}
+    `;
+
+    categoryBar.querySelectorAll("[data-category-filter]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        categoryFilter = btn.getAttribute("data-category-filter") || "all";
+        updateCategoriesList();
+        renderRoadmap();
+      });
+    });
+  }
+
+  function updateSpotlight() {
+    if (!spotlightCard) return;
+
+    if (itemsList.length === 0) {
+      spotlightCard.classList.add("hidden");
+      return;
+    }
+
+    spotlightCard.classList.remove("hidden");
+
+    // Prioritize v0.1.1 if present, otherwise look for in-progress or earliest version
+    const targetVersion =
+      itemsList.find((i) => i.version.toLowerCase() === "v0.1.1")?.version ||
+      itemsList.find(
+        (item) =>
+          item.status.toLowerCase().includes("progress") ||
+          item.status.toLowerCase().includes("soon")
+      )?.version ||
+      itemsList[0].version;
+
+    const versionItems = itemsList.filter((item) => item.version === targetVersion);
+    const firstDate = versionItems.find((i) => i.targetDate)?.targetDate || "In planning";
+
+    const allCompleted = versionItems.every(
+      (i) => i.status.toLowerCase() === "completed" || i.status.toLowerCase() === "done"
+    );
+
+    const statusInfo = allCompleted
+      ? {
+          badge: "border-status-success text-status-success bg-surface-primary",
+          label: "Ready for Release",
+        }
+      : getStatusClasses(versionItems[0].status);
+
+    if (spotlightVersion) spotlightVersion.textContent = targetVersion || "v0.1.1";
+    if (spotlightStatus) {
+      spotlightStatus.textContent = statusInfo.label;
+      spotlightStatus.className = `rounded border px-2 py-0.5 text-[11px] font-semibold ${statusInfo.badge}`;
+    }
+    if (spotlightTitle) spotlightTitle.textContent = `Milestone: ${targetVersion || "v0.1.1"}`;
+    if (spotlightDate) spotlightDate.textContent = firstDate;
+    if (spotlightCount) spotlightCount.textContent = `${versionItems.length} Feature${versionItems.length > 1 ? "s" : ""}`;
+  }
+
+  function renderRoadmap() {
+    if (!containerGroups) return;
+
+    if (itemsList.length === 0) {
+      containerGroups.innerHTML = `
+        <div class="col-span-full rounded-lg border border-border-default bg-surface-primary p-10 text-center">
+          <p class="text-base font-semibold text-text-primary">No roadmap milestones published yet</p>
+          <p class="mt-1.5 text-xs text-text-secondary sm:text-sm">
+            Upcoming releases and planned features will appear here automatically once added to the Google Sheet.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    const q = searchQuery.trim().toLowerCase();
+    const filtered = itemsList.filter((item) => {
+      const matchStatus =
+        statusFilter === "all" ||
+        item.status.toLowerCase() === statusFilter.toLowerCase() ||
+        (statusFilter === "in progress" && item.status.toLowerCase().includes("progress")) ||
+        (statusFilter === "coming soon" && item.status.toLowerCase().includes("soon")) ||
+        (statusFilter === "completed" && (item.status.toLowerCase() === "done" || item.status.toLowerCase() === "released" || item.status.toLowerCase() === "completed"));
+
+      const matchCategory =
+        categoryFilter === "all" || item.category.toLowerCase() === categoryFilter.toLowerCase();
+
+      const matchQuery =
+        !q ||
+        item.title.toLowerCase().includes(q) ||
+        item.description.toLowerCase().includes(q) ||
+        item.version.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q);
+
+      return matchStatus && matchCategory && matchQuery;
+    });
+
+    if (filtered.length === 0) {
+      containerGroups.innerHTML = `
+        <div class="rounded-lg border border-border-default bg-surface-primary p-8 text-center">
+          <p class="text-base font-semibold text-text-primary">No matching features found</p>
+          <p class="mt-1 text-xs text-text-secondary">
+            Try adjusting your search query or changing the status and category filters.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    const grouped = new Map<string, RoadmapItem[]>();
+    for (const item of filtered) {
+      const ver = item.version || "Future Ideas";
+      if (!grouped.has(ver)) grouped.set(ver, []);
+      grouped.get(ver)!.push(item);
+    }
+
+    const htmlSections: string[] = [];
+
+    for (const [ver, groupItems] of grouped.entries()) {
+      const targetDate = groupItems.find((i) => i.targetDate)?.targetDate || "";
+      const completedCount = groupItems.filter(
+        (i) => i.status.toLowerCase() === "completed" || i.status.toLowerCase() === "done"
+      ).length;
+
+      const cardsHtml = groupItems
+        .map((item) => {
+          const st = getStatusClasses(item.status);
+          return `
+          <div class="flex flex-col justify-between rounded-lg border border-border-default bg-surface-primary p-5 transition-colors hover:border-accent-primary">
+            <div>
+              <div class="flex items-center justify-between gap-2 border-b border-border-subtle pb-3">
+                <span class="rounded border border-border-default bg-surface-elevated px-2 py-0.5 font-mono text-[11px] font-medium text-text-secondary">
+                  ${escapeHtml(item.category || "General")}
+                </span>
+                <span class="inline-flex items-center gap-1.5 rounded border px-2 py-0.5 text-[11px] font-semibold ${st.badge}">
+                  <span class="h-1.5 w-1.5 rounded-full ${st.dot}"></span>
+                  <span>${escapeHtml(st.label)}</span>
+                </span>
+              </div>
+
+              <h3 class="mt-3.5 text-base font-semibold text-text-primary leading-snug">
+                ${escapeHtml(item.title)}
+              </h3>
+              <p class="mt-2 text-xs leading-relaxed text-text-secondary sm:text-sm">
+                ${escapeHtml(item.description)}
+              </p>
+            </div>
+
+            ${
+              item.targetDate
+                ? `
+              <div class="mt-4 flex items-center gap-1.5 border-t border-border-subtle pt-3 text-[11px] text-text-muted">
+                <svg class="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span>Target: <strong class="text-text-secondary font-medium">${escapeHtml(item.targetDate)}</strong></span>
+              </div>
+            `
+                : ""
+            }
+          </div>
+        `;
+        })
+        .join("");
+
+      htmlSections.push(`
+        <section class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle pb-2.5">
+            <div class="flex items-center gap-2.5">
+              <span class="rounded border border-border-default bg-accent-subtle px-2.5 py-1 font-mono text-xs font-bold text-accent-primary">
+                ${escapeHtml(ver)}
+              </span>
+              ${
+                targetDate
+                  ? `<span class="text-xs text-text-muted">Target: <strong class="text-text-secondary font-medium">${escapeHtml(targetDate)}</strong></span>`
+                  : ""
+              }
+            </div>
+
+            <div class="flex items-center gap-2 text-xs text-text-muted">
+              <span>${groupItems.length} Feature${groupItems.length > 1 ? "s" : ""}</span>
+              ${
+                completedCount > 0
+                  ? `<span class="rounded bg-surface-elevated px-1.5 py-0.5 text-[11px] text-status-success font-medium">${completedCount} completed</span>`
+                  : ""
+              }
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            ${cardsHtml}
+          </div>
+        </section>
+      `);
+    }
+
+    containerGroups.innerHTML = htmlSections.join("");
+  }
+
+  async function fetchRoadmap() {
+    if (refreshIcon) refreshIcon.classList.add("animate-spin");
+
+    try {
+      const res = await fetch(SHEET_GVIZ_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?/);
+      if (!match) throw new Error("Invalid sheet response");
+
+      const json = JSON.parse(match[1]);
+      const rows = json?.table?.rows || [];
+
+      const parsed: RoadmapItem[] = [];
+      for (const row of rows) {
+        const c = row.c || [];
+        const getVal = (idx: number) => (c[idx] && c[idx].v != null ? String(c[idx].v).trim() : "");
+        const getFmt = (idx: number) => (c[idx] && c[idx].f != null ? String(c[idx].f).trim() : "");
+
+        const version = getVal(0);
+        const title = getVal(4);
+        if (!title || title.toLowerCase() === "title") continue;
+
+        const dateRaw = getVal(1);
+        const dateFmt = getFmt(1);
+        const targetDate = formatDateString(dateRaw, dateFmt);
+
+        parsed.push({
+          version: version || "Upcoming",
+          targetDate,
+          status: getVal(2) || "Planned",
+          category: getVal(3) || "General",
+          title,
+          description: getVal(5) || "",
+        });
+      }
+
+      itemsList = parsed;
+      updateCategoriesList();
+      updateSpotlight();
+      renderRoadmap();
+
+      if (skeletonEl) skeletonEl.classList.add("hidden");
+      if (containerGroups) containerGroups.classList.remove("hidden");
+    } catch (err) {
+      console.warn("Failed to fetch live roadmap from Google Sheets:", err);
+      itemsList = [];
+      updateCategoriesList();
+      updateSpotlight();
+      renderRoadmap();
+      if (skeletonEl) skeletonEl.classList.add("hidden");
+      if (containerGroups) containerGroups.classList.remove("hidden");
+    } finally {
+      if (refreshIcon) refreshIcon.classList.remove("animate-spin");
+    }
+  }
+
+  searchInput?.addEventListener("input", () => {
+    searchQuery = searchInput?.value || "";
+    renderRoadmap();
+  });
+
+  const statusBtns = document.querySelectorAll<HTMLButtonElement>("[data-status-filter]");
+  statusBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      statusFilter = btn.getAttribute("data-status-filter") || "all";
+      statusBtns.forEach((b) => {
+        const active = b.getAttribute("data-status-filter") === statusFilter;
+        b.classList.toggle("bg-accent-subtle", active);
+        b.classList.toggle("text-accent-primary", active);
+        b.classList.toggle("font-semibold", active);
+        b.classList.toggle("text-text-secondary", !active);
+      });
+      renderRoadmap();
+    });
+  });
+
+  refreshBtn?.addEventListener("click", fetchRoadmap);
+
+  fetchRoadmap();
+</script>
