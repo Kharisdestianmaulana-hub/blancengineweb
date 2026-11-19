@@ -123,11 +123,11 @@ import { Milestone, ArrowRight, Calendar, Sparkles } from "lucide-astro";
         label: "Coming Soon",
       };
     }
-    if (s === "completed" || s === "done" || s === "released") {
+    if (s === "archive" || s === "completed" || s === "done" || s === "released") {
       return {
         badge: "border-status-success text-status-success bg-surface-primary",
         dot: "bg-status-success",
-        label: "Ready for Release",
+        label: "Released",
       };
     }
     return {

@@ -10,6 +10,7 @@ import {
   Search,
   ArrowRight,
   MessageSquare,
+  CheckCircle2,
 } from "lucide-astro";
 ---
 
@@ -68,7 +69,7 @@ import {
       </div>
     </div>
 
-    <!-- Spotlight Banner: Upcoming Release (e.g. v0.1.1) -->
+    <!-- Spotlight Banner: Next Milestone (Focus on next unreleased version, e.g. v0.2.0) -->
     <div id="spotlight-card" class="hidden mt-8 rounded-lg border border-border-default bg-surface-primary p-5 sm:p-6">
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-start gap-3.5">
@@ -82,13 +83,13 @@ import {
                 id="spotlight-version"
                 class="rounded border border-border-default bg-accent-subtle px-2 py-0.5 font-mono text-xs font-bold text-accent-primary"
               >
-                v0.1.1
+                v0.2.0
               </span>
               <span
                 id="spotlight-status"
-                class="rounded border border-status-success px-2 py-0.5 text-[11px] font-semibold text-status-success"
+                class="rounded border border-status-warning px-2 py-0.5 text-[11px] font-semibold text-status-warning"
               >
-                Ready for Release
+                Planned
               </span>
             </div>
             <h2 id="spotlight-title" class="mt-1 text-lg font-bold text-text-primary sm:text-xl">
@@ -129,10 +130,10 @@ import {
         {
           [
             { id: "all", label: "All" },
-            { id: "completed", label: "Completed" },
             { id: "in progress", label: "In Progress" },
             { id: "coming soon", label: "Coming Soon" },
             { id: "planned", label: "Planned" },
+            { id: "released", label: "Released" },
           ].map((tab, idx) => (
             <button
               type="button"
@@ -164,7 +165,7 @@ import {
     </div>
 
     <!-- Roadmap Content Container -->
-    <div id="roadmap-container" class="mt-8 space-y-10">
+    <div id="roadmap-container" class="mt-8 space-y-12">
       <!-- Skeleton Loading State -->
       <div id="roadmap-skeleton" class="space-y-6">
         <div class="h-10 w-48 rounded bg-surface-primary animate-pulse"></div>
@@ -175,8 +176,8 @@ import {
         </div>
       </div>
 
-      <!-- Rendered Groups will be injected here -->
-      <div id="roadmap-groups" class="hidden space-y-10"></div>
+      <!-- Rendered Groups (Upcoming & Released Sections) -->
+      <div id="roadmap-groups" class="hidden space-y-14"></div>
     </div>
 
     <!-- Community Feedback CTA Card -->
@@ -229,6 +230,7 @@ import {
     category: string;
     title: string;
     description: string;
+    isReleased: boolean;
   }
 
   let itemsList: RoadmapItem[] = [];
@@ -298,6 +300,7 @@ import {
         badge: "border-accent-primary text-accent-primary bg-accent-subtle",
         dot: "bg-accent-primary",
         label: "In Progress",
+        isReleased: false,
       };
     }
     if (s === "coming soon" || s === "soon") {
@@ -305,19 +308,22 @@ import {
         badge: "border-status-info text-status-info bg-surface-primary",
         dot: "bg-status-info",
         label: "Coming Soon",
+        isReleased: false,
       };
     }
-    if (s === "completed" || s === "done" || s === "released") {
+    if (s === "archive" || s === "completed" || s === "done" || s === "released") {
       return {
         badge: "border-status-success text-status-success bg-surface-primary",
         dot: "bg-status-success",
-        label: "Completed",
+        label: "Released",
+        isReleased: true,
       };
     }
     return {
       badge: "border-status-warning text-status-warning bg-surface-primary",
       dot: "bg-status-warning",
       label: s ? status : "Planned",
+      isReleased: false,
     };
   }
 
@@ -378,38 +384,102 @@ import {
 
     spotlightCard.classList.remove("hidden");
 
-    // Prioritize v0.1.1 if present, otherwise look for in-progress or earliest version
-    const targetVersion =
-      itemsList.find((i) => i.version.toLowerCase() === "v0.1.1")?.version ||
-      itemsList.find(
-        (item) =>
-          item.status.toLowerCase().includes("progress") ||
-          item.status.toLowerCase().includes("soon")
-      )?.version ||
-      itemsList[0].version;
+    // Automatically focus on the upcoming unreleased version (e.g. v0.2.0)
+    const unreleasedItems = itemsList.filter((item) => !item.isReleased);
 
+    const activeItem =
+      unreleasedItems.find((i) => i.status.toLowerCase().includes("progress") || i.status.toLowerCase().includes("soon")) ||
+      (unreleasedItems.length > 0 ? unreleasedItems[0] : itemsList[0]);
+
+    const targetVersion = activeItem.version;
     const versionItems = itemsList.filter((item) => item.version === targetVersion);
     const firstDate = versionItems.find((i) => i.targetDate)?.targetDate || "In planning";
+    const statusInfo = getStatusClasses(activeItem.status);
 
-    const allCompleted = versionItems.every(
-      (i) => i.status.toLowerCase() === "completed" || i.status.toLowerCase() === "done"
-    );
-
-    const statusInfo = allCompleted
-      ? {
-          badge: "border-status-success text-status-success bg-surface-primary",
-          label: "Ready for Release",
-        }
-      : getStatusClasses(versionItems[0].status);
-
-    if (spotlightVersion) spotlightVersion.textContent = targetVersion || "v0.1.1";
+    if (spotlightVersion) spotlightVersion.textContent = targetVersion || "Upcoming";
     if (spotlightStatus) {
       spotlightStatus.textContent = statusInfo.label;
       spotlightStatus.className = `rounded border px-2 py-0.5 text-[11px] font-semibold ${statusInfo.badge}`;
     }
-    if (spotlightTitle) spotlightTitle.textContent = `Milestone: ${targetVersion || "v0.1.1"}`;
+    if (spotlightTitle) spotlightTitle.textContent = `Milestone: ${targetVersion || "Upcoming"}`;
     if (spotlightDate) spotlightDate.textContent = firstDate;
     if (spotlightCount) spotlightCount.textContent = `${versionItems.length} Feature${versionItems.length > 1 ? "s" : ""}`;
+  }
+
+  function renderMilestoneBlock(ver: string, groupItems: RoadmapItem[]): string {
+    const targetDate = groupItems.find((i) => i.targetDate)?.targetDate || "";
+    const isAllReleased = groupItems.every((i) => i.isReleased);
+
+    const cardsHtml = groupItems
+      .map((item) => {
+        const st = getStatusClasses(item.status);
+        return `
+        <div class="flex flex-col justify-between rounded-lg border border-border-default bg-surface-primary p-5 transition-colors hover:border-accent-primary">
+          <div>
+            <div class="flex items-center justify-between gap-2 border-b border-border-subtle pb-3">
+              <span class="rounded border border-border-default bg-surface-elevated px-2 py-0.5 font-mono text-[11px] font-medium text-text-secondary">
+                ${escapeHtml(item.category || "General")}
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded border px-2 py-0.5 text-[11px] font-semibold ${st.badge}">
+                <span class="h-1.5 w-1.5 rounded-full ${st.dot}"></span>
+                <span>${escapeHtml(st.label)}</span>
+              </span>
+            </div>
+
+            <h3 class="mt-3.5 text-base font-semibold text-text-primary leading-snug">
+              ${escapeHtml(item.title)}
+            </h3>
+            <p class="mt-2 text-xs leading-relaxed text-text-secondary sm:text-sm">
+              ${escapeHtml(item.description)}
+            </p>
+          </div>
+
+          ${
+            item.targetDate
+              ? `
+            <div class="mt-4 flex items-center gap-1.5 border-t border-border-subtle pt-3 text-[11px] text-text-muted">
+              <svg class="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>Target: <strong class="text-text-secondary font-medium">${escapeHtml(item.targetDate)}</strong></span>
+            </div>
+          `
+              : ""
+          }
+        </div>
+      `;
+      })
+      .join("");
+
+    return `
+      <section class="space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle pb-2.5">
+          <div class="flex items-center gap-2.5">
+            <span class="rounded border border-border-default ${isAllReleased ? 'bg-surface-elevated text-status-success' : 'bg-accent-subtle text-accent-primary'} px-2.5 py-1 font-mono text-xs font-bold">
+              ${escapeHtml(ver)}
+            </span>
+            ${
+              targetDate
+                ? `<span class="text-xs text-text-muted">Target: <strong class="text-text-secondary font-medium">${escapeHtml(targetDate)}</strong></span>`
+                : ""
+            }
+          </div>
+
+          <div class="flex items-center gap-2 text-xs text-text-muted">
+            <span>${groupItems.length} Feature${groupItems.length > 1 ? "s" : ""}</span>
+            ${
+              isAllReleased
+                ? `<span class="rounded border border-status-success/30 bg-surface-elevated px-2 py-0.5 text-[11px] text-status-success font-semibold">Shipped</span>`
+                : ""
+            }
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          ${cardsHtml}
+        </div>
+      </section>
+    `;
   }
 
   function renderRoadmap() {
@@ -429,12 +499,15 @@ import {
 
     const q = searchQuery.trim().toLowerCase();
     const filtered = itemsList.filter((item) => {
-      const matchStatus =
-        statusFilter === "all" ||
-        item.status.toLowerCase() === statusFilter.toLowerCase() ||
-        (statusFilter === "in progress" && item.status.toLowerCase().includes("progress")) ||
-        (statusFilter === "coming soon" && item.status.toLowerCase().includes("soon")) ||
-        (statusFilter === "completed" && (item.status.toLowerCase() === "done" || item.status.toLowerCase() === "released" || item.status.toLowerCase() === "completed"));
+      const s = item.status.toLowerCase().trim();
+      const isRel = item.isReleased;
+
+      let matchStatus = false;
+      if (statusFilter === "all") matchStatus = true;
+      else if (statusFilter === "released") matchStatus = isRel;
+      else if (statusFilter === "in progress") matchStatus = s.includes("progress");
+      else if (statusFilter === "coming soon") matchStatus = s.includes("soon");
+      else if (statusFilter === "planned") matchStatus = s === "planned";
 
       const matchCategory =
         categoryFilter === "all" || item.category.toLowerCase() === categoryFilter.toLowerCase();
@@ -461,94 +534,104 @@ import {
       return;
     }
 
-    const grouped = new Map<string, RoadmapItem[]>();
-    for (const item of filtered) {
+    // Separate into Upcoming and Released groups
+    const upcomingItems = filtered.filter((i) => !i.isReleased);
+    const releasedItems = filtered.filter((i) => i.isReleased);
+
+    const groupUpcoming = new Map<string, RoadmapItem[]>();
+    for (const item of upcomingItems) {
       const ver = item.version || "Future Ideas";
-      if (!grouped.has(ver)) grouped.set(ver, []);
-      grouped.get(ver)!.push(item);
+      if (!groupUpcoming.has(ver)) groupUpcoming.set(ver, []);
+      groupUpcoming.get(ver)!.push(item);
     }
 
-    const htmlSections: string[] = [];
+    const groupReleased = new Map<string, RoadmapItem[]>();
+    for (const item of releasedItems) {
+      const ver = item.version || "Released";
+      if (!groupReleased.has(ver)) groupReleased.set(ver, []);
+      groupReleased.get(ver)!.push(item);
+    }
 
-    for (const [ver, groupItems] of grouped.entries()) {
-      const targetDate = groupItems.find((i) => i.targetDate)?.targetDate || "";
-      const completedCount = groupItems.filter(
-        (i) => i.status.toLowerCase() === "completed" || i.status.toLowerCase() === "done"
-      ).length;
+    let finalHtml = "";
 
-      const cardsHtml = groupItems
-        .map((item) => {
-          const st = getStatusClasses(item.status);
-          return `
-          <div class="flex flex-col justify-between rounded-lg border border-border-default bg-surface-primary p-5 transition-colors hover:border-accent-primary">
-            <div>
-              <div class="flex items-center justify-between gap-2 border-b border-border-subtle pb-3">
-                <span class="rounded border border-border-default bg-surface-elevated px-2 py-0.5 font-mono text-[11px] font-medium text-text-secondary">
-                  ${escapeHtml(item.category || "General")}
-                </span>
-                <span class="inline-flex items-center gap-1.5 rounded border px-2 py-0.5 text-[11px] font-semibold ${st.badge}">
-                  <span class="h-1.5 w-1.5 rounded-full ${st.dot}"></span>
-                  <span>${escapeHtml(st.label)}</span>
-                </span>
-              </div>
+    // 1. Upcoming Section
+    if (groupUpcoming.size > 0) {
+      let upcomingBlocks = "";
+      for (const [ver, gItems] of groupUpcoming.entries()) {
+        upcomingBlocks += renderMilestoneBlock(ver, gItems);
+      }
 
-              <h3 class="mt-3.5 text-base font-semibold text-text-primary leading-snug">
-                ${escapeHtml(item.title)}
-              </h3>
-              <p class="mt-2 text-xs leading-relaxed text-text-secondary sm:text-sm">
-                ${escapeHtml(item.description)}
-              </p>
+      finalHtml += `
+        <div class="space-y-6">
+          <div class="flex items-center justify-between border-b border-border-default pb-3">
+            <div class="flex items-center gap-2">
+              <span class="inline-block h-2.5 w-2.5 rounded-full bg-accent-primary"></span>
+              <h2 class="text-lg font-bold tracking-tight text-text-primary sm:text-xl">
+                Upcoming Milestones
+              </h2>
             </div>
-
-            ${
-              item.targetDate
-                ? `
-              <div class="mt-4 flex items-center gap-1.5 border-t border-border-subtle pt-3 text-[11px] text-text-muted">
-                <svg class="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span>Target: <strong class="text-text-secondary font-medium">${escapeHtml(item.targetDate)}</strong></span>
-              </div>
-            `
-                : ""
-            }
+            <span class="rounded bg-accent-subtle px-2 py-0.5 font-mono text-xs text-accent-primary font-medium">
+              ${upcomingItems.length} planned
+            </span>
           </div>
-        `;
-        })
-        .join("");
+          <div class="space-y-8">
+            ${upcomingBlocks}
+          </div>
+        </div>
+      `;
+    }
 
-      htmlSections.push(`
-        <section class="space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle pb-2.5">
-            <div class="flex items-center gap-2.5">
-              <span class="rounded border border-border-default bg-accent-subtle px-2.5 py-1 font-mono text-xs font-bold text-accent-primary">
-                ${escapeHtml(ver)}
+    // 2. Released / Archive Section (Option A)
+    if (groupReleased.size > 0) {
+      let releasedBlocks = "";
+      for (const [ver, gItems] of groupReleased.entries()) {
+        releasedBlocks += renderMilestoneBlock(ver, gItems);
+      }
+
+      finalHtml += `
+        <div class="${groupUpcoming.size > 0 ? 'border-t border-border-default pt-10' : ''} space-y-6">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-border-default pb-3">
+            <div class="flex items-center gap-2">
+              <span class="inline-block h-2.5 w-2.5 rounded-full bg-status-success"></span>
+              <h2 class="text-lg font-bold tracking-tight text-text-primary sm:text-xl">
+                Recently Shipped & Released
+              </h2>
+              <span class="rounded border border-status-success/30 bg-surface-elevated px-2 py-0.5 font-mono text-xs text-status-success font-medium">
+                Archive
               </span>
-              ${
-                targetDate
-                  ? `<span class="text-xs text-text-muted">Target: <strong class="text-text-secondary font-medium">${escapeHtml(targetDate)}</strong></span>`
-                  : ""
-              }
             </div>
 
-            <div class="flex items-center gap-2 text-xs text-text-muted">
-              <span>${groupItems.length} Feature${groupItems.length > 1 ? "s" : ""}</span>
-              ${
-                completedCount > 0
-                  ? `<span class="rounded bg-surface-elevated px-1.5 py-0.5 text-[11px] text-status-success font-medium">${completedCount} completed</span>`
-                  : ""
-              }
-            </div>
+            <a
+              href="/changelog"
+              class="inline-flex items-center gap-1.5 text-xs font-semibold text-accent-primary hover:underline"
+            >
+              <span>View Technical Changelog</span>
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
           </div>
 
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            ${cardsHtml}
+          <div class="space-y-8">
+            ${releasedBlocks}
           </div>
-        </section>
-      `);
+
+          <div class="mt-6 rounded-lg border border-border-default bg-surface-primary p-4 text-xs text-text-secondary sm:text-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <span>Looking for official installers or release binaries?</span>
+            <div class="flex items-center gap-2">
+              <a href="/download" class="rounded bg-accent-primary px-3 py-1.5 text-xs font-semibold text-text-on-accent hover:bg-accent-hover">
+                Download Latest Release
+              </a>
+              <a href="/changelog" class="rounded border border-border-default bg-surface-elevated px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-hover">
+                Read Changelog
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
-    containerGroups.innerHTML = htmlSections.join("");
+    containerGroups.innerHTML = finalHtml;
   }
 
   async function fetchRoadmap() {
@@ -577,14 +660,17 @@ import {
         const dateRaw = getVal(1);
         const dateFmt = getFmt(1);
         const targetDate = formatDateString(dateRaw, dateFmt);
+        const rawStatus = getVal(2) || "Planned";
+        const st = getStatusClasses(rawStatus);
 
         parsed.push({
           version: version || "Upcoming",
           targetDate,
-          status: getVal(2) || "Planned",
+          status: rawStatus,
           category: getVal(3) || "General",
           title,
           description: getVal(5) || "",
+          isReleased: st.isReleased,
         });
       }
 
