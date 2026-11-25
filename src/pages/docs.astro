@@ -2,133 +2,414 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
-import { BookOpen, ArrowRight, Copy, Check } from "lucide-astro";
-
-const sections = [
-  { id: "getting-started", title: "1. Project & Assets" },
-  { id: "story-setup", title: "2. Story Setup Syntax" },
-  { id: "scenes-flow", title: "3. Scene Editor & Story Flow" },
-  { id: "ui-designer", title: "4. UI Designer" },
-  { id: "localization", title: "5. Multi-Language & CSV" },
-  { id: "export", title: "6. Exporting & Installer" },
-  { id: "shortcuts", title: "7. Runtime Shortcuts" },
-];
+import {
+  BookOpen,
+  Search,
+  ExternalLink,
+  Github,
+  ChevronDown,
+  ChevronRight,
+  Info,
+  Lightbulb,
+  AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
+  Copy,
+  Check,
+  Code2,
+  Terminal,
+  FolderTree,
+  Gamepad2,
+} from "lucide-astro";
 ---
 
 <BaseLayout
-  title="Documentation: Blanc Engine User Guide"
-  description="Complete user guide for creating, localizing, and distributing visual novels with Blanc Engine."
+  title="Blanc Engine Documentation: Official User Guide"
+  description="Official documentation for Blanc Engine visual novel development. Learn screenplay scripting, visual scene timelines, story flow node graph, localization, and Windows installer export."
   ogImage="/screenshots/SS_STORY_SETUP.png"
   breadcrumbs={[{ name: "Home", path: "/" }, { name: "Docs", path: "/docs/" }]}
 >
   <Navbar />
 
-  <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12">
-    <!-- Page Header -->
-    <div class="border-b border-border-default pb-6">
-      <div class="flex items-center gap-2">
-        <BookOpen class="h-4 w-4 text-text-muted" />
-        <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-muted">
-          User Guide
-        </span>
-      </div>
-      <h1 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
-        Blanc Engine Documentation
-      </h1>
-      <p class="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary sm:text-base">
-        Learn the complete no-code workflow from screenplay drafting to packaging a standalone Windows installer.
-      </p>
-    </div>
-
-    <!-- 2-Pane Documentation Layout -->
-    <div class="mt-8 grid gap-8 lg:grid-cols-12">
-      <!-- Left Sidebar TOC -->
-      <aside class="min-w-0 lg:col-span-3">
-        <div class="sticky top-24 rounded-lg border border-border-default bg-bg-secondary p-4">
-          <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-text-muted">
-            Contents
-          </p>
-          <nav class="mt-3 flex flex-col gap-1" aria-label="Documentation sections">
-            {
-              sections.map((sec, idx) => (
-                <a
-                  href={`#${sec.id}`}
-                  data-doc-toc={sec.id}
-                  class:list={[
-                    "rounded-md px-2.5 py-1.5 text-sm transition-colors",
-                    idx === 0
-                      ? "bg-surface-elevated font-semibold text-text-primary"
-                      : "text-text-secondary hover:bg-surface-hover hover:text-text-primary",
-                  ]}
-                >
-                  {sec.title}
-                </a>
-              ))
-            }
-          </nav>
-
-          <div class="mt-5 space-y-2 border-t border-border-subtle pt-4">
-            <a
-              href="/download"
-              class="inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-accent-primary px-3 py-2 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover"
-            >
-              <span>Download Blanc Engine</span>
-              <ArrowRight class="h-3.5 w-3.5" />
-            </a>
-            <a
-              href="#"
-              class="inline-flex w-full items-center justify-center rounded-md border border-border-default bg-surface-primary px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
-            >
-              Back to top
-            </a>
+  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- 1. LEFT SIDEBAR: GODOT DOCS HIERARCHICAL TREE -->
+      <aside class="lg:col-span-3 sticky top-20 rounded-lg border border-border-default bg-bg-secondary p-4 select-none">
+        <!-- Godot Docs Style Logo Ribbon Banner -->
+        <div class="rounded-md border border-border-default bg-surface-primary p-3 text-center shadow-sm">
+          <div class="flex items-center justify-center gap-2">
+            <img src="/logo.png" alt="Blanc Engine" class="h-6 w-6 object-contain" />
+            <span class="font-mono text-xs font-bold tracking-wider text-text-primary uppercase">Blanc Docs</span>
           </div>
+          <p class="mt-1 font-mono text-[10px] text-text-muted">v0.1.1 (Stable)</p>
+        </div>
+
+        <!-- Search Input -->
+        <div class="mt-3.5 relative">
+          <Search class="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-text-muted" />
+          <input
+            id="docs-search-input"
+            type="text"
+            placeholder="Search docs..."
+            class="h-8 w-full rounded border border-border-default bg-bg-primary pl-8 pr-2 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+          />
+        </div>
+
+        <!-- Tree Navigation Groups -->
+        <nav id="docs-tree-nav" class="mt-4 space-y-4 text-xs font-medium" aria-label="Documentation hierarchy">
+          
+          <!-- Group 1: Getting Started -->
+          <div>
+            <div class="flex items-center justify-between font-mono text-[10px] font-bold uppercase tracking-wider text-text-muted mb-1 px-1">
+              <span>Getting Started</span>
+              <span class="text-[9px]">2 topics</span>
+            </div>
+            <ul class="space-y-0.5">
+              <li>
+                <a
+                  href="#overview"
+                  data-doc-nav="overview"
+                  class="doc-nav-link flex items-center gap-1.5 rounded px-2.5 py-1.5 text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors bg-surface-elevated text-text-primary font-semibold"
+                >
+                  <span class="text-text-primary text-[10px]">&bull;</span>
+                  <span>Introduction & Overview</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#getting-started"
+                  data-doc-nav="getting-started"
+                  class="doc-nav-link flex items-center gap-1.5 rounded px-2.5 py-1.5 text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors"
+                >
+                  <span class="text-text-muted text-[10px]">&bull;</span>
+                  <span>1. Project & Asset Manager</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Group 2: Story & Scripting -->
+          <div>
+            <div class="flex items-center justify-between font-mono text-[10px] font-bold uppercase tracking-wider text-text-muted mb-1 px-1">
+              <span>Story & Scripting</span>
+              <span class="text-[9px]">1 topic</span>
+            </div>
+            <ul class="space-y-0.5">
+              <li>
+                <a
+                  href="#story-setup"
+                  data-doc-nav="story-setup"
+                  class="doc-nav-link flex items-center gap-1.5 rounded px-2.5 py-1.5 text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors"
+                >
+                  <span class="text-text-muted text-[10px]">&bull;</span>
+                  <span>2. Story Setup (Screenplay)</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Group 3: Visual Editors -->
+          <div>
+            <div class="flex items-center justify-between font-mono text-[10px] font-bold uppercase tracking-wider text-text-muted mb-1 px-1">
+              <span>Visual Editors</span>
+              <span class="text-[9px]">2 topics</span>
+            </div>
+            <ul class="space-y-0.5">
+              <li>
+                <a
+                  href="#scenes-flow"
+                  data-doc-nav="scenes-flow"
+                  class="doc-nav-link flex items-center gap-1.5 rounded px-2.5 py-1.5 text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors"
+                >
+                  <span class="text-text-muted text-[10px]">&bull;</span>
+                  <span>3. Scene Editor & Story Flow</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#ui-designer"
+                  data-doc-nav="ui-designer"
+                  class="doc-nav-link flex items-center gap-1.5 rounded px-2.5 py-1.5 text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors"
+                >
+                  <span class="text-text-muted text-[10px]">&bull;</span>
+                  <span>4. UI Designer Studio</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Group 4: Localization & Export -->
+          <div>
+            <div class="flex items-center justify-between font-mono text-[10px] font-bold uppercase tracking-wider text-text-muted mb-1 px-1">
+              <span>Localization & Export</span>
+              <span class="text-[9px]">2 topics</span>
+            </div>
+            <ul class="space-y-0.5">
+              <li>
+                <a
+                  href="#localization"
+                  data-doc-nav="localization"
+                  class="doc-nav-link flex items-center gap-1.5 rounded px-2.5 py-1.5 text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors"
+                >
+                  <span class="text-text-muted text-[10px]">&bull;</span>
+                  <span>5. Multi-Language & CSV</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#export"
+                  data-doc-nav="export"
+                  class="doc-nav-link flex items-center gap-1.5 rounded px-2.5 py-1.5 text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors"
+                >
+                  <span class="text-text-muted text-[10px]">&bull;</span>
+                  <span>6. Exporting & Distribution</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Group 5: Reference -->
+          <div>
+            <div class="flex items-center justify-between font-mono text-[10px] font-bold uppercase tracking-wider text-text-muted mb-1 px-1">
+              <span>Reference</span>
+              <span class="text-[9px]">1 topic</span>
+            </div>
+            <ul class="space-y-0.5">
+              <li>
+                <a
+                  href="#shortcuts"
+                  data-doc-nav="shortcuts"
+                  class="doc-nav-link flex items-center gap-1.5 rounded px-2.5 py-1.5 text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors"
+                >
+                  <span class="text-text-muted text-[10px]">&bull;</span>
+                  <span>7. Runtime Shortcuts</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </nav>
+
+        <!-- Sidebar Footer: Version Tag & GitHub -->
+        <div class="mt-6 pt-4 border-t border-border-subtle flex items-center justify-between text-[11px] font-mono text-text-muted">
+          <span>v: stable</span>
+          <a
+            href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/tree/main/docs"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-text-muted hover:text-text-primary hover:underline flex items-center gap-1"
+          >
+            <span>GitHub Docs</span>
+            <ExternalLink class="h-3 w-3" />
+          </a>
         </div>
       </aside>
 
-      <!-- Right Content Area -->
-      <div class="min-w-0 space-y-8 lg:col-span-9">
-        <section id="getting-started" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6">
-          <h2 class="text-xl font-semibold text-text-primary">1. Creating a Project & Importing Assets</h2>
-          <p class="mt-2 text-sm leading-relaxed text-text-secondary">
-            Download and open <strong>Blanc Engine</strong> (<code class="font-mono text-xs text-text-primary">Setup.exe</code> or <code class="font-mono text-xs text-text-primary">Portable.exe</code>), click <strong>New Project</strong> (or open an existing project), and import your assets in the <strong>Asset Manager</strong>:
+      <!-- 2. MAIN READING AREA -->
+      <main class="lg:col-span-9 space-y-10 min-w-0">
+        
+        <!-- Header: Godot Docs Style Breadcrumbs & Edit on GitHub Actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-border-default pb-4">
+          <div class="flex items-center gap-2 font-mono text-xs text-text-muted">
+            <a href="/" class="hover:text-text-primary">Home</a>
+            <span>/</span>
+            <span class="text-text-secondary">Blanc Docs</span>
+            <span>/</span>
+            <span class="text-text-primary font-semibold">v0.1.1 branch</span>
+          </div>
+
+          <div class="flex items-center gap-3 text-xs">
+            <a
+              id="edit-github-btn"
+              href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/tree/main/docs"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 text-text-secondary hover:text-text-primary hover:underline font-semibold"
+            >
+              <Github class="h-3.5 w-3.5" />
+              <span>Edit on GitHub</span>
+            </a>
+            <span class="text-border-default">|</span>
+            <a
+              href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/blob/main/README.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-text-muted hover:text-text-primary"
+            >
+              Learn how to contribute
+            </a>
+          </div>
+        </div>
+
+        <!-- Page Main Heading -->
+        <div id="overview" class="scroll-mt-24 space-y-4">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary">
+            Blanc Docs - v0.1.1 branch
+          </h1>
+
+          <!-- Callout: Godot Style Note Box (Matte Slate Surface) -->
+          <div class="rounded-lg border border-border-default bg-surface-primary overflow-hidden">
+            <div class="flex items-center gap-2 border-b border-border-subtle bg-surface-elevated px-4 py-2 font-mono text-xs font-semibold text-text-primary">
+              <Info class="h-3.5 w-3.5 text-text-muted" />
+              <span class="uppercase tracking-wider">Note</span>
+            </div>
+            <p class="p-4 text-xs sm:text-sm leading-relaxed text-text-secondary">
+              Blanc Engine documentation is open-source and version-controlled via GitHub Markdown files. Click <strong class="text-text-primary">Edit on GitHub</strong> at the top of any page to suggest improvements, fix typos, or contribute tutorials.
+            </p>
+          </div>
+
+          <p class="text-sm leading-relaxed text-text-secondary sm:text-base">
+            Welcome to the official documentation of <strong>Blanc Engine</strong>, the visual screenplay, timeline, and node-based visual novel creation suite. If you are new to the engine, select the tile below that matches your background:
           </p>
-          <div class="mt-4 grid gap-3 sm:grid-cols-2">
-            <div class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
-              <p class="text-xs font-semibold text-text-primary">Backgrounds</p>
-              <p class="mt-1 font-mono text-xs text-text-muted">.png, .jpg, .webp</p>
+
+          <!-- 4 ROLE-BASED TILES (2x2 GRID IN MATTE SLATE / CHARCOAL SURFACES) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+            <!-- Tile 1: Beginner -->
+            <a
+              href="#getting-started"
+              class="group flex flex-col justify-between rounded-lg border border-border-default bg-surface-primary p-4 transition-all hover:bg-surface-elevated hover:border-text-muted"
+            >
+              <div>
+                <span class="inline-block rounded border border-border-subtle bg-bg-secondary px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-text-muted group-hover:text-text-secondary">
+                  Beginner Track
+                </span>
+                <h3 class="mt-2.5 text-sm font-semibold text-text-primary group-hover:text-white">
+                  I have never made a game before, I want to create my first visual novel.
+                </h3>
+              </div>
+              <div class="mt-4 flex items-center gap-1.5 text-xs font-medium text-text-secondary group-hover:text-text-primary">
+                <span>Start No-Code Guide</span>
+                <ArrowRight class="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </a>
+
+            <!-- Tile 2: Experienced Creator -->
+            <a
+              href="#story-setup"
+              class="group flex flex-col justify-between rounded-lg border border-border-default bg-surface-primary p-4 transition-all hover:bg-surface-elevated hover:border-text-muted"
+            >
+              <div>
+                <span class="inline-block rounded border border-border-subtle bg-bg-secondary px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-text-muted group-hover:text-text-secondary">
+                  Engine Migrator
+                </span>
+                <h3 class="mt-2.5 text-sm font-semibold text-text-primary group-hover:text-white">
+                  I know Ren'Py or TyranoBuilder, I want to learn Blanc's visual screenplay workflow.
+                </h3>
+              </div>
+              <div class="mt-4 flex items-center gap-1.5 text-xs font-medium text-text-secondary group-hover:text-text-primary">
+                <span>Story Setup Syntax</span>
+                <ArrowRight class="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </a>
+
+            <!-- Tile 3: Advanced Story Flow -->
+            <a
+              href="#scenes-flow"
+              class="group flex flex-col justify-between rounded-lg border border-border-default bg-surface-primary p-4 transition-all hover:bg-surface-elevated hover:border-text-muted"
+            >
+              <div>
+                <span class="inline-block rounded border border-border-subtle bg-bg-secondary px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-text-muted group-hover:text-text-secondary">
+                  Advanced Route Logic
+                </span>
+                <h3 class="mt-2.5 text-sm font-semibold text-text-primary group-hover:text-white">
+                  I want to build branching narrative node trees, choice flags, and multi-endings.
+                </h3>
+              </div>
+              <div class="mt-4 flex items-center gap-1.5 text-xs font-medium text-text-secondary group-hover:text-text-primary">
+                <span>Story Flow Canvas</span>
+                <ArrowRight class="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </a>
+
+            <!-- Tile 4: Contributor -->
+            <a
+              href="https://github.com/Kharisdestianmaulana-hub/blancengineweb"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex flex-col justify-between rounded-lg border border-border-default bg-surface-primary p-4 transition-all hover:bg-surface-elevated hover:border-text-muted"
+            >
+              <div>
+                <span class="inline-block rounded border border-border-subtle bg-bg-secondary px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-text-muted group-hover:text-text-secondary">
+                  Open Source Contributor
+                </span>
+                <h3 class="mt-2.5 text-sm font-semibold text-text-primary group-hover:text-white">
+                  I want to contribute translations, tutorials, and improvements to Blanc Engine.
+                </h3>
+              </div>
+              <div class="mt-4 flex items-center gap-1.5 text-xs font-medium text-text-secondary group-hover:text-text-primary">
+                <span>GitHub Repository</span>
+                <ExternalLink class="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- SECTION 1: Creating a Project & Assets -->
+        <section id="getting-started" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-border-subtle pb-3">
+            <h2 class="text-xl font-bold text-text-primary">1. Creating a Project & Importing Assets</h2>
+            <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/01-project-and-assets.md" target="_blank" class="text-xs text-text-muted hover:text-text-primary hover:underline flex items-center gap-1 font-medium">
+              <Github class="h-3 w-3" />
+              <span>Edit section</span>
+            </a>
+          </div>
+
+          <p class="text-sm leading-relaxed text-text-secondary">
+            Download and open <strong>Blanc Engine</strong> (<code class="font-mono text-xs text-text-primary">Setup.exe</code> or <code class="font-mono text-xs text-text-primary">Portable.exe</code>). On the Project Hub, click <strong>New Project</strong> to create your workspace, then import visual and sound assets via the <strong>Asset Manager</strong>:
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div class="rounded border border-border-subtle bg-bg-secondary p-3.5">
+              <p class="text-xs font-bold text-text-primary">Backgrounds</p>
+              <p class="mt-1 font-mono text-xs text-text-muted">.png, .jpg, .webp (1920x1080 recommended)</p>
             </div>
-            <div class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
-              <p class="text-xs font-semibold text-text-primary">Characters</p>
-              <p class="mt-1 font-mono text-xs text-text-muted">Sprites & expression variants</p>
+            <div class="rounded border border-border-subtle bg-bg-secondary p-3.5">
+              <p class="text-xs font-bold text-text-primary">Characters</p>
+              <p class="mt-1 font-mono text-xs text-text-muted">Transparent sprites, side portraits, and expression variants</p>
             </div>
-            <div class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
-              <p class="text-xs font-semibold text-text-primary">Audio</p>
-              <p class="mt-1 font-mono text-xs text-text-muted">BGM, SFX, and Voice tracks</p>
+            <div class="rounded border border-border-subtle bg-bg-secondary p-3.5">
+              <p class="text-xs font-bold text-text-primary">Audio</p>
+              <p class="mt-1 font-mono text-xs text-text-muted">BGM (looping), SFX sound effects, and voice clips</p>
             </div>
-            <div class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
-              <p class="text-xs font-semibold text-text-primary">UI & Fonts</p>
-              <p class="mt-1 font-mono text-xs text-text-muted">Custom panels, buttons, .ttf/.otf</p>
+            <div class="rounded border border-border-subtle bg-bg-secondary p-3.5">
+              <p class="text-xs font-bold text-text-primary">UI & Fonts</p>
+              <p class="mt-1 font-mono text-xs text-text-muted">Custom textboxes, buttons, nine-slice borders, and .ttf/.otf</p>
             </div>
+          </div>
+
+          <!-- Tip Box -->
+          <div class="rounded-lg border border-border-default bg-bg-secondary p-4">
+            <div class="flex items-center gap-2 text-text-primary font-semibold text-xs font-mono uppercase tracking-wider">
+              <Lightbulb class="h-3.5 w-3.5 text-text-muted" />
+              <span>Tip: Asset Organization</span>
+            </div>
+            <p class="mt-1 text-xs text-text-secondary leading-relaxed">
+              Organize your assets into subfolders inside the Asset Manager for cleaner timelines when building large visual novel projects.
+            </p>
           </div>
         </section>
 
-        <section id="story-setup" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6">
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <h2 class="text-xl font-semibold text-text-primary">2. Writing in Story Setup</h2>
+        <!-- SECTION 2: Writing in Story Setup -->
+        <section id="story-setup" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-border-subtle pb-3">
+            <h2 class="text-xl font-bold text-text-primary">2. Writing in Story Setup</h2>
             <button
               id="copy-sample-script"
               type="button"
-              class="inline-flex h-8 items-center gap-1.5 rounded-md border border-border-default bg-bg-secondary px-2.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent-primary hover:text-text-primary cursor-pointer"
+              class="inline-flex h-8 items-center gap-1.5 rounded border border-border-default bg-bg-secondary px-2.5 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer"
             >
               <Copy id="copy-icon" class="h-3.5 w-3.5" />
               <Check id="copied-icon" class="hidden h-3.5 w-3.5 text-status-success" />
               <span id="copy-label">Copy Sample Script</span>
             </button>
           </div>
-          <p class="mt-2 text-sm leading-relaxed text-text-secondary">
-            In <strong>Story Setup</strong>, draft your story like a simple movie script, then click <strong>Convert to Scenes</strong> to turn it into editable visual scenes automatically.
+
+          <p class="text-sm leading-relaxed text-text-secondary">
+            In <strong>Story Setup</strong>, draft dialogues like a screenplay. Typing speaker names and bracketed tags automatically formats into visual action blocks when you click <strong>Convert to Scenes</strong>:
           </p>
-          <pre id="sample-script-code" class="mt-4 overflow-x-auto rounded-md border border-border-subtle bg-bg-primary p-4 font-mono text-xs leading-relaxed text-text-primary"><code>[Scene: Classroom_Afternoon]
+
+          <pre id="sample-script-code" class="overflow-x-auto rounded border border-border-subtle bg-bg-primary p-4 font-mono text-xs leading-relaxed text-text-primary"><code>[Scene: Classroom_Afternoon]
 [BGM: peaceful_day]
 
 Alice (Happy): "Hello! Welcome to Blanc Engine."
@@ -139,112 +420,201 @@ Narrator: The afternoon sun streamed through the classroom windows.
 - Stay in the classroom -> Classroom_Evening</code></pre>
         </section>
 
-        <section id="scenes-flow" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6">
-          <h2 class="text-xl font-semibold text-text-primary">3. Editing Scenes & Story Flow</h2>
-          <ul class="mt-3 space-y-2.5 text-sm leading-relaxed text-text-secondary">
-            <li class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
-              <strong class="text-text-primary">Scene Editor:</strong> Fine-tune vertical action blocks including backgrounds, character positioning and expressions, dialogue, narration, choices, wait timers, and screen effects (<code class="font-mono text-xs text-accent-primary">FadeIn</code>, <code class="font-mono text-xs text-accent-primary">FadeOut</code>, <code class="font-mono text-xs text-accent-primary">FlashWhite</code>, <code class="font-mono text-xs text-accent-primary">Shake</code>).
-            </li>
-            <li class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
-              <strong class="text-text-primary">Story Flow:</strong> Visually wire <code class="font-mono text-xs text-text-primary">Main Menu</code>, <code class="font-mono text-xs text-text-primary">Scene</code> nodes, <code class="font-mono text-xs text-text-primary">Choice</code> pins, <code class="font-mono text-xs text-text-primary">Pause</code>, <code class="font-mono text-xs text-text-primary">Settings</code>, and <code class="font-mono text-xs text-text-primary">Ending</code> nodes on an interactive canvas.
-            </li>
-          </ul>
-        </section>
+        <!-- SECTION 3: Editing Scenes & Story Flow -->
+        <section id="scenes-flow" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-border-subtle pb-3">
+            <h2 class="text-xl font-bold text-text-primary">3. Editing Scenes & Story Flow</h2>
+            <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/03-scene-editor-and-story-flow.md" target="_blank" class="text-xs text-text-muted hover:text-text-primary hover:underline flex items-center gap-1 font-medium">
+              <Github class="h-3 w-3" />
+              <span>Edit section</span>
+            </a>
+          </div>
 
-        <section id="ui-designer" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6">
-          <h2 class="text-xl font-semibold text-text-primary">4. Customizing UI (UI Designer)</h2>
-          <p class="mt-2 text-sm leading-relaxed text-text-secondary">
-            Use <strong>UI Designer</strong> with live preview to customize the <strong>Title Screen</strong> (logo, background, button layout and textures), <strong>Gameplay HUD</strong> (dialogue box, nameplate, Q.Save, Q.Load, Auto, Skip, History, Hide UI, Menu), and <strong>Pause / Settings / Save-Load / Backlog</strong> screens.
-          </p>
-        </section>
-
-        <section id="localization" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6">
-          <h2 class="text-xl font-semibold text-text-primary">5. Multi-Language Support (Localization)</h2>
-          <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-text-secondary">
-            <li>Open the <strong>Localization</strong> tab and confirm your <strong>Source / Default Language</strong> (such as <code class="font-mono text-xs text-text-primary">en</code> or <code class="font-mono text-xs text-text-primary">id</code>).</li>
-            <li>Under <strong>Add Language</strong>, enter a language code (e.g., <code class="font-mono text-xs text-text-primary">ja</code>, <code class="font-mono text-xs text-text-primary">ko</code>, <code class="font-mono text-xs text-text-primary">fr</code>) and display name, then click <strong>+ Add Language</strong>.</li>
-            <li>Click <strong>Sync Strings</strong> whenever you add new dialogues or choices in your scenes.</li>
-            <li>Translate directly in the editor or use <strong>Export CSV / Import CSV</strong> (<code class="font-mono text-xs text-text-primary">key,context,source,translation</code>) to edit in Excel or Google Sheets.</li>
-            <li>Players can switch languages anytime from <strong>Settings &rarr; Language</strong> in the exported game.</li>
-          </ol>
-        </section>
-
-        <section id="export" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6">
-          <h2 class="text-xl font-semibold text-text-primary">6. Exporting & Distributing Your Game</h2>
-          <div class="mt-3 grid gap-4 sm:grid-cols-2">
-            <div class="rounded-md border border-border-subtle bg-bg-secondary p-4">
-              <h3 class="text-sm font-semibold text-text-primary">Portable Build</h3>
-              <p class="mt-1.5 text-xs leading-relaxed text-text-secondary">
-                Outputs <code class="font-mono text-text-primary">YourGame.exe</code> alongside an encrypted <code class="font-mono text-accent-primary">game.bpack</code> archive (or loose <code class="font-mono text-text-primary">GameData/</code>).
+          <div class="space-y-3 text-sm text-text-secondary leading-relaxed">
+            <div class="rounded border border-border-subtle bg-bg-secondary p-4">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-text-primary font-mono">Scene Editor (Action Blocks)</h3>
+              <p class="mt-1 text-xs text-text-secondary">
+                Drag and drop vertical timeline action blocks: backgrounds, character positioning (Left, Center, Right), emotional expressions, dialogue text, wait timers, and screen transitions (<code class="font-mono text-xs text-text-primary bg-bg-primary px-1 py-0.5 rounded border border-border-subtle">FadeIn</code>, <code class="font-mono text-xs text-text-primary bg-bg-primary px-1 py-0.5 rounded border border-border-subtle">FadeOut</code>, <code class="font-mono text-xs text-text-primary bg-bg-primary px-1 py-0.5 rounded border border-border-subtle">FlashWhite</code>, <code class="font-mono text-xs text-text-primary bg-bg-primary px-1 py-0.5 rounded border border-border-subtle">Shake</code>).
               </p>
             </div>
-            <div class="rounded-md border border-border-subtle bg-bg-secondary p-4">
-              <h3 class="text-sm font-semibold text-text-primary">Windows Installer (Setup.exe)</h3>
-              <p class="mt-1.5 text-xs leading-relaxed text-text-secondary">
-                Configure Version, Publisher, Welcome Message, per-language Terms & Privacy Policy, Sidebar Photo, and Desktop/Start Menu shortcuts. Includes a clean <code class="font-mono text-text-primary">Uninstall &lt;Game&gt;.exe</code>.
+
+            <div class="rounded border border-border-subtle bg-bg-secondary p-4">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-text-primary font-mono">Story Flow (Visual Node Canvas)</h3>
+              <p class="mt-1 text-xs text-text-secondary">
+                Connect nodes visually on an infinite canvas: wire <code class="font-mono text-text-primary">Main Menu</code>, <code class="font-mono text-text-primary">Scene</code> blocks, choice branches, <code class="font-mono text-text-primary">Pause</code>, <code class="font-mono text-text-primary">Settings</code>, and <code class="font-mono text-text-primary">Ending</code> nodes with zero coding required.
               </p>
             </div>
           </div>
         </section>
 
-        <section id="shortcuts" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6">
-          <h2 class="text-xl font-semibold text-text-primary">7. Runtime Keyboard Shortcuts</h2>
-          <div class="mt-4 grid gap-2 sm:grid-cols-2">
-            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2 text-xs">
-              <span class="text-text-secondary">Advance dialogue / confirm</span>
+        <!-- SECTION 4: Customizing UI Designer -->
+        <section id="ui-designer" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-border-subtle pb-3">
+            <h2 class="text-xl font-bold text-text-primary">4. Customizing UI (UI Designer Studio)</h2>
+            <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/04-ui-designer.md" target="_blank" class="text-xs text-text-muted hover:text-text-primary hover:underline flex items-center gap-1 font-medium">
+              <Github class="h-3 w-3" />
+              <span>Edit section</span>
+            </a>
+          </div>
+
+          <p class="text-sm leading-relaxed text-text-secondary">
+            Customize the look and feel of your visual novel with real-time WYSIWYG preview:
+          </p>
+          <ul class="list-disc list-inside space-y-1.5 text-xs text-text-secondary">
+            <li><strong>Title Screen</strong>: Game logo, custom animated background, start/load/settings buttons.</li>
+            <li><strong>Gameplay HUD</strong>: Dialogue textbox, speaker nameplate, Q.Save, Q.Load, Auto-Play, Skip, Backlog history, and Hide UI button.</li>
+            <li><strong>System Screens</strong>: Pause overlay, Save & Load multi-slot grids, and History backlog viewer.</li>
+          </ul>
+        </section>
+
+        <!-- SECTION 5: Multi-Language Support -->
+        <section id="localization" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-border-subtle pb-3">
+            <h2 class="text-xl font-bold text-text-primary">5. Multi-Language Support (Localization)</h2>
+            <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/05-multi-language-and-csv.md" target="_blank" class="text-xs text-text-muted hover:text-text-primary hover:underline flex items-center gap-1 font-medium">
+              <Github class="h-3 w-3" />
+              <span>Edit section</span>
+            </a>
+          </div>
+
+          <ol class="list-decimal list-inside space-y-2 text-xs sm:text-sm text-text-secondary leading-relaxed">
+            <li>Open the <strong>Localization</strong> tab and confirm your default source language (e.g. <code class="font-mono text-xs text-text-primary">en</code> or <code class="font-mono text-xs text-text-primary">id</code>).</li>
+            <li>Click <strong>+ Add Language</strong> and enter the language code (<code class="font-mono text-xs text-text-primary">ja</code>, <code class="font-mono text-xs text-text-primary">ko</code>, <code class="font-mono text-xs text-text-primary">fr</code>).</li>
+            <li>Click <strong>Sync Strings</strong> to extract all dialogues from your scenes automatically.</li>
+            <li>Export to CSV (<code class="font-mono text-xs text-text-primary">key,context,source,translation</code>) to translate with external tools or translators.</li>
+            <li>Players can seamlessly switch languages from the in-game Settings menu.</li>
+          </ol>
+        </section>
+
+        <!-- SECTION 6: Exporting & Distribution -->
+        <section id="export" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-border-subtle pb-3">
+            <h2 class="text-xl font-bold text-text-primary">6. Exporting & Distributing Your Game</h2>
+            <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/06-exporting-and-installer.md" target="_blank" class="text-xs text-text-muted hover:text-text-primary hover:underline flex items-center gap-1 font-medium">
+              <Github class="h-3 w-3" />
+              <span>Edit section</span>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="rounded border border-border-subtle bg-bg-secondary p-4">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-text-primary font-mono">Portable Build</h3>
+              <p class="mt-1 text-xs text-text-secondary leading-relaxed">
+                Generates <code class="font-mono text-text-primary">Game.exe</code> alongside an encrypted <code class="font-mono text-xs text-text-primary bg-bg-primary px-1 py-0.5 rounded border border-border-subtle">game.bpack</code> archive for easy distribution on itch.io or Steam.
+              </p>
+            </div>
+            <div class="rounded border border-border-subtle bg-bg-secondary p-4">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-text-primary font-mono">Windows Setup.exe Installer</h3>
+              <p class="mt-1 text-xs text-text-secondary leading-relaxed">
+                Builds a polished installer wizard with publisher branding, license agreements, desktop shortcuts, and a clean manifest uninstaller.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 7: Runtime Keyboard Shortcuts -->
+        <section id="shortcuts" class="scroll-mt-24 rounded-lg border border-border-default bg-surface-primary p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-border-subtle pb-3">
+            <h2 class="text-xl font-bold text-text-primary">7. Runtime Keyboard Shortcuts</h2>
+            <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/07-runtime-shortcuts.md" target="_blank" class="text-xs text-text-muted hover:text-text-primary hover:underline flex items-center gap-1 font-medium">
+              <Github class="h-3 w-3" />
+              <span>Edit section</span>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2">
+              <span class="text-text-secondary">Advance dialogue / Confirm</span>
               <kbd class="rounded border border-border-default bg-surface-primary px-1.5 py-0.5 font-mono text-[11px] text-text-primary">Space / Enter</kbd>
             </div>
-            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2 text-xs">
+            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2">
               <span class="text-text-secondary">Toggle Auto-Play</span>
               <kbd class="rounded border border-border-default bg-surface-primary px-1.5 py-0.5 font-mono text-[11px] text-text-primary">A</kbd>
             </div>
-            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2 text-xs">
-              <span class="text-text-secondary">Toggle Skip</span>
+            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2">
+              <span class="text-text-secondary">Toggle Skip Mode</span>
               <kbd class="rounded border border-border-default bg-surface-primary px-1.5 py-0.5 font-mono text-[11px] text-text-primary">S</kbd>
             </div>
-            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2 text-xs">
-              <span class="text-text-secondary">Dialogue History (Backlog)</span>
+            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2">
+              <span class="text-text-secondary">Dialogue Backlog</span>
               <kbd class="rounded border border-border-default bg-surface-primary px-1.5 py-0.5 font-mono text-[11px] text-text-primary">B</kbd>
             </div>
-            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2 text-xs">
-              <span class="text-text-secondary">Hide / show UI</span>
+            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2">
+              <span class="text-text-secondary">Hide / Show UI HUD</span>
               <kbd class="rounded border border-border-default bg-surface-primary px-1.5 py-0.5 font-mono text-[11px] text-text-primary">H</kbd>
             </div>
-            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2 text-xs">
+            <div class="flex items-center justify-between rounded border border-border-subtle bg-bg-secondary px-3 py-2">
               <span class="text-text-secondary">Quick Save / Quick Load</span>
               <kbd class="rounded border border-border-default bg-surface-primary px-1.5 py-0.5 font-mono text-[11px] text-text-primary">F5 / F9</kbd>
             </div>
           </div>
         </section>
-      </div>
+
+        <!-- Pagination Footer (Prev / Next Buttons like Godot Docs) -->
+        <div class="border-t border-border-default pt-6 flex items-center justify-between">
+          <a
+            href="/"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-text-primary"
+          >
+            <ArrowLeft class="h-3.5 w-3.5" />
+            <span>Home</span>
+          </a>
+
+          <a
+            href="/download"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-text-primary hover:underline"
+          >
+            <span>Download Blanc Engine</span>
+            <ArrowRight class="h-3.5 w-3.5" />
+          </a>
+        </div>
+          >
+            <span>Download Blanc Engine</span>
+            <ArrowRight class="h-3.5 w-3.5" />
+          </a>
+        </div>
+
+      </main>
     </div>
-  </main>
+  </div>
 
   <Footer />
 </BaseLayout>
 
 <script>
-  const tocLinks = document.querySelectorAll<HTMLAnchorElement>("[data-doc-toc]");
-  const docSections = document.querySelectorAll<HTMLElement>("section[id]");
+  // Active Navigation Highlight
+  const navLinks = document.querySelectorAll<HTMLAnchorElement>("[data-doc-nav]");
+  const sections = document.querySelectorAll<HTMLElement>("section[id], div[id='overview']");
 
-  function setActiveToc(id: string) {
-    tocLinks.forEach((link) => {
-      const active = link.getAttribute("data-doc-toc") === id;
+  function setActiveNav(id: string) {
+    navLinks.forEach((link) => {
+      const active = link.getAttribute("data-doc-nav") === id;
       link.classList.toggle("bg-surface-elevated", active);
       link.classList.toggle("font-semibold", active);
       link.classList.toggle("text-text-primary", active);
       link.classList.toggle("text-text-secondary", !active);
-      link.classList.toggle("hover:bg-surface-hover", !active);
-      link.classList.toggle("hover:text-text-primary", !active);
     });
+
+    // Update edit on GitHub button link
+    const editBtn = document.getElementById("edit-github-btn") as HTMLAnchorElement | null;
+    if (editBtn) {
+      if (id === "getting-started") editBtn.href = "https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/01-project-and-assets.md";
+      else if (id === "story-setup") editBtn.href = "https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/02-story-setup-syntax.md";
+      else if (id === "scenes-flow") editBtn.href = "https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/03-scene-editor-and-story-flow.md";
+      else if (id === "ui-designer") editBtn.href = "https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/04-ui-designer.md";
+      else if (id === "localization") editBtn.href = "https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/05-multi-language-and-csv.md";
+      else if (id === "export") editBtn.href = "https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/06-exporting-and-installer.md";
+      else if (id === "shortcuts") editBtn.href = "https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/07-runtime-shortcuts.md";
+      else editBtn.href = "https://github.com/Kharisdestianmaulana-hub/blancengineweb/tree/main/docs";
+    }
   }
 
-  if (docSections.length > 0) {
+  if (sections.length > 0) {
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setActiveToc(entry.target.id);
+            setActiveNav(entry.target.id);
             break;
           }
         }
@@ -252,16 +622,17 @@ Narrator: The afternoon sun streamed through the classroom windows.
       { rootMargin: "-20% 0px -65% 0px", threshold: 0 }
     );
 
-    docSections.forEach((sec) => observer.observe(sec));
+    sections.forEach((sec) => observer.observe(sec));
   }
 
-  tocLinks.forEach((link) => {
+  navLinks.forEach((link) => {
     link.addEventListener("click", () => {
-      const id = link.getAttribute("data-doc-toc");
-      if (id) setActiveToc(id);
+      const id = link.getAttribute("data-doc-nav");
+      if (id) setActiveNav(id);
     });
   });
 
+  // Copy sample script button
   const copyBtn = document.getElementById("copy-sample-script");
   const samplePre = document.getElementById("sample-script-code");
   const copyIcon = document.getElementById("copy-icon");
@@ -282,7 +653,20 @@ Narrator: The afternoon sun streamed through the classroom windows.
         if (copyLabel) copyLabel.textContent = "Copy Sample Script";
       }, 2000);
     } catch {
-      // Ignore clipboard errors
+      // Fallback
     }
+  });
+
+  // Live Docs Search
+  const searchInput = document.getElementById("docs-search-input") as HTMLInputElement | null;
+  searchInput?.addEventListener("input", () => {
+    const q = (searchInput.value || "").toLowerCase().trim();
+    navLinks.forEach((link) => {
+      const text = (link.textContent || "").toLowerCase();
+      const li = link.closest("li");
+      if (li) {
+        li.style.display = !q || text.includes(q) ? "block" : "none";
+      }
+    });
   });
 </script>

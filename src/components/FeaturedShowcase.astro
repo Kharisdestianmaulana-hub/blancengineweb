@@ -73,6 +73,70 @@ import { Gamepad2, ArrowRight } from "lucide-astro";
 
   async function loadFeaturedGames() {
     if (!featuredGrid) return;
+
+    // 1. Try Cloudflare D1 Edge API first
+    try {
+      const apiRes = await fetch("/api/showcase");
+      if (apiRes.ok) {
+        const data = await apiRes.json();
+        if (Array.isArray(data.games) && data.games.length > 0) {
+          const topThree = data.games.slice(0, 3).map((g: any) => ({
+            title: g.title,
+            author: g.author,
+            status: g.status || "Released",
+            cover: g.cover_url || "/screenshots/SS_GAMEPLAY_1_CHARACTER.png",
+            url: `/showcase/game/?id=${encodeURIComponent(g.slug)}`,
+            description: g.description,
+          }));
+
+          featuredGrid.innerHTML = topThree
+            .map(
+              (game: any) => `
+              <a
+                href="${esc(game.url)}"
+                class="flex flex-col overflow-hidden rounded-lg border border-border-default bg-surface-primary transition-colors hover:border-border-default hover:bg-surface-hover"
+              >
+                <div class="aspect-video w-full overflow-hidden border-b border-border-subtle bg-bg-primary">
+                  <img
+                    src="${esc(game.cover)}"
+                    alt="${esc(game.title)}"
+                    class="h-full w-full object-cover"
+                    loading="lazy"
+                    onerror="this.src='/screenshots/SS_GAMEPLAY_1_CHARACTER.png'"
+                  />
+                </div>
+                <div class="flex flex-1 flex-col justify-between p-4">
+                  <div>
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="font-mono text-xs text-text-muted">${esc(game.author)}</span>
+                      <span class="rounded border border-border-default bg-surface-elevated px-1.5 py-0.5 font-mono text-[10px] text-text-secondary">
+                        ${esc(game.status)}
+                      </span>
+                    </div>
+                    <h3 class="mt-2 text-base font-semibold text-text-primary line-clamp-1">
+                      ${esc(game.title)}
+                    </h3>
+                    <p class="mt-1 text-xs leading-relaxed text-text-secondary line-clamp-2">
+                      ${esc(game.description || "No description provided.")}
+                    </p>
+                  </div>
+                  <div class="mt-4 flex items-center gap-1 text-xs font-semibold text-accent-primary">
+                    <span>View Project</span>
+                    <span aria-hidden="true">&rarr;</span>
+                  </div>
+                </div>
+              </a>
+            `
+            )
+            .join("");
+          return;
+        }
+      }
+    } catch {
+      // Fallback to Google Sheet below
+    }
+
+    // 2. Fallback to Google Sheet
     try {
       const res = await fetch(SHEET_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

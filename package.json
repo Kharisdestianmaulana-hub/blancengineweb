@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "astro dev",
+    "dev:d1": "astro build && wrangler pages dev dist --d1 DB=370333f6-73e9-4a55-afb0-3e4c79be322f --remote",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"

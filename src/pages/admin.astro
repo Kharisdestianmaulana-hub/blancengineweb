@@ -1,0 +1,1389 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  Lock,
+  LogOut,
+  Newspaper,
+  BookOpen,
+  Gamepad2,
+  Milestone,
+  Check,
+  X,
+  Star,
+  Trash2,
+  Edit3,
+  Plus,
+  RefreshCw,
+  ExternalLink,
+  Search,
+  Database,
+  ArrowRight,
+  FileText,
+  Calendar,
+  Eye,
+} from "lucide-astro";
+---
+
+<BaseLayout
+  title="Blanc Studio: Content & Ecosystem CMS"
+  description="Internal management studio for Blanc Engine blog, documentation, showcase, and roadmap."
+  noindex={true}
+>
+  <!-- 1. Login Gate View (Full screen centered if unauthenticated) -->
+  <div id="login-gate" class="min-h-screen w-screen flex flex-col justify-center items-center px-4 py-12 bg-bg-primary">
+    <div class="w-full max-w-sm rounded-lg border border-border-default bg-surface-primary p-6 sm:p-8 shadow-2xl">
+      <div class="flex items-center gap-3 mb-6">
+        <img src="/logo.png" alt="Blanc Engine" class="h-8 w-8 object-contain" />
+        <div>
+          <h1 class="text-base font-bold text-text-primary tracking-tight">Blanc Studio</h1>
+          <p class="font-mono text-[10px] text-text-muted">Content & Engine Management</p>
+        </div>
+      </div>
+
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label for="admin-pass" class="block font-mono text-[11px] font-medium text-text-muted">
+            Admin Password
+          </label>
+          <input
+            id="admin-pass"
+            type="password"
+            required
+            autofocus
+            placeholder="••••••••••••"
+            class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+          />
+        </div>
+
+        <p id="login-error" class="hidden text-xs text-status-error"></p>
+
+        <button
+          type="submit"
+          id="login-btn"
+          class="inline-flex h-9 w-full items-center justify-center rounded bg-accent-primary px-4 text-xs font-semibold text-text-on-accent hover:bg-accent-hover cursor-pointer transition-colors"
+        >
+          Unlock Studio
+        </button>
+      </form>
+
+      <p class="mt-4 text-center font-mono text-[10px] text-text-muted">
+        Cloudflare Edge & D1 Database
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. Main Studio Dashboard (100% Full-Height Edge-to-Edge Desktop Layout) -->
+  <div id="admin-dashboard" class="hidden h-screen w-screen overflow-hidden flex bg-bg-primary text-text-primary">
+    
+    <!-- FULL-HEIGHT EDGE-TO-EDGE LEFT SIDEBAR -->
+    <aside class="w-64 sm:w-72 h-full shrink-0 flex flex-col justify-between border-r border-border-default bg-bg-secondary select-none">
+      
+      <!-- Top Brand Pane -->
+      <div class="h-14 shrink-0 flex items-center justify-between px-4 border-b border-border-default">
+        <div class="flex items-center gap-2.5">
+          <img src="/logo.png" alt="Blanc Engine" class="h-6 w-6 object-contain" />
+          <span class="font-bold tracking-tight text-sm text-text-primary">Blanc Studio</span>
+          <span class="font-mono text-[10px] text-text-secondary border border-border-default bg-surface-primary px-1.5 py-0.2 rounded">
+            CMS
+          </span>
+        </div>
+        <a
+          href="/"
+          target="_blank"
+          class="text-text-muted hover:text-text-primary p-1 transition-colors"
+          title="Open Public Site"
+        >
+          <ExternalLink class="h-3.5 w-3.5" />
+        </a>
+      </div>
+
+      <!-- Navigation Links Pane -->
+      <div class="flex-1 overflow-y-auto py-4 px-2 space-y-6">
+        <!-- Group: Content & Publishing -->
+        <div>
+          <p class="px-2.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+            Content & Publishing
+          </p>
+          <nav class="mt-1.5 space-y-0.5">
+            <button
+              type="button"
+              data-tab-target="blog"
+              class="tab-btn w-full flex items-center justify-between px-3 py-2 rounded text-xs font-semibold transition-colors bg-surface-elevated text-text-primary border-l-2 border-accent-primary cursor-pointer text-left"
+            >
+              <div class="flex items-center gap-2.5">
+                <Newspaper class="h-4 w-4 shrink-0" />
+                <span>Blog & Devlogs</span>
+              </div>
+              <span id="badge-blog-count" class="font-mono text-[10px] text-text-muted">
+                0
+              </span>
+            </button>
+
+            <button
+              type="button"
+              data-tab-target="docs"
+              class="tab-btn w-full flex items-center justify-between px-3 py-2 rounded text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover cursor-pointer transition-colors text-left"
+            >
+              <div class="flex items-center gap-2.5">
+                <BookOpen class="h-4 w-4 shrink-0" />
+                <span>Documentation</span>
+              </div>
+              <span class="font-mono text-[10px] text-text-muted">
+                7 files
+              </span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- Group: Engine Ecosystem -->
+        <div>
+          <p class="px-2.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+            Engine Ecosystem
+          </p>
+          <nav class="mt-1.5 space-y-0.5">
+            <button
+              type="button"
+              data-tab-target="showcase"
+              class="tab-btn w-full flex items-center justify-between px-3 py-2 rounded text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover cursor-pointer transition-colors text-left"
+            >
+              <div class="flex items-center gap-2.5">
+                <Gamepad2 class="h-4 w-4 shrink-0" />
+                <span>Showcase Games</span>
+              </div>
+              <span id="badge-pending-count" class="hidden rounded bg-status-warning/20 px-1.5 py-0.2 font-mono text-[10px] text-status-warning font-bold">
+                0
+              </span>
+            </button>
+
+            <button
+              type="button"
+              data-tab-target="roadmap"
+              class="tab-btn w-full flex items-center justify-between px-3 py-2 rounded text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover cursor-pointer transition-colors text-left"
+            >
+              <div class="flex items-center gap-2.5">
+                <Milestone class="h-4 w-4 shrink-0" />
+                <span>Roadmap Timeline</span>
+              </div>
+              <span id="badge-roadmap-count" class="font-mono text-[10px] text-text-muted">
+                0
+              </span>
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Sidebar Bottom: Database Status & Logout -->
+      <div class="p-3 border-t border-border-default space-y-2.5 bg-bg-primary/40">
+        <div class="flex items-center justify-between px-1 text-[11px] font-mono">
+          <span class="flex items-center gap-1.5 text-text-secondary">
+            <span class="h-2 w-2 rounded-full bg-status-success"></span>
+            <span>Cloudflare D1</span>
+          </span>
+          <button id="btn-sync-all" type="button" class="text-accent-primary hover:underline text-[11px] cursor-pointer flex items-center gap-1">
+            <RefreshCw id="sync-spin" class="h-3 w-3" />
+            <span>Sync</span>
+          </button>
+        </div>
+
+        <button
+          id="admin-logout-btn"
+          type="button"
+          class="w-full flex items-center justify-center gap-2 py-1.5 text-xs font-medium text-text-muted hover:text-status-error hover:bg-surface-hover transition-colors rounded cursor-pointer"
+        >
+          <LogOut class="h-3.5 w-3.5" />
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- FULL-HEIGHT EDGE-TO-EDGE RIGHT MAIN WORKSPACE -->
+    <div class="flex-1 h-full min-w-0 flex flex-col bg-bg-primary overflow-hidden">
+      
+      <!-- Top Workspace Bar -->
+      <header class="h-14 shrink-0 flex items-center justify-between px-6 border-b border-border-default bg-bg-secondary">
+        <div>
+          <h2 id="top-title" class="text-sm font-bold text-text-primary">Blog & Devlogs</h2>
+          <p id="top-desc" class="text-[11px] text-text-secondary">Publish and manage devlogs, announcements, and engine release notes.</p>
+        </div>
+
+        <div id="top-actions" class="flex items-center gap-2">
+          <button
+            type="button"
+            id="btn-create-post"
+            class="inline-flex items-center gap-1.5 rounded bg-accent-primary px-3 py-1.5 text-xs font-semibold text-text-on-accent hover:bg-accent-hover cursor-pointer transition-colors"
+          >
+            <Plus class="h-3.5 w-3.5" />
+            <span>New Article</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Workspace Body -->
+      <main class="flex-1 overflow-y-auto p-6 sm:p-8">
+        
+        <!-- 1. PANEL: BLOG & DEVLOGS -->
+        <div id="panel-blog" class="panel-view space-y-4">
+          <div id="blog-posts-list" class="space-y-3">
+            <div class="rounded border border-border-default bg-surface-primary p-8 text-center text-xs text-text-muted">
+              Loading blog posts...
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. PANEL: DOCUMENTATION (GITHUB-BACKED) -->
+        <div id="panel-docs" class="panel-view hidden space-y-4">
+          <div class="rounded border border-border-default bg-surface-primary p-4 mb-4 flex items-center justify-between">
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Docs files are stored as pure Markdown in the repository, enabling version control and open-source GitHub pull requests.
+            </p>
+            <a
+              href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/tree/main/docs"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 rounded border border-border-default bg-surface-elevated px-3 py-1.5 text-xs font-semibold text-text-primary hover:bg-surface-hover shrink-0"
+            >
+              <ExternalLink class="h-3.5 w-3.5 text-text-muted" />
+              <span>Browse docs/ Folder</span>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="rounded border border-border-default bg-surface-primary p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-[11px] text-text-muted">01-project-and-assets.md</span>
+                  <span class="rounded bg-surface-elevated px-1.5 py-0.2 text-[10px] text-text-secondary">Core</span>
+                </div>
+                <h3 class="mt-2 text-sm font-bold text-text-primary">1. Creating a Project & Importing Assets</h3>
+                <p class="mt-1 text-xs text-text-secondary line-clamp-2">First-time onboarding, project creation, and Asset Manager file types.</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between">
+                <a href="/docs#getting-started" target="_blank" class="text-xs text-text-muted hover:text-text-primary flex items-center gap-1">
+                  <Eye class="h-3 w-3" />
+                  <span>Preview</span>
+                </a>
+                <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/01-project-and-assets.md" target="_blank" class="text-xs font-semibold text-accent-primary hover:underline flex items-center gap-1">
+                  <Edit3 class="h-3 w-3" />
+                  <span>Edit on GitHub</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="rounded border border-border-default bg-surface-primary p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-[11px] text-text-muted">02-story-setup-syntax.md</span>
+                  <span class="rounded bg-surface-elevated px-1.5 py-0.2 text-[10px] text-text-secondary">Screenplay</span>
+                </div>
+                <h3 class="mt-2 text-sm font-bold text-text-primary">2. Writing in Story Setup</h3>
+                <p class="mt-1 text-xs text-text-secondary line-clamp-2">Screenplay-style scripting with speakers, emotions, scenes, and choices.</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between">
+                <a href="/docs#story-setup" target="_blank" class="text-xs text-text-muted hover:text-text-primary flex items-center gap-1">
+                  <Eye class="h-3 w-3" />
+                  <span>Preview</span>
+                </a>
+                <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/02-story-setup-syntax.md" target="_blank" class="text-xs font-semibold text-accent-primary hover:underline flex items-center gap-1">
+                  <Edit3 class="h-3 w-3" />
+                  <span>Edit on GitHub</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="rounded border border-border-default bg-surface-primary p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-[11px] text-text-muted">03-scene-editor-and-story-flow.md</span>
+                  <span class="rounded bg-surface-elevated px-1.5 py-0.2 text-[10px] text-text-secondary">Nodes</span>
+                </div>
+                <h3 class="mt-2 text-sm font-bold text-text-primary">3. Scene Editor & Story Flow</h3>
+                <p class="mt-1 text-xs text-text-secondary line-clamp-2">Action blocks, camera effects, timers, and the visual node graph canvas.</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between">
+                <a href="/docs#scenes-flow" target="_blank" class="text-xs text-text-muted hover:text-text-primary flex items-center gap-1">
+                  <Eye class="h-3 w-3" />
+                  <span>Preview</span>
+                </a>
+                <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/03-scene-editor-and-story-flow.md" target="_blank" class="text-xs font-semibold text-accent-primary hover:underline flex items-center gap-1">
+                  <Edit3 class="h-3 w-3" />
+                  <span>Edit on GitHub</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="rounded border border-border-default bg-surface-primary p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-[11px] text-text-muted">04-ui-designer.md</span>
+                  <span class="rounded bg-surface-elevated px-1.5 py-0.2 text-[10px] text-text-secondary">UI</span>
+                </div>
+                <h3 class="mt-2 text-sm font-bold text-text-primary">4. Customizing UI (UI Designer)</h3>
+                <p class="mt-1 text-xs text-text-secondary line-clamp-2">Title Screen, Gameplay HUD, Dialogue box, and Save/Load slot styling.</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between">
+                <a href="/docs#ui-designer" target="_blank" class="text-xs text-text-muted hover:text-text-primary flex items-center gap-1">
+                  <Eye class="h-3 w-3" />
+                  <span>Preview</span>
+                </a>
+                <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/04-ui-designer.md" target="_blank" class="text-xs font-semibold text-accent-primary hover:underline flex items-center gap-1">
+                  <Edit3 class="h-3 w-3" />
+                  <span>Edit on GitHub</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="rounded border border-border-default bg-surface-primary p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-[11px] text-text-muted">05-multi-language-and-csv.md</span>
+                  <span class="rounded bg-surface-elevated px-1.5 py-0.2 text-[10px] text-text-secondary">Localization</span>
+                </div>
+                <h3 class="mt-2 text-sm font-bold text-text-primary">5. Multi-Language Support & CSV</h3>
+                <p class="mt-1 text-xs text-text-secondary line-clamp-2">Adding languages, synchronizing strings, and importing/exporting CSVs.</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between">
+                <a href="/docs#localization" target="_blank" class="text-xs text-text-muted hover:text-text-primary flex items-center gap-1">
+                  <Eye class="h-3 w-3" />
+                  <span>Preview</span>
+                </a>
+                <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/05-multi-language-and-csv.md" target="_blank" class="text-xs font-semibold text-accent-primary hover:underline flex items-center gap-1">
+                  <Edit3 class="h-3 w-3" />
+                  <span>Edit on GitHub</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="rounded border border-border-default bg-surface-primary p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-[11px] text-text-muted">06-exporting-and-installer.md</span>
+                  <span class="rounded bg-surface-elevated px-1.5 py-0.2 text-[10px] text-text-secondary">Packaging</span>
+                </div>
+                <h3 class="mt-2 text-sm font-bold text-text-primary">6. Exporting & Distribution</h3>
+                <p class="mt-1 text-xs text-text-secondary line-clamp-2">Portable encrypted builds and full Windows Setup.exe packaging.</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between">
+                <a href="/docs#export" target="_blank" class="text-xs text-text-muted hover:text-text-primary flex items-center gap-1">
+                  <Eye class="h-3 w-3" />
+                  <span>Preview</span>
+                </a>
+                <a href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/edit/main/docs/06-exporting-and-installer.md" target="_blank" class="text-xs font-semibold text-accent-primary hover:underline flex items-center gap-1">
+                  <Edit3 class="h-3 w-3" />
+                  <span>Edit on GitHub</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. PANEL: SHOWCASE GAMES -->
+        <div id="panel-showcase" class="panel-view hidden space-y-4">
+          <div id="showcase-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="col-span-full rounded border border-border-default bg-surface-primary p-8 text-center text-xs text-text-muted">
+              Loading showcase games...
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. PANEL: ROADMAP -->
+        <div id="panel-roadmap" class="panel-view hidden space-y-4">
+          <div class="overflow-hidden rounded border border-border-default bg-surface-primary">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="border-b border-border-default bg-bg-secondary font-mono text-[11px] text-text-muted">
+                  <tr>
+                    <th class="px-4 py-2.5">Version</th>
+                    <th class="px-4 py-2.5">Feature & Description</th>
+                    <th class="px-4 py-2.5">Category</th>
+                    <th class="px-4 py-2.5">Status</th>
+                    <th class="px-4 py-2.5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="roadmap-tbody" class="divide-y divide-border-subtle">
+                  <tr>
+                    <td colspan="5" class="p-8 text-center text-text-muted">Loading roadmap milestones...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- Modal: Blog Post Editor -->
+  <div id="modal-post" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-2xl max-h-[90vh] flex flex-col rounded-lg border border-border-default bg-surface-primary shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between border-b border-border-default px-6 py-4 bg-bg-secondary">
+        <h3 id="modal-post-title" class="text-sm font-bold text-text-primary">New Blog Post</h3>
+        <button type="button" id="modal-post-close" class="text-text-muted hover:text-text-primary cursor-pointer">
+          <X class="h-4 w-4" />
+        </button>
+      </div>
+
+      <form id="form-post" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <input type="hidden" id="post-id" />
+        
+        <div>
+          <label for="post-title" class="block font-mono text-[11px] font-medium text-text-muted">Title *</label>
+          <input id="post-title" type="text" required class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" placeholder="Blanc Engine v0.2.0 Devlog..." />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="post-author" class="block font-mono text-[11px] font-medium text-text-muted">Author</label>
+            <input id="post-author" type="text" value="Blanc Team" class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+          </div>
+          <div>
+            <label for="post-tags" class="block font-mono text-[11px] font-medium text-text-muted">Tags</label>
+            <input id="post-tags" type="text" value="Devlog, Announcements" class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label for="post-cover" class="block font-mono text-[11px] font-medium text-text-muted">Cover Image URL</label>
+          <input id="post-cover" type="text" class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" placeholder="/screenshots/SS_OVERVIEW.png" />
+        </div>
+
+        <div>
+          <label for="post-excerpt" class="block font-mono text-[11px] font-medium text-text-muted">Excerpt (Summary) *</label>
+          <textarea id="post-excerpt" rows="2" required class="mt-1 w-full rounded border border-border-default bg-bg-primary p-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" placeholder="Brief summary of the article..."></textarea>
+        </div>
+
+        <div>
+          <label for="post-content" class="block font-mono text-[11px] font-medium text-text-muted">Article Body (Markdown) *</label>
+          <textarea id="post-content" rows="8" required class="mt-1 w-full rounded border border-border-default bg-bg-primary p-3 font-mono text-xs text-text-primary focus:border-accent-primary focus:outline-none" placeholder="Write markdown content here..."></textarea>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <input id="post-published" type="checkbox" checked class="h-4 w-4 rounded border-border-default bg-bg-primary text-accent-primary" />
+          <label for="post-published" class="font-mono text-xs text-text-secondary cursor-pointer">Publish article immediately</label>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle">
+          <button type="button" id="modal-post-cancel" class="rounded border border-border-default bg-surface-primary px-4 py-2 text-xs font-medium text-text-secondary hover:bg-surface-hover cursor-pointer">Cancel</button>
+          <button type="submit" class="rounded bg-accent-primary px-4 py-2 text-xs font-semibold text-text-on-accent hover:bg-accent-hover cursor-pointer">Save Article</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Showcase Editor -->
+  <div id="modal-game" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-lg rounded-lg border border-border-default bg-surface-primary shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between border-b border-border-default px-6 py-4 bg-bg-secondary">
+        <h3 id="modal-game-title" class="text-sm font-bold text-text-primary">Add Showcase Game</h3>
+        <button type="button" id="modal-game-close" class="text-text-muted hover:text-text-primary cursor-pointer"><X class="h-4 w-4" /></button>
+      </div>
+
+      <form id="form-game" class="p-6 space-y-4">
+        <input type="hidden" id="game-id" />
+        <div>
+          <label for="game-title" class="block font-mono text-[11px] font-medium text-text-muted">Game Title *</label>
+          <input id="game-title" type="text" required class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="game-author" class="block font-mono text-[11px] font-medium text-text-muted">Author / Studio *</label>
+            <input id="game-author" type="text" required class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+          </div>
+          <div>
+            <label for="game-status" class="block font-mono text-[11px] font-medium text-text-muted">Status</label>
+            <select id="game-status" class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-2 text-xs text-text-primary focus:border-accent-primary focus:outline-none">
+              <option value="Released">Released</option>
+              <option value="Demo Available">Demo Available</option>
+              <option value="In Development">In Development</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="game-cover" class="block font-mono text-[11px] font-medium text-text-muted">Cover Image URL *</label>
+          <input id="game-cover" type="text" required class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+        </div>
+        <div>
+          <label for="game-desc" class="block font-mono text-[11px] font-medium text-text-muted">Description</label>
+          <textarea id="game-desc" rows="3" class="mt-1 w-full rounded border border-border-default bg-bg-primary p-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="game-itch" class="block font-mono text-[11px] font-medium text-text-muted">Itch.io URL</label>
+            <input id="game-itch" type="url" class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+          </div>
+          <div>
+            <label for="game-steam" class="block font-mono text-[11px] font-medium text-text-muted">Steam URL</label>
+            <input id="game-steam" type="url" class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+          </div>
+        </div>
+        <div class="flex items-center gap-2 pt-2">
+          <input id="game-approved" type="checkbox" checked class="h-4 w-4 rounded border-border-default bg-bg-primary text-accent-primary" />
+          <label for="game-approved" class="font-mono text-xs text-text-secondary cursor-pointer">Approved (Show in showcase)</label>
+        </div>
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle">
+          <button type="button" id="modal-game-cancel" class="rounded border border-border-default bg-surface-primary px-4 py-2 text-xs font-medium text-text-secondary hover:bg-surface-hover cursor-pointer">Cancel</button>
+          <button type="submit" class="rounded bg-accent-primary px-4 py-2 text-xs font-semibold text-text-on-accent hover:bg-accent-hover cursor-pointer">Save Game</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Roadmap Editor -->
+  <div id="modal-roadmap" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-lg rounded-lg border border-border-default bg-surface-primary shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between border-b border-border-default px-6 py-4 bg-bg-secondary">
+        <h3 id="modal-roadmap-title" class="text-sm font-bold text-text-primary">Add Roadmap Milestone</h3>
+        <button type="button" id="modal-roadmap-close" class="text-text-muted hover:text-text-primary cursor-pointer"><X class="h-4 w-4" /></button>
+      </div>
+
+      <form id="form-roadmap" class="p-6 space-y-4">
+        <input type="hidden" id="roadmap-id" />
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="roadmap-version" class="block font-mono text-[11px] font-medium text-text-muted">Version *</label>
+            <input id="roadmap-version" type="text" required placeholder="v0.2.0" class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+          </div>
+          <div>
+            <label for="roadmap-date" class="block font-mono text-[11px] font-medium text-text-muted">Target Date</label>
+            <input id="roadmap-date" type="text" placeholder="2026-12-25" class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="roadmap-status" class="block font-mono text-[11px] font-medium text-text-muted">Status *</label>
+            <select id="roadmap-status" class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-2 text-xs text-text-primary focus:border-accent-primary focus:outline-none">
+              <option value="Planned">Planned</option>
+              <option value="In Progress" selected>In Progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Shipped">Shipped</option>
+            </select>
+          </div>
+          <div>
+            <label for="roadmap-category" class="block font-mono text-[11px] font-medium text-text-muted">Category *</label>
+            <input id="roadmap-category" type="text" required placeholder="UI & UX" class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label for="roadmap-feature-title" class="block font-mono text-[11px] font-medium text-text-muted">Milestone Title *</label>
+          <input id="roadmap-feature-title" type="text" required class="mt-1 h-9 w-full rounded border border-border-default bg-bg-primary px-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none" />
+        </div>
+
+        <div>
+          <label for="roadmap-desc" class="block font-mono text-[11px] font-medium text-text-muted">Description *</label>
+          <textarea id="roadmap-desc" rows="3" required class="mt-1 w-full rounded border border-border-default bg-bg-primary p-3 text-xs text-text-primary focus:border-accent-primary focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle">
+          <button type="button" id="modal-roadmap-cancel" class="rounded border border-border-default bg-surface-primary px-4 py-2 text-xs font-medium text-text-secondary hover:bg-surface-hover cursor-pointer">Cancel</button>
+          <button type="submit" class="rounded bg-accent-primary px-4 py-2 text-xs font-semibold text-text-on-accent hover:bg-accent-hover cursor-pointer">Save Milestone</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2 rounded border border-border-default bg-surface-elevated px-4 py-2.5 text-xs font-medium text-text-primary shadow-2xl">
+    <Check class="h-4 w-4 text-status-success shrink-0" />
+    <span id="toast-msg">Updated successfully</span>
+  </div>
+
+</BaseLayout>
+
+<script>
+  let adminToken = localStorage.getItem("blanc_admin_token") || "";
+  let activeTab: "blog" | "docs" | "showcase" | "roadmap" = "blog";
+
+  let allPosts: any[] = [];
+  let allGames: any[] = [];
+  let allRoadmap: any[] = [];
+  let showcaseFilter = "pending";
+
+  const loginGate = document.getElementById("login-gate");
+  const dashboard = document.getElementById("admin-dashboard");
+  const logoutBtn = document.getElementById("admin-logout-btn");
+  const loginForm = document.getElementById("login-form");
+  const loginPass = document.getElementById("admin-pass") as HTMLInputElement | null;
+  const loginError = document.getElementById("login-error");
+
+  const btnSyncAll = document.getElementById("btn-sync-all");
+  const syncSpin = document.getElementById("sync-spin");
+
+  const badgeBlog = document.getElementById("badge-blog-count");
+  const badgePending = document.getElementById("badge-pending-count");
+  const badgeRoadmap = document.getElementById("badge-roadmap-count");
+
+  const topTitle = document.getElementById("top-title");
+  const topDesc = document.getElementById("top-desc");
+  const topActions = document.getElementById("top-actions");
+
+  // Modals
+  const modalPost = document.getElementById("modal-post");
+  const formPost = document.getElementById("form-post") as HTMLFormElement | null;
+  const modalGame = document.getElementById("modal-game");
+  const formGame = document.getElementById("form-game") as HTMLFormElement | null;
+  const modalRoadmap = document.getElementById("modal-roadmap");
+  const formRoadmap = document.getElementById("form-roadmap") as HTMLFormElement | null;
+
+  function showToast(msg: string) {
+    const toast = document.getElementById("toast");
+    const toastMsg = document.getElementById("toast-msg");
+    if (!toast || !toastMsg) return;
+    toastMsg.textContent = msg;
+    toast.classList.remove("hidden");
+    toast.classList.add("flex");
+    setTimeout(() => {
+      toast.classList.add("hidden");
+      toast.classList.remove("flex");
+    }, 2800);
+  }
+
+  function esc(str: any): string {
+    if (!str) return "";
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function getHeaders() {
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${adminToken}`,
+    };
+  }
+
+  function checkAuthState() {
+    if (adminToken) {
+      loginGate?.classList.add("hidden");
+      dashboard?.classList.remove("hidden");
+      dashboard?.classList.add("flex");
+      fetchAllData();
+    } else {
+      loginGate?.classList.remove("hidden");
+      dashboard?.classList.add("hidden");
+      dashboard?.classList.remove("flex");
+    }
+  }
+
+  // Login
+  loginForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!loginPass) return;
+    const pass = loginPass.value.trim();
+    if (loginError) loginError.classList.add("hidden");
+
+    try {
+      const res = await fetch("/api/admin/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: pass }),
+      });
+
+      const contentType = res.headers.get("content-type") || "";
+      if (!contentType.includes("application/json")) {
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+          adminToken = pass || "local_dev_token";
+          localStorage.setItem("blanc_admin_token", adminToken);
+          checkAuthState();
+          showToast("Local Dev Preview Mode");
+          return;
+        }
+        throw new Error("Invalid response. Please deploy to Cloudflare Pages.");
+      }
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        adminToken = data.token;
+        localStorage.setItem("blanc_admin_token", adminToken);
+        checkAuthState();
+      } else {
+        if (loginError) {
+          loginError.textContent = data.error || "Password incorrect";
+          loginError.classList.remove("hidden");
+        }
+      }
+    } catch (err: any) {
+      if (loginError) {
+        loginError.textContent = err.message || "Failed to contact auth server";
+        loginError.classList.remove("hidden");
+      }
+    }
+  });
+
+  logoutBtn?.addEventListener("click", () => {
+    adminToken = "";
+    localStorage.removeItem("blanc_admin_token");
+    checkAuthState();
+  });
+
+  // Switch Tabs & Update Header
+  document.querySelectorAll<HTMLButtonElement>("[data-tab-target]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-tab-target") as any;
+      if (!target) return;
+      activeTab = target;
+
+      document.querySelectorAll(".tab-btn").forEach((b) => {
+        b.classList.remove("bg-surface-elevated", "text-text-primary", "border-l-2", "border-accent-primary", "font-semibold");
+        b.classList.add("text-text-secondary", "font-medium");
+      });
+      btn.classList.add("bg-surface-elevated", "text-text-primary", "border-l-2", "border-accent-primary", "font-semibold");
+      btn.classList.remove("text-text-secondary");
+
+      document.querySelectorAll(".panel-view").forEach((p) => p.classList.add("hidden"));
+      const activePanel = document.getElementById(`panel-${target}`);
+      if (activePanel) activePanel.classList.remove("hidden");
+
+      updateHeaderBar(target);
+    });
+  });
+
+  function updateHeaderBar(tab: string) {
+    if (!topTitle || !topDesc || !topActions) return;
+
+    if (tab === "blog") {
+      topTitle.textContent = "Blog & Devlogs";
+      topDesc.textContent = "Publish and manage devlogs, announcements, and engine release notes.";
+      topActions.innerHTML = `
+        <button
+          type="button"
+          id="btn-create-post"
+          class="inline-flex items-center gap-1.5 rounded bg-accent-primary px-3 py-1.5 text-xs font-semibold text-text-on-accent hover:bg-accent-hover cursor-pointer"
+        >
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          <span>New Article</span>
+        </button>
+      `;
+      document.getElementById("btn-create-post")?.addEventListener("click", openNewPostModal);
+    } else if (tab === "docs") {
+      topTitle.textContent = "Documentation Guides";
+      topDesc.textContent = "Structured user guides stored as Markdown in your repository (Godot-style docs).";
+      topActions.innerHTML = `
+        <a
+          href="https://github.com/Kharisdestianmaulana-hub/blancengineweb/tree/main/docs"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded border border-border-default bg-surface-primary px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-surface-hover"
+        >
+          <svg class="h-3.5 w-3.5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <span>Open docs/ on GitHub</span>
+        </a>
+      `;
+    } else if (tab === "showcase") {
+      topTitle.textContent = "Showcase Games Moderation";
+      topDesc.textContent = "Review visual novel submissions from creators and feature games on the hero section.";
+      topActions.innerHTML = `
+        <div class="inline-flex rounded border border-border-default bg-bg-secondary p-0.5 text-xs mr-2">
+          <button type="button" data-showcase-filter="pending" class="rounded px-2.5 py-1 text-xs font-semibold bg-surface-elevated text-text-primary shadow-sm cursor-pointer">Pending</button>
+          <button type="button" data-showcase-filter="approved" class="rounded px-2.5 py-1 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer">Approved</button>
+          <button type="button" data-showcase-filter="all" class="rounded px-2.5 py-1 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer">All</button>
+        </div>
+        <button
+          type="button"
+          id="btn-add-game"
+          class="inline-flex items-center gap-1.5 rounded bg-accent-primary px-3 py-1.5 text-xs font-semibold text-text-on-accent hover:bg-accent-hover cursor-pointer"
+        >
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Add Game</span>
+        </button>
+      `;
+      setupShowcaseHeaderEvents();
+    } else if (tab === "roadmap") {
+      topTitle.textContent = "Roadmap Timeline & Backlog";
+      topDesc.textContent = "Manage upcoming engine features, target release dates, and shipped milestones.";
+      topActions.innerHTML = `
+        <select id="roadmap-version-filter" class="h-8 rounded border border-border-default bg-bg-secondary px-2 text-xs text-text-primary mr-2">
+          <option value="all">All Versions</option>
+          <option value="v0.2.0">v0.2.0</option>
+          <option value="v0.1.1">v0.1.1</option>
+        </select>
+        <button
+          type="button"
+          id="btn-add-roadmap"
+          class="inline-flex items-center gap-1.5 rounded bg-accent-primary px-3 py-1.5 text-xs font-semibold text-text-on-accent hover:bg-accent-hover cursor-pointer"
+        >
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Add Milestone</span>
+        </button>
+      `;
+      setupRoadmapHeaderEvents();
+    }
+  }
+
+  function setupShowcaseHeaderEvents() {
+    document.querySelectorAll<HTMLButtonElement>("[data-showcase-filter]").forEach((b) => {
+      b.addEventListener("click", () => {
+        showcaseFilter = b.getAttribute("data-showcase-filter") || "all";
+        document.querySelectorAll("[data-showcase-filter]").forEach((btn) => {
+          btn.classList.remove("bg-surface-elevated", "text-text-primary", "shadow-sm", "font-semibold");
+          btn.classList.add("text-text-secondary", "font-medium");
+        });
+        b.classList.add("bg-surface-elevated", "text-text-primary", "shadow-sm", "font-semibold");
+        b.classList.remove("text-text-secondary");
+        renderShowcase();
+      });
+    });
+
+    document.getElementById("btn-add-game")?.addEventListener("click", () => {
+      (document.getElementById("modal-game-title") as HTMLElement).textContent = "Add Showcase Game";
+      (document.getElementById("game-id") as HTMLInputElement).value = "";
+      formGame?.reset();
+      (document.getElementById("game-approved") as HTMLInputElement).checked = true;
+      modalGame?.classList.remove("hidden");
+      modalGame?.classList.add("flex");
+    });
+  }
+
+  function setupRoadmapHeaderEvents() {
+    document.getElementById("roadmap-version-filter")?.addEventListener("change", renderRoadmap);
+    document.getElementById("btn-add-roadmap")?.addEventListener("click", () => {
+      (document.getElementById("modal-roadmap-title") as HTMLElement).textContent = "Add Roadmap Milestone";
+      (document.getElementById("roadmap-id") as HTMLInputElement).value = "";
+      formRoadmap?.reset();
+      modalRoadmap?.classList.remove("hidden");
+      modalRoadmap?.classList.add("flex");
+    });
+  }
+
+  function openNewPostModal() {
+    (document.getElementById("modal-post-title") as HTMLElement).textContent = "New Blog Post";
+    (document.getElementById("post-id") as HTMLInputElement).value = "";
+    formPost?.reset();
+    (document.getElementById("post-published") as HTMLInputElement).checked = true;
+    modalPost?.classList.remove("hidden");
+    modalPost?.classList.add("flex");
+  }
+
+  document.getElementById("btn-create-post")?.addEventListener("click", openNewPostModal);
+
+  // Fetch all D1 data
+  async function fetchAllData() {
+    if (syncSpin) syncSpin.classList.add("animate-spin");
+
+    try {
+      const [resPosts, resShowcase, resRoadmap] = await Promise.all([
+        fetch("/api/admin/blog", { headers: getHeaders() }).catch(() => null),
+        fetch("/api/admin/showcase", { headers: getHeaders() }).catch(() => null),
+        fetch("/api/roadmap").catch(() => null),
+      ]);
+
+      if (resPosts && resPosts.status === 401) {
+        adminToken = "";
+        localStorage.removeItem("blanc_admin_token");
+        checkAuthState();
+        return;
+      }
+
+      if (resPosts && resPosts.ok && resPosts.headers.get("content-type")?.includes("application/json")) {
+        const d = await resPosts.json();
+        allPosts = d.posts || [];
+        renderBlog();
+      }
+
+      if (resShowcase && resShowcase.ok && resShowcase.headers.get("content-type")?.includes("application/json")) {
+        const d = await resShowcase.json();
+        allGames = d.games || [];
+        renderShowcase();
+      }
+
+      if (resRoadmap && resRoadmap.ok && resRoadmap.headers.get("content-type")?.includes("application/json")) {
+        const d = await resRoadmap.json();
+        allRoadmap = d.items || [];
+        renderRoadmap();
+      }
+
+      showToast("Data synced from D1");
+    } catch {
+      showToast("Unable to sync from D1 database");
+    } finally {
+      if (syncSpin) syncSpin.classList.remove("animate-spin");
+    }
+  }
+
+  btnSyncAll?.addEventListener("click", fetchAllData);
+
+  // RENDER BLOG
+  function renderBlog() {
+    const listEl = document.getElementById("blog-posts-list");
+    if (!listEl) return;
+    if (badgeBlog) badgeBlog.textContent = String(allPosts.length);
+
+    if (allPosts.length === 0) {
+      listEl.innerHTML = `
+        <div class="rounded border border-border-default bg-surface-primary p-8 text-center text-xs text-text-muted">
+          No articles published yet. Click "New Article" to write your first devlog.
+        </div>
+      `;
+      return;
+    }
+
+    listEl.innerHTML = allPosts
+      .map(
+        (p) => `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded border border-border-default bg-surface-primary p-4 hover:border-border-default transition-colors">
+          <div class="flex items-start gap-3.5">
+            ${
+              p.cover_url
+                ? `<img src="${esc(p.cover_url)}" alt="${esc(p.title)}" class="h-14 w-20 shrink-0 rounded object-cover border border-border-subtle bg-bg-primary" onerror="this.style.display='none'" />`
+                : `<div class="h-14 w-20 shrink-0 rounded border border-border-subtle bg-bg-secondary flex items-center justify-center font-mono text-[10px] text-text-muted">No Cover</div>`
+            }
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="rounded px-2 py-0.2 font-mono text-[10px] font-bold ${
+                  p.is_published ? "bg-status-success/20 text-status-success border border-status-success/30" : "bg-status-warning/20 text-status-warning border border-status-warning/30"
+                }">
+                  ${p.is_published ? "Published" : "Draft"}
+                </span>
+                <span class="font-mono text-xs text-text-muted">${esc(p.tags || "Devlog")}</span>
+                <span class="text-text-muted text-[10px]">&bull;</span>
+                <span class="font-mono text-[11px] text-text-muted">${(p.published_at || "").slice(0, 10)}</span>
+              </div>
+              <h3 class="mt-1 text-sm font-bold text-text-primary">${esc(p.title)}</h3>
+              <p class="mt-0.5 text-xs text-text-secondary line-clamp-1">${esc(p.excerpt)}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+            <a href="/blog/post/?slug=${encodeURIComponent(p.slug)}" target="_blank" class="rounded p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-hover" title="View live article">
+              <Eye class="h-4 w-4" />
+            </a>
+            <button type="button" onclick="openEditPost(${p.id})" class="rounded p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-hover cursor-pointer" title="Edit article">
+              <Edit3 class="h-4 w-4" />
+            </button>
+            <button type="button" onclick="deletePost(${p.id})" class="rounded p-1.5 text-text-muted hover:text-status-error hover:bg-surface-hover cursor-pointer" title="Delete article">
+              <Trash2 class="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      `
+      )
+      .join("");
+  }
+
+  // RENDER SHOWCASE
+  function renderShowcase() {
+    const gridEl = document.getElementById("showcase-grid");
+    if (!gridEl) return;
+
+    const pendingCount = allGames.filter((g) => !g.is_approved).length;
+    if (badgePending) {
+      if (pendingCount > 0) {
+        badgePending.textContent = String(pendingCount);
+        badgePending.classList.remove("hidden");
+      } else {
+        badgePending.classList.add("hidden");
+      }
+    }
+
+    let list = allGames.filter((g) => {
+      if (showcaseFilter === "pending") return !g.is_approved;
+      if (showcaseFilter === "approved") return Boolean(g.is_approved);
+      return true;
+    });
+
+    if (list.length === 0) {
+      gridEl.innerHTML = `
+        <div class="col-span-full rounded border border-border-default bg-surface-primary p-8 text-center text-xs text-text-muted">
+          No games found in "${showcaseFilter}" filter.
+        </div>
+      `;
+      return;
+    }
+
+    gridEl.innerHTML = list
+      .map(
+        (g) => `
+        <div class="flex flex-col justify-between overflow-hidden rounded border border-border-default bg-surface-primary">
+          <div class="relative aspect-video w-full overflow-hidden bg-bg-primary">
+            <img src="${esc(g.cover_url)}" alt="${esc(g.title)}" class="h-full w-full object-cover" onerror="this.src='/screenshots/SS_GAMEPLAY_1_CHARACTER.png'" />
+            <div class="absolute top-2 left-2 flex items-center gap-1.5">
+              ${
+                g.is_approved
+                  ? `<span class="rounded bg-status-success/90 px-2 py-0.5 font-mono text-[10px] font-bold text-white shadow">Approved</span>`
+                  : `<span class="rounded bg-status-warning/90 px-2 py-0.5 font-mono text-[10px] font-bold text-slate-950 shadow">Pending</span>`
+              }
+              ${
+                g.is_featured
+                  ? `<span class="rounded bg-accent-primary px-2 py-0.5 font-mono text-[10px] font-bold text-white shadow">★ Hero</span>`
+                  : ""
+              }
+            </div>
+          </div>
+
+          <div class="p-3.5 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-1.5">
+                <h3 class="text-sm font-bold text-text-primary truncate">${esc(g.title)}</h3>
+                <span class="rounded border border-border-default bg-bg-secondary px-1.5 py-0.2 font-mono text-[10px] text-text-secondary">${esc(g.status)}</span>
+              </div>
+              <p class="font-mono text-xs text-text-muted mt-0.5">by ${esc(g.author)}</p>
+            </div>
+
+            <div class="mt-3.5 pt-2.5 border-t border-border-subtle flex items-center justify-between gap-1">
+              <button
+                type="button"
+                onclick="toggleApprove(${g.id}, ${g.is_approved ? 0 : 1})"
+                class="rounded px-2 py-1 text-xs font-semibold cursor-pointer transition-colors ${
+                  g.is_approved
+                    ? "border border-border-default bg-surface-elevated text-text-secondary hover:text-status-warning"
+                    : "bg-status-success text-white hover:bg-emerald-600"
+                }"
+              >
+                ${g.is_approved ? "Unapprove" : "Approve ✓"}
+              </button>
+
+              <button
+                type="button"
+                onclick="toggleFeatured(${g.id}, ${g.is_featured ? 0 : 1})"
+                class="rounded px-2 py-1 text-xs font-medium cursor-pointer transition-colors ${
+                  g.is_featured ? "text-amber-400 bg-amber-400/10" : "text-text-muted hover:text-amber-400"
+                }"
+              >
+                ★ ${g.is_featured ? "Featured" : "Feature"}
+              </button>
+
+              <div class="flex items-center gap-1">
+                <button type="button" onclick="openEditGame(${g.id})" class="rounded p-1 text-text-muted hover:text-text-primary hover:bg-surface-hover cursor-pointer" title="Edit details">
+                  <Edit3 class="h-3.5 w-3.5" />
+                </button>
+                <button type="button" onclick="deleteGame(${g.id})" class="rounded p-1 text-text-muted hover:text-status-error hover:bg-surface-hover cursor-pointer" title="Delete">
+                  <Trash2 class="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+      )
+      .join("");
+  }
+
+  // RENDER ROADMAP
+  function renderRoadmap() {
+    const tbody = document.getElementById("roadmap-tbody");
+    if (!tbody) return;
+    if (badgeRoadmap) badgeRoadmap.textContent = String(allRoadmap.length);
+
+    const verFilter = (document.getElementById("roadmap-version-filter") as HTMLSelectElement)?.value || "all";
+    let list = allRoadmap;
+    if (verFilter !== "all") {
+      list = allRoadmap.filter((r) => (r.version || "").toLowerCase() === verFilter.toLowerCase());
+    }
+
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-text-muted">No roadmap items for ${verFilter}.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = list
+      .map(
+        (r) => `
+        <tr class="hover:bg-surface-hover/50">
+          <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-text-primary">
+            <span class="rounded border border-border-default bg-bg-secondary px-2 py-0.5">${esc(r.version)}</span>
+          </td>
+          <td class="px-4 py-3 min-w-[260px]">
+            <p class="font-semibold text-text-primary">${esc(r.title)}</p>
+            <p class="mt-0.5 text-text-secondary line-clamp-1 text-[11px]">${esc(r.description)}</p>
+            ${r.target_date ? `<span class="mt-1 inline-block font-mono text-[10px] text-text-muted">Target: ${esc(r.target_date)}</span>` : ""}
+          </td>
+          <td class="whitespace-nowrap px-4 py-3 font-mono text-[11px] text-text-muted">
+            ${esc(r.category)}
+          </td>
+          <td class="whitespace-nowrap px-4 py-3">
+            <select
+              onchange="changeRoadmapStatus(${r.id}, this.value)"
+              class="h-7 rounded border border-border-default bg-bg-secondary px-2 text-xs font-semibold cursor-pointer ${
+                r.status === "Completed" || r.status === "Shipped"
+                  ? "text-status-success"
+                  : r.status === "In Progress"
+                  ? "text-status-warning"
+                  : "text-text-muted"
+              }"
+            >
+              <option value="Planned" ${r.status === "Planned" ? "selected" : ""}>Planned</option>
+              <option value="In Progress" ${r.status === "In Progress" ? "selected" : ""}>In Progress</option>
+              <option value="Completed" ${r.status === "Completed" ? "selected" : ""}>Completed</option>
+              <option value="Shipped" ${r.status === "Shipped" ? "selected" : ""}>Shipped</option>
+            </select>
+          </td>
+          <td class="whitespace-nowrap px-4 py-3 text-right">
+            <div class="inline-flex items-center gap-1">
+              <button type="button" onclick="openEditRoadmap(${r.id})" class="rounded p-1 text-text-muted hover:text-text-primary hover:bg-surface-hover cursor-pointer" title="Edit milestone">
+                <Edit3 class="h-3.5 w-3.5" />
+              </button>
+              <button type="button" onclick="deleteRoadmap(${r.id})" class="rounded p-1 text-text-muted hover:text-status-error hover:bg-surface-hover cursor-pointer" title="Delete milestone">
+                <Trash2 class="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      `
+      )
+      .join("");
+  }
+
+  // Global window functions
+  (window as any).openEditPost = (id: number) => {
+    const p = allPosts.find((item) => item.id === id);
+    if (!p) return;
+    (document.getElementById("modal-post-title") as HTMLElement).textContent = "Edit Blog Post";
+    (document.getElementById("post-id") as HTMLInputElement).value = String(p.id);
+    (document.getElementById("post-title") as HTMLInputElement).value = p.title || "";
+    (document.getElementById("post-author") as HTMLInputElement).value = p.author || "Blanc Team";
+    (document.getElementById("post-tags") as HTMLInputElement).value = p.tags || "Devlog";
+    (document.getElementById("post-cover") as HTMLInputElement).value = p.cover_url || "";
+    (document.getElementById("post-excerpt") as HTMLTextAreaElement).value = p.excerpt || "";
+    (document.getElementById("post-content") as HTMLTextAreaElement).value = p.content || "";
+    (document.getElementById("post-published") as HTMLInputElement).checked = Boolean(p.is_published);
+    modalPost?.classList.remove("hidden");
+    modalPost?.classList.add("flex");
+  };
+
+  (window as any).deletePost = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this article?")) return;
+    try {
+      const res = await fetch(`/api/admin/blog?id=${id}`, { method: "DELETE", headers: getHeaders() });
+      if (res.ok) {
+        showToast("Article deleted");
+        fetchAllData();
+      }
+    } catch {
+      showToast("Error deleting article");
+    }
+  };
+
+  (window as any).toggleApprove = async (id: number, val: number) => {
+    try {
+      const res = await fetch("/api/admin/showcase", {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify({ id, is_approved: val }),
+      });
+      if (res.ok) {
+        showToast(val ? "Game Approved and Live!" : "Game set to Pending");
+        fetchAllData();
+      }
+    } catch {
+      showToast("Error updating status");
+    }
+  };
+
+  (window as any).toggleFeatured = async (id: number, val: number) => {
+    try {
+      const res = await fetch("/api/admin/showcase", {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify({ id, is_featured: val }),
+      });
+      if (res.ok) {
+        showToast(val ? "Game featured on Hero!" : "Unfeatured");
+        fetchAllData();
+      }
+    } catch {
+      showToast("Error updating featured status");
+    }
+  };
+
+  (window as any).deleteGame = async (id: number) => {
+    if (!confirm("Delete this showcase submission?")) return;
+    try {
+      const res = await fetch(`/api/admin/showcase?id=${id}`, { method: "DELETE", headers: getHeaders() });
+      if (res.ok) {
+        showToast("Game deleted");
+        fetchAllData();
+      }
+    } catch {
+      showToast("Error deleting game");
+    }
+  };
+
+  (window as any).changeRoadmapStatus = async (id: number, status: string) => {
+    try {
+      const res = await fetch("/api/admin/roadmap", {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify({ id, status }),
+      });
+      if (res.ok) {
+        showToast(`Roadmap status set to ${status}`);
+        fetchAllData();
+      }
+    } catch {
+      showToast("Error updating roadmap status");
+    }
+  };
+
+  (window as any).deleteRoadmap = async (id: number) => {
+    if (!confirm("Delete this milestone?")) return;
+    try {
+      const res = await fetch(`/api/admin/roadmap?id=${id}`, { method: "DELETE", headers: getHeaders() });
+      if (res.ok) {
+        showToast("Milestone deleted");
+        fetchAllData();
+      }
+    } catch {
+      showToast("Error deleting milestone");
+    }
+  };
+
+  (window as any).openEditGame = (id: number) => {
+    const g = allGames.find((item) => item.id === id);
+    if (!g) return;
+    (document.getElementById("modal-game-title") as HTMLElement).textContent = "Edit Showcase Game";
+    (document.getElementById("game-id") as HTMLInputElement).value = String(g.id);
+    (document.getElementById("game-title") as HTMLInputElement).value = g.title || "";
+    (document.getElementById("game-author") as HTMLInputElement).value = g.author || "";
+    (document.getElementById("game-status") as HTMLSelectElement).value = g.status || "Released";
+    (document.getElementById("game-cover") as HTMLInputElement).value = g.cover_url || "";
+    (document.getElementById("game-desc") as HTMLTextAreaElement).value = g.description || "";
+    (document.getElementById("game-itch") as HTMLInputElement).value = g.itch_url || "";
+    (document.getElementById("game-steam") as HTMLInputElement).value = g.steam_url || "";
+    (document.getElementById("game-approved") as HTMLInputElement).checked = Boolean(g.is_approved);
+    modalGame?.classList.remove("hidden");
+    modalGame?.classList.add("flex");
+  };
+
+  (window as any).openEditRoadmap = (id: number) => {
+    const r = allRoadmap.find((item) => item.id === id);
+    if (!r) return;
+    (document.getElementById("modal-roadmap-title") as HTMLElement).textContent = "Edit Milestone";
+    (document.getElementById("roadmap-id") as HTMLInputElement).value = String(r.id);
+    (document.getElementById("roadmap-version") as HTMLInputElement).value = r.version || "";
+    (document.getElementById("roadmap-date") as HTMLInputElement).value = r.target_date || "";
+    (document.getElementById("roadmap-status") as HTMLSelectElement).value = r.status || "Planned";
+    (document.getElementById("roadmap-category") as HTMLInputElement).value = r.category || "";
+    (document.getElementById("roadmap-feature-title") as HTMLInputElement).value = r.title || "";
+    (document.getElementById("roadmap-desc") as HTMLTextAreaElement).value = r.description || "";
+    modalRoadmap?.classList.remove("hidden");
+    modalRoadmap?.classList.add("flex");
+  };
+
+  // Modal Closers
+  document.getElementById("modal-post-close")?.addEventListener("click", () => {
+    modalPost?.classList.add("hidden");
+    modalPost?.classList.remove("flex");
+  });
+  document.getElementById("modal-post-cancel")?.addEventListener("click", () => {
+    modalPost?.classList.add("hidden");
+    modalPost?.classList.remove("flex");
+  });
+
+  document.getElementById("modal-game-close")?.addEventListener("click", () => {
+    modalGame?.classList.add("hidden");
+    modalGame?.classList.remove("flex");
+  });
+  document.getElementById("modal-game-cancel")?.addEventListener("click", () => {
+    modalGame?.classList.add("hidden");
+    modalGame?.classList.remove("flex");
+  });
+
+  document.getElementById("modal-roadmap-close")?.addEventListener("click", () => {
+    modalRoadmap?.classList.add("hidden");
+    modalRoadmap?.classList.remove("flex");
+  });
+  document.getElementById("modal-roadmap-cancel")?.addEventListener("click", () => {
+    modalRoadmap?.classList.add("hidden");
+    modalRoadmap?.classList.remove("flex");
+  });
+
+  // Form Submits
+  formPost?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = (document.getElementById("post-id") as HTMLInputElement).value;
+    const isEdit = Boolean(id);
+    const body = {
+      id: id ? Number(id) : undefined,
+      title: (document.getElementById("post-title") as HTMLInputElement).value.trim(),
+      author: (document.getElementById("post-author") as HTMLInputElement).value.trim(),
+      tags: (document.getElementById("post-tags") as HTMLInputElement).value.trim(),
+      cover_url: (document.getElementById("post-cover") as HTMLInputElement).value.trim(),
+      excerpt: (document.getElementById("post-excerpt") as HTMLTextAreaElement).value.trim(),
+      content: (document.getElementById("post-content") as HTMLTextAreaElement).value.trim(),
+      is_published: (document.getElementById("post-published") as HTMLInputElement).checked ? 1 : 0,
+    };
+
+    try {
+      const res = await fetch("/api/admin/blog", {
+        method: isEdit ? "PUT" : "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        showToast(isEdit ? "Article updated" : "Article published");
+        modalPost?.classList.add("hidden");
+        modalPost?.classList.remove("flex");
+        fetchAllData();
+      }
+    } catch {
+      showToast("Error saving article");
+    }
+  });
+
+  formGame?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = (document.getElementById("game-id") as HTMLInputElement).value;
+    const isEdit = Boolean(id);
+    const body = {
+      id: id ? Number(id) : undefined,
+      title: (document.getElementById("game-title") as HTMLInputElement).value.trim(),
+      author: (document.getElementById("game-author") as HTMLInputElement).value.trim(),
+      status: (document.getElementById("game-status") as HTMLSelectElement).value,
+      cover: (document.getElementById("game-cover") as HTMLInputElement).value.trim(),
+      description: (document.getElementById("game-desc") as HTMLTextAreaElement).value.trim(),
+      itch: (document.getElementById("game-itch") as HTMLInputElement).value.trim(),
+      steam: (document.getElementById("game-steam") as HTMLInputElement).value.trim(),
+      is_approved: (document.getElementById("game-approved") as HTMLInputElement).checked ? 1 : 0,
+    };
+
+    try {
+      const res = await fetch("/api/admin/showcase", {
+        method: isEdit ? "PUT" : "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        showToast(isEdit ? "Game updated" : "Game added");
+        modalGame?.classList.add("hidden");
+        modalGame?.classList.remove("flex");
+        fetchAllData();
+      }
+    } catch {
+      showToast("Error saving game");
+    }
+  });
+
+  formRoadmap?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = (document.getElementById("roadmap-id") as HTMLInputElement).value;
+    const isEdit = Boolean(id);
+    const body = {
+      id: id ? Number(id) : undefined,
+      version: (document.getElementById("roadmap-version") as HTMLInputElement).value.trim(),
+      target_date: (document.getElementById("roadmap-date") as HTMLInputElement).value.trim(),
+      status: (document.getElementById("roadmap-status") as HTMLSelectElement).value,
+      category: (document.getElementById("roadmap-category") as HTMLInputElement).value.trim(),
+      title: (document.getElementById("roadmap-feature-title") as HTMLInputElement).value.trim(),
+      description: (document.getElementById("roadmap-desc") as HTMLTextAreaElement).value.trim(),
+    };
+
+    try {
+      const res = await fetch("/api/admin/roadmap", {
+        method: isEdit ? "PUT" : "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        showToast(isEdit ? "Milestone updated" : "Milestone added");
+        modalRoadmap?.classList.add("hidden");
+        modalRoadmap?.classList.remove("flex");
+        fetchAllData();
+      }
+    } catch {
+      showToast("Error saving milestone");
+    }
+  });
+
+  // Init
+  checkAuthState();
+</script>

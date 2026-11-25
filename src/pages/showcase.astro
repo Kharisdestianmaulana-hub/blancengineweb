@@ -671,6 +671,32 @@ const engineScreenshots = [
 
   async function fetchGames() {
     if (!gamesGrid) return;
+
+    // 1. Try Cloudflare D1 Edge API first
+    try {
+      const apiRes = await fetch("/api/showcase");
+      if (apiRes.ok) {
+        const data = await apiRes.json();
+        if (Array.isArray(data.games) && data.games.length > 0) {
+          gamesList = data.games.map((g: any) => ({
+            slug: g.slug,
+            title: g.title,
+            author: g.author,
+            status: g.status || "Released",
+            genre: "",
+            cover: g.cover_url || "/screenshots/SS_GAMEPLAY_1_CHARACTER.png",
+            url: g.itch_url || g.steam_url || `/showcase/game/?id=${encodeURIComponent(g.slug)}`,
+            description: g.description,
+          }));
+          renderGames();
+          return;
+        }
+      }
+    } catch {
+      // Fallback to Google Sheet below
+    }
+
+    // 2. Fallback to Google Sheet
     try {
       const res = await fetch(SHEET_GVIZ_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -880,6 +906,24 @@ const engineScreenshots = [
     const combinedCovers = [mainCover, ...extraCovers].filter(Boolean).join(", ");
 
     try {
+      // 1. Submit to Cloudflare D1 Edge API (saved as is_approved = 0 for admin review)
+      fetch("/api/showcase", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: (document.getElementById("field-title") as HTMLInputElement)?.value.trim(),
+          author: (document.getElementById("field-author") as HTMLInputElement)?.value.trim(),
+          description: (document.getElementById("field-description") as HTMLTextAreaElement)?.value.trim(),
+          cover: mainCover,
+          screenshots: extraCovers,
+          status: (document.getElementById("field-status") as HTMLSelectElement)?.value || "Released",
+          steam: steamVal,
+          itch: itchVal,
+          contact: (document.getElementById("field-contact") as HTMLInputElement)?.value.trim(),
+        }),
+      }).catch((e) => console.warn("D1 API submit error:", e));
+
+      // 2. Submit to Google Form as secondary backup
       const formData = new FormData(submitForm);
       formData.set("entry.908982358", combinedCovers);
       formData.set("entry.153994697", combinedUrl);

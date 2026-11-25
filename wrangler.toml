@@ -1,0 +1,8 @@
+name = "blanc-engine-website"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "blanc-db"
+database_id = "370333f6-73e9-4a55-afb0-3e4c79be322f"

@@ -1,17 +1,27 @@
 User-agent: *
+Disallow: /admin
+Disallow: /admin/
 Allow: /
 
 # AI Crawlers and Search Engines
 User-agent: GPTBot
+Disallow: /admin
+Disallow: /admin/
 Allow: /
 
 User-agent: PerplexityBot
+Disallow: /admin
+Disallow: /admin/
 Allow: /
 
 User-agent: ClaudeBot
+Disallow: /admin
+Disallow: /admin/
 Allow: /
 
 User-agent: Google-Extended
+Disallow: /admin
+Disallow: /admin/
 Allow: /
 
 Sitemap: https://getblanc.web.id/sitemap.xml

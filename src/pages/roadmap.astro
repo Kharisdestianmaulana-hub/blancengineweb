@@ -637,6 +637,35 @@ import {
   async function fetchRoadmap() {
     if (refreshIcon) refreshIcon.classList.add("animate-spin");
 
+    // 1. Try our fast Cloudflare D1 Edge API first
+    try {
+      const apiRes = await fetch("/api/roadmap");
+      if (apiRes.ok) {
+        const data = await apiRes.json();
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          itemsList = data.items.map((r: any) => {
+            const rawStatus = r.status || "Planned";
+            const st = getStatusClasses(rawStatus);
+            return {
+              version: r.version || "Upcoming",
+              targetDate: r.target_date || "",
+              status: rawStatus,
+              category: r.category || "General",
+              title: r.title,
+              description: r.description || "",
+              isReleased: st.isReleased,
+            };
+          });
+          updateCategoriesList();
+          updateSpotlight();
+          renderRoadmap();
+          return;
+        }
+      }
+    } catch {
+      // Fallback to Google Sheet below
+    }
+
     try {
       const res = await fetch(SHEET_GVIZ_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

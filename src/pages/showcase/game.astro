@@ -239,38 +239,73 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2, X } from "lucide-astro";
     const requestedSlug = new URLSearchParams(window.location.search).get("id") || "";
 
     let games: ShowcaseGame[] = [];
-    try {
-      const res = await fetch(SHEET_GVIZ_URL);
-      if (res.ok) {
-        const text = await res.text();
-        const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?/);
-        if (match) {
-          const json = JSON.parse(match[1]);
-          const rows = json?.table?.rows || [];
-          for (const row of rows) {
-            const c = row.c || [];
-            const getVal = (idx: number) => (c[idx] && c[idx].v != null ? String(c[idx].v).trim() : "");
-            const approvedRaw = getVal(8).toLowerCase();
-            const isApproved = approvedRaw === "true" || approvedRaw === "1" || approvedRaw === "yes";
-            const title = getVal(1);
-            if (!title || title.toLowerCase() === "game title" || !isApproved) continue;
 
+    // 1. Try Cloudflare D1 Edge API first if slug is requested
+    if (requestedSlug) {
+      try {
+        const apiRes = await fetch(`/api/showcase?slug=${encodeURIComponent(requestedSlug)}`);
+        if (apiRes.ok) {
+          const data = await apiRes.json();
+          if (data && data.game) {
+            const g = data.game;
+            const extraScreenshots = Array.isArray(g.screenshots) ? g.screenshots : [];
+            const allImages = [g.cover_url, ...extraScreenshots].filter(Boolean);
+            const directUrl =
+              g.itch_url && g.steam_url
+                ? `itch:${g.itch_url} | steam:${g.steam_url}`
+                : g.itch_url || g.steam_url || "#";
             games.push({
-              slug: toSlug(title),
-              title,
-              author: getVal(2) || "Unknown Creator",
-              status: getVal(3) || "Released",
-              genre: getVal(4),
-              cover: getVal(5),
-              url: getVal(6) || "#",
-              description: getVal(7),
+              slug: g.slug,
+              title: g.title,
+              author: g.author,
+              status: g.status || "Released",
+              genre: "",
+              cover: allImages.join(", "),
+              url: directUrl,
+              description: g.description,
             });
           }
-          games.reverse();
         }
+      } catch {
+        // Fallback to Google Sheet below
       }
-    } catch {
-      // Fallback handled below
+    }
+
+    // 2. Fallback to Google Sheet if not found in D1
+    if (games.length === 0) {
+      try {
+        const res = await fetch(SHEET_GVIZ_URL);
+        if (res.ok) {
+          const text = await res.text();
+          const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?/);
+          if (match) {
+            const json = JSON.parse(match[1]);
+            const rows = json?.table?.rows || [];
+            for (const row of rows) {
+              const c = row.c || [];
+              const getVal = (idx: number) => (c[idx] && c[idx].v != null ? String(c[idx].v).trim() : "");
+              const approvedRaw = getVal(8).toLowerCase();
+              const isApproved = approvedRaw === "true" || approvedRaw === "1" || approvedRaw === "yes";
+              const title = getVal(1);
+              if (!title || title.toLowerCase() === "game title" || !isApproved) continue;
+
+              games.push({
+                slug: toSlug(title),
+                title,
+                author: getVal(2) || "Unknown Creator",
+                status: getVal(3) || "Released",
+                genre: getVal(4),
+                cover: getVal(5),
+                url: getVal(6) || "#",
+                description: getVal(7),
+              });
+            }
+            games.reverse();
+          }
+        }
+      } catch {
+        // Fallback handled below
+      }
     }
 
     const game = games.find((g) => g.slug === requestedSlug) || (requestedSlug ? null : games[0]);
