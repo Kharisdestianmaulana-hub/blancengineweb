@@ -1,6 +1,6 @@
 export const prerender = true;
 
-const site = "https://getblanc.pages.dev";
+const site = "https://getblanc.web.id";
 
 const pages = [
   { path: "/", priority: "1.0", changefreq: "weekly" },

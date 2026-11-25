@@ -1,4 +1,17 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://getblanc.pages.dev/sitemap.xml
+# AI Crawlers and Search Engines
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://getblanc.web.id/sitemap.xml

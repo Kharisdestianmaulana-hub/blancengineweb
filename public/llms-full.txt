@@ -1,0 +1,33 @@
+# Blanc Engine - Full AI Context & Documentation
+
+Blanc Engine is a specialized open-source desktop visual novel studio designed for indie authors, scriptwriters, and game developers targeting Windows.
+
+## Philosophy
+Blanc Engine replaces traditional script-coding workflows (such as Python or custom scripting languages) with an intuitive node graph and visual inspector, making visual novel creation accessible to everyone without sacrificing depth.
+
+## Core Capabilities
+1. Screenplay Flowchart:
+   Branching node system supporting Dialogue, Branch/Choice, Conditional logic, Set Variable, and Scene jumps.
+2. Character System:
+   Multiple character presets with interchangeable expressions, speaker positions, and portrait animations.
+3. Audio System:
+   BGM, BGS, and Voice-over channels with fading and volume normalization.
+4. Visual Designer:
+   In-engine visual customization of dialogue boxes, choice buttons, quick menus, title screens, save/load screens, and settings dialogs.
+5. Windows Standalone Runtime:
+   Built on robust native technologies delivering 60 FPS performance and lightweight memory usage.
+6. Localization:
+   Export and import dialogue strings via standard CSV for effortless multilingual support.
+
+## Release Information
+- Latest Release: v0.1.1
+- License: GNU General Public License v3.0 (GPL-3.0)
+- Operating System: Windows 10, Windows 11 (x64)
+- Repository: https://github.com/Kharisdestianmaulana-hub/blanc-engine
+
+## Web Resources
+- Home: https://getblanc.web.id/
+- Download: https://getblanc.web.id/download/
+- Documentation: https://getblanc.web.id/docs/
+- Showcase: https://getblanc.web.id/showcase/
+- Changelog: https://getblanc.web.id/changelog/

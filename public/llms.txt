@@ -1,0 +1,21 @@
+# Blanc Engine
+
+> Blanc Engine is an open-source, no-code visual novel desktop creation suite and standalone runtime for Windows. It lets creators write stories like screenplays, design character sprites and menus visually, and export ready-to-play Windows games (Setup installer and portable executable) with zero coding required.
+
+## Key Features
+- Visual Story Flow Node Graph: Interactive screenplay flowchart to branch dialogue, choices, variables, and conditions.
+- Live-Preview UI Designer: Visual WYSIWYG menu, textbox, and layout editor.
+- Character and Asset Manager: Built-in sprite expressions, background, and audio management.
+- Multi-Language CSV Localization: Easy string extraction and multi-language translation support.
+- Zero-Code Windows Export: Instant packaging into standalone Windows games (Setup.exe and Portable .zip).
+- Free and Open Source: Licensed under GNU GPL v3.
+
+## Links and Documentation
+- [Official Website](https://getblanc.web.id/)
+- [Download](https://getblanc.web.id/download/)
+- [Documentation and Getting Started](https://getblanc.web.id/docs/)
+- [Showcase and Community Games](https://getblanc.web.id/showcase/)
+- [Roadmap](https://getblanc.web.id/roadmap/)
+- [Changelog](https://getblanc.web.id/changelog/)
+- [GitHub Repository](https://github.com/Kharisdestianmaulana-hub/blanc-engine)
+- [Discord Community](https://discord.gg/GcQMrRXa9Z)
