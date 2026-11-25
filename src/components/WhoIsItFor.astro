@@ -38,7 +38,7 @@ const roles = [
 <section class="border-b border-border-default bg-bg-primary py-16 sm:py-20">
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
     <div class="max-w-2xl">
-      <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+      <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-muted">
         Who Is It For
       </span>
       <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
@@ -54,9 +54,9 @@ const roles = [
         roles.map((role) => {
           const Icon = role.icon;
           return (
-            <article class="flex min-w-0 flex-col rounded-lg border border-border-default bg-surface-primary p-5">
+            <article class="group flex min-w-0 flex-col rounded-lg border border-border-default bg-surface-primary p-5 transition-colors hover:bg-surface-hover">
               <div class="flex items-center gap-3">
-                <div class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border-default bg-bg-secondary text-accent-primary">
+                <div class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border-default bg-bg-secondary text-text-secondary transition-colors group-hover:text-text-primary">
                   <Icon class="h-4 w-4" />
                 </div>
                 <div class="min-w-0">

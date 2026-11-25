@@ -68,7 +68,6 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2, X } from "lucide-astro";
         <div
           id="art-cover-bg"
           class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-700"
-          style="background-attachment: fixed;"
         ></div>
 
         <!-- Bottom-to-Top Gradient: Dark and solid at bottom, transparent at top -->
@@ -80,7 +79,7 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2, X } from "lucide-astro";
           <!-- Back to Showcase Button -->
           <a
             href="/showcase/"
-            class="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-black/60 px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur-md transition-colors hover:border-accent-primary hover:bg-black/80 hover:text-white mb-5"
+            class="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-black/60 px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur-md transition-colors hover:border-white/30 hover:bg-black/80 hover:text-white mb-5"
           >
             <ArrowLeft class="h-3.5 w-3.5" />
             <span>Back to Showcase</span>
@@ -90,7 +89,7 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2, X } from "lucide-astro";
           <div class="flex flex-wrap items-center gap-2.5">
             <span id="art-status" class="rounded border px-2.5 py-0.5 font-mono text-xs font-medium bg-black/50 backdrop-blur-sm"></span>
             <span class="inline-flex items-center gap-1.5 font-mono text-xs text-text-muted">
-              <Gamepad2 class="h-3.5 w-3.5 text-accent-primary" />
+              <Gamepad2 class="h-3.5 w-3.5 text-text-muted" />
               Made with Blanc Engine
             </span>
           </div>
@@ -119,7 +118,7 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2, X } from "lucide-astro";
             <button
               id="art-copy-btn"
               type="button"
-              class="inline-flex h-10 items-center gap-2 rounded-md border border-white/15 bg-surface-primary/80 px-4 text-xs font-medium text-text-primary backdrop-blur-sm transition-colors hover:border-accent-primary hover:bg-surface-hover cursor-pointer shadow-md"
+              class="inline-flex h-10 items-center gap-2 rounded-md border border-white/15 bg-surface-primary/80 px-4 text-xs font-medium text-text-primary backdrop-blur-sm transition-colors hover:border-white/30 hover:bg-surface-hover cursor-pointer shadow-md"
             >
               <Share2 class="h-3.5 w-3.5 text-text-secondary" />
               <span id="art-copy-label">Copy Link</span>
@@ -146,7 +145,7 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2, X } from "lucide-astro";
                 <h3 class="font-mono text-xs font-semibold uppercase tracking-wider text-text-muted">
                   Screenshots &amp; Gallery
                 </h3>
-                <span id="gallery-count" class="font-mono text-xs text-accent-primary font-medium"></span>
+                <span id="gallery-count" class="font-mono text-xs text-text-muted font-medium"></span>
               </div>
 
               <!-- Screenshots Grid -->
@@ -163,7 +162,7 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2, X } from "lucide-astro";
         <section id="more-games-section" class="mt-14 hidden border-t border-border-default pt-10">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold text-text-primary">More Games Made With Blanc Engine</h2>
-            <a href="/showcase/" class="text-xs font-medium text-accent-primary hover:underline">
+            <a href="/showcase/" class="text-xs font-medium text-text-secondary hover:text-text-primary hover:underline">
               View All
             </a>
           </div>
@@ -400,7 +399,7 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2, X } from "lucide-astro";
           <button
             type="button"
             data-lightbox-src="${esc(imgUrl)}"
-            class="group relative aspect-video w-full overflow-hidden rounded-md border border-border-default bg-bg-primary transition-all hover:border-accent-primary cursor-pointer text-left"
+            class="group relative aspect-video w-full overflow-hidden rounded-md border border-border-default bg-bg-primary transition-all hover:border-border-default hover:shadow-md cursor-pointer text-left"
           >
             <img
               src="${esc(imgUrl)}"
@@ -443,7 +442,7 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2, X } from "lucide-astro";
             return `
               <a
                 href="/showcase/game/?id=${encodeURIComponent(other.slug)}"
-                class="flex flex-col overflow-hidden rounded-lg border border-border-default bg-surface-primary transition-colors hover:border-accent-primary"
+                class="flex flex-col overflow-hidden rounded-lg border border-border-default bg-surface-primary transition-colors hover:border-border-default hover:bg-surface-hover"
               >
                 <div class="aspect-video w-full overflow-hidden border-b border-border-subtle bg-bg-primary">
                   <img

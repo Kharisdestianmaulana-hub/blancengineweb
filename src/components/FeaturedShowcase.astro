@@ -7,8 +7,8 @@ import { Gamepad2, ArrowRight } from "lucide-astro";
     <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
       <div class="max-w-2xl">
         <div class="flex items-center gap-2">
-          <Gamepad2 class="h-4 w-4 text-accent-primary" />
-          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+          <Gamepad2 class="h-4 w-4 text-text-muted" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-muted">
             Community Showcase
           </span>
         </div>
@@ -22,10 +22,10 @@ import { Gamepad2, ArrowRight } from "lucide-astro";
 
       <a
         href="/showcase"
-        class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3.5 text-xs font-medium text-text-primary transition-colors hover:border-accent-primary hover:bg-surface-hover"
+        class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3.5 text-xs font-medium text-text-primary transition-colors hover:border-border-default hover:bg-surface-hover"
       >
         <span>Explore Showcase</span>
-        <ArrowRight class="h-3.5 w-3.5 text-accent-primary" />
+        <ArrowRight class="h-3.5 w-3.5 text-text-muted" />
       </a>
     </div>
 
@@ -127,7 +127,7 @@ import { Gamepad2, ArrowRight } from "lucide-astro";
           (game) => `
           <a
             href="${esc(game.url)}"
-            class="flex flex-col overflow-hidden rounded-lg border border-border-default bg-surface-primary transition-colors hover:border-accent-primary"
+            class="flex flex-col overflow-hidden rounded-lg border border-border-default bg-surface-primary transition-colors hover:border-border-default hover:bg-surface-hover"
           >
             <div class="aspect-video w-full overflow-hidden border-b border-border-subtle bg-bg-primary">
               <img

@@ -140,8 +140,8 @@ const engineScreenshots = [
     <div class="flex flex-col justify-between gap-4 border-b border-border-default pb-6 sm:flex-row sm:items-end">
       <div>
         <div class="flex items-center gap-2">
-          <Gamepad2 class="h-4 w-4 text-accent-primary" />
-          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+          <Gamepad2 class="h-4 w-4 text-text-muted" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-muted">
             Community Showcase
           </span>
         </div>
@@ -170,7 +170,7 @@ const engineScreenshots = [
           type="button"
           data-showcase-tab="games"
           aria-selected="true"
-          class="inline-flex items-center gap-1.5 rounded px-3.5 py-1.5 text-xs font-medium bg-accent-subtle text-accent-primary cursor-pointer"
+          class="inline-flex items-center gap-1.5 rounded px-3.5 py-1.5 text-xs font-semibold bg-surface-elevated text-text-primary shadow-sm cursor-pointer"
         >
           <Gamepad2 class="h-3.5 w-3.5" />
           <span>Community Games</span>
@@ -203,7 +203,7 @@ const engineScreenshots = [
 
         <div class="flex flex-wrap items-center gap-2">
           <div class="inline-flex rounded-md border border-border-default bg-surface-primary p-0.5" role="group" aria-label="Filter by status">
-            <button type="button" data-status-filter="all" class="rounded px-2.5 py-1 text-xs font-medium bg-accent-subtle text-accent-primary cursor-pointer">
+            <button type="button" data-status-filter="all" class="rounded px-2.5 py-1 text-xs font-semibold bg-surface-elevated text-text-primary shadow-sm cursor-pointer">
               All
             </button>
             <button type="button" data-status-filter="Released" class="rounded px-2.5 py-1 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer">
@@ -736,8 +736,10 @@ const engineScreenshots = [
       statusFilter = btn.getAttribute("data-status-filter") || "all";
       statusButtons.forEach((b) => {
         const active = b.getAttribute("data-status-filter") === statusFilter;
-        b.classList.toggle("bg-accent-subtle", active);
-        b.classList.toggle("text-accent-primary", active);
+        b.classList.toggle("bg-surface-elevated", active);
+        b.classList.toggle("text-text-primary", active);
+        b.classList.toggle("font-semibold", active);
+        b.classList.toggle("shadow-sm", active);
         b.classList.toggle("text-text-secondary", !active);
       });
       renderGames();
@@ -758,8 +760,10 @@ const engineScreenshots = [
       showcaseTabs.forEach((t) => {
         const active = t.getAttribute("data-showcase-tab") === target;
         t.setAttribute("aria-selected", String(active));
-        t.classList.toggle("bg-accent-subtle", active);
-        t.classList.toggle("text-accent-primary", active);
+        t.classList.toggle("bg-surface-elevated", active);
+        t.classList.toggle("text-text-primary", active);
+        t.classList.toggle("font-semibold", active);
+        t.classList.toggle("shadow-sm", active);
         t.classList.toggle("text-text-secondary", !active);
       });
       panelGames?.classList.toggle("hidden", target !== "games");

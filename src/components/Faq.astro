@@ -49,8 +49,8 @@ const faqSchema = {
   <div class="mx-auto max-w-4xl px-4 sm:px-6">
     <div class="text-center">
       <div class="inline-flex items-center gap-2">
-        <HelpCircle class="h-4 w-4 text-accent-primary" />
-        <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+        <HelpCircle class="h-4 w-4 text-text-muted" />
+        <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-muted">
           FAQ
         </span>
       </div>
@@ -66,12 +66,12 @@ const faqSchema = {
       {
         faqs.map((item, idx) => (
           <details
-            class="group rounded-lg border border-border-default bg-surface-primary open:border-accent-primary"
+            class="group rounded-lg border border-border-default bg-surface-primary open:border-border-default"
             open={idx === 0}
           >
             <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left text-sm font-semibold text-text-primary transition-colors hover:bg-surface-hover sm:text-base">
               <span>{item.question}</span>
-              <ChevronDown class="h-4 w-4 shrink-0 text-text-muted transition-transform group-open:rotate-180 group-open:text-accent-primary" />
+              <ChevronDown class="h-4 w-4 shrink-0 text-text-muted transition-transform group-open:rotate-180 group-open:text-text-primary" />
             </summary>
             <div class="border-t border-border-subtle px-5 py-4 text-xs leading-relaxed text-text-secondary sm:text-sm">
               {item.answer}

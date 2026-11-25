@@ -18,8 +18,8 @@ import { Download, Terminal, Package, ExternalLink, RefreshCw, PlayCircle } from
     <div class="flex flex-col justify-between gap-4 border-b border-border-default pb-6 sm:flex-row sm:items-end">
       <div>
         <div class="flex items-center gap-2">
-          <Download class="h-4 w-4 text-accent-primary" />
-          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+          <Download class="h-4 w-4 text-text-muted" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-muted">
             GitHub Releases
           </span>
         </div>
@@ -79,7 +79,7 @@ import { Download, Terminal, Package, ExternalLink, RefreshCw, PlayCircle } from
             type="button"
             data-release-filter="all"
             aria-selected="true"
-            class="rounded px-3 py-1.5 text-xs font-medium bg-accent-subtle text-accent-primary cursor-pointer"
+            class="rounded px-3 py-1.5 text-xs font-semibold bg-surface-elevated text-text-primary shadow-sm cursor-pointer"
           >
             All
           </button>
@@ -113,20 +113,20 @@ import { Download, Terminal, Package, ExternalLink, RefreshCw, PlayCircle } from
     <section class="mt-12 grid gap-6 border-t border-border-default pt-10 lg:grid-cols-2">
       <div class="min-w-0 rounded-lg border border-border-default bg-surface-primary p-5">
         <div class="flex items-center gap-2">
-          <PlayCircle class="h-4 w-4 text-accent-primary" />
+          <PlayCircle class="h-4 w-4 text-text-muted" />
           <h2 class="text-base font-semibold text-text-primary">Quick Start After Downloading</h2>
         </div>
         <ol class="mt-4 space-y-3 text-xs leading-relaxed text-text-secondary sm:text-sm">
           <li class="flex items-start gap-2.5 rounded-md border border-border-subtle bg-bg-secondary p-3">
-            <span class="font-mono font-semibold text-accent-primary">1.</span>
+            <span class="font-mono font-semibold text-text-primary">1.</span>
             <span>Run <strong class="text-text-primary">Setup.exe</strong> to install Blanc Engine, or open <strong class="text-text-primary">Portable.exe</strong> directly.</span>
           </li>
           <li class="flex items-start gap-2.5 rounded-md border border-border-subtle bg-bg-secondary p-3">
-            <span class="font-mono font-semibold text-accent-primary">2.</span>
+            <span class="font-mono font-semibold text-text-primary">2.</span>
             <span>Click <strong class="text-text-primary">New Project</strong> and import your backgrounds, character sprites, and music.</span>
           </li>
           <li class="flex items-start gap-2.5 rounded-md border border-border-subtle bg-bg-secondary p-3">
-            <span class="font-mono font-semibold text-accent-primary">3.</span>
+            <span class="font-mono font-semibold text-text-primary">3.</span>
             <span>Write your story, preview it live, and export a playable game to share with others.</span>
           </li>
         </ol>
@@ -134,7 +134,7 @@ import { Download, Terminal, Package, ExternalLink, RefreshCw, PlayCircle } from
 
       <div class="min-w-0 rounded-lg border border-border-default bg-surface-primary p-5">
         <div class="flex items-center gap-2">
-          <Package class="h-4 w-4 text-accent-primary" />
+          <Package class="h-4 w-4 text-text-muted" />
           <h2 class="text-base font-semibold text-text-primary">Which File Should I Download?</h2>
         </div>
         <div class="mt-4 space-y-3">
@@ -384,7 +384,7 @@ cargo run -p blanc_editor --release</code></pre>
     latestContainer.innerHTML = `
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle pb-4">
         <div class="flex flex-wrap items-center gap-2.5">
-          <span class="rounded border border-accent-primary bg-accent-subtle px-2 py-0.5 font-mono text-[11px] font-semibold text-accent-primary">
+          <span class="rounded border border-border-default bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-semibold text-text-primary">
             Latest
           </span>
           <span class="rounded border ${badgeClass} bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium">
@@ -549,8 +549,10 @@ cargo run -p blanc_editor --release</code></pre>
       filterBtns.forEach((b) => {
         const active = b.getAttribute("data-release-filter") === val;
         b.setAttribute("aria-selected", String(active));
-        b.classList.toggle("bg-accent-subtle", active);
-        b.classList.toggle("text-accent-primary", active);
+        b.classList.toggle("bg-surface-elevated", active);
+        b.classList.toggle("text-text-primary", active);
+        b.classList.toggle("font-semibold", active);
+        b.classList.toggle("shadow-sm", active);
         b.classList.toggle("text-text-secondary", !active);
       });
 

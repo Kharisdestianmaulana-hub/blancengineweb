@@ -165,32 +165,66 @@ const breadcrumbSchema =
       id="back-to-top"
       type="button"
       aria-label="Back to top"
-      class="fixed right-5 bottom-5 z-40 hidden h-9 w-9 items-center justify-center rounded-md border border-border-default bg-surface-primary text-text-secondary transition-colors hover:border-accent-primary hover:bg-surface-hover hover:text-accent-primary cursor-pointer"
+      class="fixed right-5 bottom-5 z-40 hidden h-9 w-9 items-center justify-center rounded-md border border-border-default bg-surface-primary text-text-secondary transition-colors hover:border-border-default hover:bg-surface-hover hover:text-text-primary cursor-pointer shadow-md"
     >
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="m18 15-6-6-6 6" />
       </svg>
     </button>
 
-    <script is:inline>
-      (function () {
-        const btn = document.getElementById("back-to-top");
-        if (!btn) return;
+    <!-- Lenis Smooth Inertia Scroll -->
+    <script>
+      import Lenis from "lenis";
+      import "lenis/dist/lenis.css";
+
+      const lenis = new Lenis({
+        duration: 1.1,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        wheelMultiplier: 1.0,
+        touchMultiplier: 1.5,
+      });
+
+      function raf(time: number) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
+      requestAnimationFrame(raf);
+
+      // Back to top & anchor clicks
+      const backBtn = document.getElementById("back-to-top");
+      if (backBtn) {
         const toggle = () => {
           if (window.scrollY > 400) {
-            btn.classList.remove("hidden");
-            btn.classList.add("inline-flex");
+            backBtn.classList.remove("hidden");
+            backBtn.classList.add("inline-flex");
           } else {
-            btn.classList.add("hidden");
-            btn.classList.remove("inline-flex");
+            backBtn.classList.add("hidden");
+            backBtn.classList.remove("inline-flex");
           }
         };
         window.addEventListener("scroll", toggle, { passive: true });
-        btn.addEventListener("click", () => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
+        backBtn.addEventListener("click", () => {
+          lenis.scrollTo(0, { duration: 1.2 });
         });
         toggle();
-      })();
+      }
+
+      // Smooth anchor scrolling
+      document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", (e) => {
+          const href = anchor.getAttribute("href");
+          if (!href || href === "#") return;
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            lenis.scrollTo(target as HTMLElement, { offset: -70, duration: 1.2 });
+          }
+        });
+      });
     </script>
   </body>
 </html>

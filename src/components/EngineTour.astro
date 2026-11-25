@@ -68,7 +68,7 @@ const modules = [
 <section id="features" class="border-b border-border-default bg-bg-primary py-16 sm:py-20">
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
     <div class="max-w-2xl">
-      <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+      <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-muted">
         Inside The Studio
       </span>
       <h2 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
@@ -91,14 +91,14 @@ const modules = [
                 class:list={[
                   "flex items-start gap-3 rounded-lg border p-4 text-left transition-colors cursor-pointer",
                   idx === 0
-                    ? "border-accent-primary bg-accent-subtle text-text-primary"
-                    : "border-border-default bg-surface-primary text-text-secondary hover:bg-surface-hover hover:text-text-primary",
+                    ? "border-border-default bg-surface-elevated text-text-primary shadow-sm"
+                    : "border-transparent bg-transparent text-text-secondary hover:bg-surface-hover hover:text-text-primary",
                 ]}
               >
                 <Icon
                   class:list={[
-                    "mt-0.5 h-4 w-4 shrink-0",
-                    idx === 0 ? "text-accent-primary" : "text-text-muted",
+                    "mt-0.5 h-4 w-4 shrink-0 transition-colors",
+                    idx === 0 ? "text-text-primary" : "text-text-muted",
                   ]}
                   data-tour-icon
                 />
@@ -163,15 +163,16 @@ const modules = [
       tourTabs.forEach((t) => {
         const active = t.getAttribute("data-tour-tab") === target;
         t.setAttribute("aria-selected", String(active));
-        t.classList.toggle("border-accent-primary", active);
-        t.classList.toggle("bg-accent-subtle", active);
+        t.classList.toggle("border-border-default", active);
+        t.classList.toggle("bg-surface-elevated", active);
+        t.classList.toggle("shadow-sm", active);
         t.classList.toggle("text-text-primary", active);
-        t.classList.toggle("border-border-default", !active);
-        t.classList.toggle("bg-surface-primary", !active);
+        t.classList.toggle("border-transparent", !active);
+        t.classList.toggle("bg-transparent", !active);
         t.classList.toggle("text-text-secondary", !active);
 
         const icon = t.querySelector("[data-tour-icon]");
-        icon?.classList.toggle("text-accent-primary", active);
+        icon?.classList.toggle("text-text-primary", active);
         icon?.classList.toggle("text-text-muted", !active);
       });
 

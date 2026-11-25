@@ -27,8 +27,8 @@ const sections = [
     <!-- Page Header -->
     <div class="border-b border-border-default pb-6">
       <div class="flex items-center gap-2">
-        <BookOpen class="h-4 w-4 text-accent-primary" />
-        <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+        <BookOpen class="h-4 w-4 text-text-muted" />
+        <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-muted">
           User Guide
         </span>
       </div>
@@ -57,7 +57,7 @@ const sections = [
                   class:list={[
                     "rounded-md px-2.5 py-1.5 text-sm transition-colors",
                     idx === 0
-                      ? "bg-accent-subtle font-medium text-accent-primary"
+                      ? "bg-surface-elevated font-semibold text-text-primary"
                       : "text-text-secondary hover:bg-surface-hover hover:text-text-primary",
                   ]}
                 >
@@ -230,9 +230,9 @@ Narrator: The afternoon sun streamed through the classroom windows.
   function setActiveToc(id: string) {
     tocLinks.forEach((link) => {
       const active = link.getAttribute("data-doc-toc") === id;
-      link.classList.toggle("bg-accent-subtle", active);
-      link.classList.toggle("font-medium", active);
-      link.classList.toggle("text-accent-primary", active);
+      link.classList.toggle("bg-surface-elevated", active);
+      link.classList.toggle("font-semibold", active);
+      link.classList.toggle("text-text-primary", active);
       link.classList.toggle("text-text-secondary", !active);
       link.classList.toggle("hover:bg-surface-hover", !active);
       link.classList.toggle("hover:text-text-primary", !active);

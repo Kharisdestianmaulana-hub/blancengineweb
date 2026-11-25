@@ -40,8 +40,8 @@ const shortcuts = [
       <!-- Workspace Crates -->
       <div class="min-w-0">
         <div class="flex items-center gap-2">
-          <Box class="h-4 w-4 text-accent-primary" />
-          <span class="font-mono text-xs font-medium uppercase tracking-wider text-accent-primary">
+          <Box class="h-4 w-4 text-text-muted" />
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-muted">
             Workspace Architecture
           </span>
         </div>
@@ -57,7 +57,7 @@ const shortcuts = [
             crates.map((crate) => (
               <div class="rounded-md border border-border-default bg-surface-primary p-4">
                 <div class="flex items-center justify-between">
-                  <code class="font-mono text-sm font-semibold text-accent-primary">{crate.name}</code>
+                  <code class="font-mono text-sm font-semibold text-text-primary">{crate.name}</code>
                   <span class="rounded border border-border-default bg-bg-secondary px-2 py-0.5 font-mono text-[11px] text-text-secondary">
                     {crate.role}
                   </span>
@@ -75,7 +75,7 @@ const shortcuts = [
       <div id="get-started" class="flex min-w-0 flex-col justify-between gap-6">
         <div class="rounded-lg border border-border-default bg-surface-primary p-5">
           <div class="flex items-center gap-2">
-            <Terminal class="h-4 w-4 text-accent-primary" />
+            <Terminal class="h-4 w-4 text-text-muted" />
             <h3 class="text-base font-semibold text-text-primary">Clone & Build Locally</h3>
           </div>
           <p class="mt-2 text-sm text-text-secondary">
@@ -89,7 +89,7 @@ cargo run -p blanc_editor</code></pre>
 
         <div class="rounded-lg border border-border-default bg-surface-primary p-5">
           <div class="flex items-center gap-2">
-            <Keyboard class="h-4 w-4 text-accent-primary" />
+            <Keyboard class="h-4 w-4 text-text-muted" />
             <h3 class="text-base font-semibold text-text-primary">Runtime Keyboard Shortcuts</h3>
           </div>
           <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">

@@ -11,12 +11,10 @@ import { Download, Sparkles, Gamepad2, ArrowUpRight } from "lucide-astro";
     <div
       id="hero-bg-layer-1"
       class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
-      style="background-attachment: fixed;"
     ></div>
     <div
       id="hero-bg-layer-2"
       class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-0 transition-opacity duration-1000"
-      style="background-attachment: fixed;"
     ></div>
 
     <!-- Soft Readability Overlays: gentle gradient behind text, clear artwork on the right -->
@@ -28,7 +26,7 @@ import { Download, Sparkles, Gamepad2, ArrowUpRight } from "lucide-astro";
     <div class="max-w-3xl">
       <!-- Headline -->
       <h1 class="text-3xl font-bold leading-tight tracking-tight text-text-primary drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] sm:text-4xl xl:text-5xl">
-        Create &amp; Share Your Own <span class="text-accent-primary">Visual Novel</span>, Zero Code.
+        Create &amp; Share Your Own Visual Novel, Zero Code.
       </h1>
       <p class="mt-4 max-w-2xl text-base leading-relaxed text-text-secondary drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] sm:text-lg">
         Write your story like a screenplay, design your characters and menus visually, and package a ready-to-play Windows game in one simple desktop app.
@@ -63,7 +61,7 @@ import { Download, Sparkles, Gamepad2, ArrowUpRight } from "lucide-astro";
           href="/changelog"
           class="inline-flex h-11 items-center gap-2 rounded-md border border-white/20 bg-black/40 px-4 sm:px-5 text-sm font-medium text-white backdrop-blur-md transition-colors hover:bg-black/60 hover:border-white/30 shadow-md"
         >
-          <Sparkles class="h-4 w-4 text-accent-primary shrink-0" />
+          <Sparkles class="h-4 w-4 text-white/80 shrink-0" />
           <span>What's New</span>
         </a>
       </div>
@@ -73,8 +71,8 @@ import { Download, Sparkles, Gamepad2, ArrowUpRight } from "lucide-astro";
         <p class="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs text-text-muted">
           <span>No-Code Visual Novel Studio</span>
           <span aria-hidden="true">·</span>
-          <a href="/download" class="inline-flex items-center gap-1.5 text-text-secondary transition-colors hover:text-accent-primary">
-            <Download class="h-3.5 w-3.5 text-accent-primary" />
+          <a href="/download" class="inline-flex items-center gap-1.5 text-text-secondary transition-colors hover:text-text-primary">
+            <Download class="h-3.5 w-3.5 text-text-muted" />
             <span id="hero-total-downloads">0 downloads</span>
           </a>
         </p>
@@ -83,7 +81,7 @@ import { Download, Sparkles, Gamepad2, ArrowUpRight } from "lucide-astro";
           Want to see{" "}
           <a
             href="/download#previous-versions"
-            class="font-medium text-indigo-400 underline underline-offset-2 transition-colors hover:text-indigo-300"
+            class="font-medium text-text-secondary underline underline-offset-2 transition-colors hover:text-text-primary"
           >
             previous version?
           </a>
@@ -96,10 +94,10 @@ import { Download, Sparkles, Gamepad2, ArrowUpRight } from "lucide-astro";
   <a
     id="hero-credit-badge"
     href="/showcase"
-    class="pointer-events-auto absolute bottom-4 right-4 sm:bottom-5 sm:right-6 z-20 hidden items-center gap-2 rounded-full border border-border-default bg-surface-primary/90 px-3.5 py-1.5 font-mono text-xs text-text-secondary shadow-lg backdrop-blur-md transition-all hover:border-accent-primary hover:bg-surface-hover hover:text-text-primary"
+    class="pointer-events-auto absolute bottom-4 right-4 sm:bottom-5 sm:right-6 z-20 hidden items-center gap-2 rounded-full border border-border-default bg-surface-primary/90 px-3.5 py-1.5 font-mono text-xs text-text-secondary shadow-lg backdrop-blur-md transition-all hover:border-text-secondary hover:bg-surface-hover hover:text-text-primary"
     title="View this game in showcase"
   >
-    <Gamepad2 class="h-3.5 w-3.5 text-accent-primary shrink-0" />
+    <Gamepad2 class="h-3.5 w-3.5 text-text-muted shrink-0" />
     <span class="text-text-muted">Art:</span>
     <span id="hero-credit-text" class="truncate max-w-[180px] sm:max-w-xs font-semibold text-text-primary">Featured Game</span>
     <ArrowUpRight class="h-3.5 w-3.5 text-text-muted shrink-0" />
