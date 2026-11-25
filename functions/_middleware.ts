@@ -8,5 +8,14 @@ export const onRequest: PagesFunction = async (context) => {
     return Response.redirect(url.toString(), 301);
   }
 
+  // Explicitly kill and block /admin - redirect to 404 immediately
+  if (
+    url.pathname === "/admin" ||
+    url.pathname === "/admin/" ||
+    url.pathname.startsWith("/admin/")
+  ) {
+    return Response.redirect(new URL("/404", url).toString(), 302);
+  }
+
   return context.next();
 };
