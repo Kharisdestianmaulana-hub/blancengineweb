@@ -639,7 +639,7 @@ import {
 
     // 1. Try our fast Cloudflare D1 Edge API first
     try {
-      const apiRes = await fetch("/api/roadmap");
+      const apiRes = await fetch(`/api/roadmap?_t=${Date.now()}`, { cache: "no-store" });
       if (apiRes.ok) {
         const data = await apiRes.json();
         if (Array.isArray(data.items) && data.items.length > 0) {

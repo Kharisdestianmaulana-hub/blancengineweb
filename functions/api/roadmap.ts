@@ -174,7 +174,7 @@ function jsonResponse(data: unknown, status = 200): Response {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "public, max-age=60, s-maxage=60",
+      "Cache-Control": "public, max-age=10, s-maxage=10, stale-while-revalidate=30",
       "Access-Control-Allow-Origin": "*",
     },
   });

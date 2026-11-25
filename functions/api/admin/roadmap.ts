@@ -24,6 +24,28 @@ function checkAdminAuth(request: Request, env: Env): boolean {
   return token === expected || keyHeader === expected;
 }
 
+// GET: Fetch all roadmap items for admin studio (always fresh, no-store)
+export async function onRequestGet(context: { env: Env; request: Request }): Promise<Response> {
+  if (!checkAdminAuth(context.request, context.env)) {
+    return jsonResponse({ error: "Unauthorized access" }, 401);
+  }
+
+  const db = context.env.DB;
+  if (!db) return jsonResponse({ error: "D1 database is not configured" }, 503);
+
+  try {
+    const { results } = await db
+      .prepare(
+        "SELECT id, version, target_date, status, category, title, description, sort_order FROM roadmap ORDER BY sort_order ASC, id ASC"
+      )
+      .all();
+
+    return jsonResponse({ success: true, items: results || [] });
+  } catch (err: any) {
+    return jsonResponse({ error: err?.message || "Failed to fetch roadmap milestones" }, 500);
+  }
+}
+
 // POST: Add new roadmap item
 export async function onRequestPost(context: { env: Env; request: Request }): Promise<Response> {
   if (!checkAdminAuth(context.request, context.env)) {

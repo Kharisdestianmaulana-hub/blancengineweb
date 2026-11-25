@@ -862,9 +862,14 @@ import {
 
     try {
       const [resPosts, resShowcase, resRoadmap] = await Promise.all([
-        fetch("/api/admin/blog", { headers: getHeaders() }).catch(() => null),
-        fetch("/api/admin/showcase", { headers: getHeaders() }).catch(() => null),
-        fetch("/api/roadmap").catch(() => null),
+        fetch("/api/admin/blog", { headers: getHeaders(), cache: "no-store" }).catch(() => null),
+        fetch("/api/admin/showcase", { headers: getHeaders(), cache: "no-store" }).catch(() => null),
+        fetch("/api/admin/roadmap", { headers: getHeaders(), cache: "no-store" })
+          .then(async (res) => {
+            if (res && res.ok) return res;
+            return fetch(`/api/roadmap?_t=${Date.now()}`, { cache: "no-store" });
+          })
+          .catch(() => null),
       ]);
 
       if (resPosts && resPosts.status === 401) {
@@ -1124,17 +1129,17 @@ import {
             <select
               onchange="changeRoadmapStatus(${r.id}, this.value)"
               class="h-7 rounded border border-border-default bg-bg-secondary px-2 text-xs font-semibold cursor-pointer ${
-                r.status === "Completed" || r.status === "Shipped"
+                (r.status || "").toLowerCase().includes("complete") || (r.status || "").toLowerCase().includes("shipped")
                   ? "text-status-success"
-                  : r.status === "In Progress"
+                  : (r.status || "").toLowerCase().includes("progress")
                   ? "text-status-warning"
                   : "text-text-muted"
               }"
             >
-              <option value="Planned" ${r.status === "Planned" ? "selected" : ""}>Planned</option>
-              <option value="In Progress" ${r.status === "In Progress" ? "selected" : ""}>In Progress</option>
-              <option value="Completed" ${r.status === "Completed" ? "selected" : ""}>Completed</option>
-              <option value="Shipped" ${r.status === "Shipped" ? "selected" : ""}>Shipped</option>
+              <option value="Planned" ${(r.status || "").toLowerCase().trim() === "planned" ? "selected" : ""}>Planned</option>
+              <option value="In Progress" ${(r.status || "").toLowerCase().includes("progress") ? "selected" : ""}>In Progress</option>
+              <option value="Completed" ${(r.status || "").toLowerCase().includes("complete") ? "selected" : ""}>Completed</option>
+              <option value="Shipped" ${(r.status || "").toLowerCase().includes("ship") ? "selected" : ""}>Shipped</option>
             </select>
           </td>
           <td class="whitespace-nowrap px-4 py-3 text-right">
@@ -1241,6 +1246,11 @@ import {
   };
 
   (window as any).changeRoadmapStatus = async (id: number, status: string) => {
+    const item = allRoadmap.find((r) => r.id === id);
+    if (item) {
+      item.status = status;
+    }
+
     try {
       const res = await fetch("/api/admin/roadmap", {
         method: "PUT",
@@ -1249,6 +1259,9 @@ import {
       });
       if (res.ok) {
         showToast(`Roadmap status set to ${status}`);
+        fetchAllData();
+      } else {
+        showToast("Error updating roadmap status");
         fetchAllData();
       }
     } catch {
@@ -1293,7 +1306,16 @@ import {
     (document.getElementById("roadmap-id") as HTMLInputElement).value = String(r.id);
     (document.getElementById("roadmap-version") as HTMLInputElement).value = r.version || "";
     (document.getElementById("roadmap-date") as HTMLInputElement).value = r.target_date || "";
-    (document.getElementById("roadmap-status") as HTMLSelectElement).value = r.status || "Planned";
+
+    const rawSt = (r.status || "Planned").trim().toLowerCase();
+    const selectEl = document.getElementById("roadmap-status") as HTMLSelectElement;
+    if (selectEl) {
+      if (rawSt.includes("complete") || rawSt.includes("done")) selectEl.value = "Completed";
+      else if (rawSt.includes("ship") || rawSt.includes("release")) selectEl.value = "Shipped";
+      else if (rawSt.includes("progress")) selectEl.value = "In Progress";
+      else selectEl.value = "Planned";
+    }
+
     (document.getElementById("roadmap-category") as HTMLInputElement).value = r.category || "";
     (document.getElementById("roadmap-feature-title") as HTMLInputElement).value = r.title || "";
     (document.getElementById("roadmap-desc") as HTMLTextAreaElement).value = r.description || "";
