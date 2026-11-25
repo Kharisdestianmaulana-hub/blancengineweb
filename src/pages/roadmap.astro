@@ -11,6 +11,9 @@ import {
   ArrowRight,
   MessageSquare,
   CheckCircle2,
+  Filter,
+  ChevronDown,
+  X,
 } from "lucide-astro";
 ---
 
@@ -152,16 +155,87 @@ import {
       </div>
     </div>
 
-    <!-- Category Pills -->
-    <div id="category-bar" class="mt-3 hidden flex-wrap items-center gap-1.5">
+    <!-- Category Filter Bar (Quick Pills + Linear-Style Popover Multi-Select) -->
+    <div id="category-bar" class="mt-3 hidden items-center gap-2 flex-wrap relative">
       <span class="mr-1 text-[11px] font-medium text-text-muted">Category:</span>
-      <button
-        type="button"
-        data-category-filter="all"
-        class="rounded border border-border-default bg-accent-subtle px-2 py-0.5 text-[11px] font-semibold text-accent-primary transition-colors cursor-pointer"
-      >
-        All
-      </button>
+
+      <!-- Container for Top Quick Pills: All + 4 Top Categories -->
+      <div id="quick-category-pills" class="flex flex-wrap items-center gap-1.5">
+        <button
+          type="button"
+          data-category-filter="all"
+          class="rounded border border-border-default bg-accent-subtle px-2 py-0.5 text-[11px] font-semibold text-accent-primary transition-colors cursor-pointer"
+        >
+          All
+        </button>
+      </div>
+
+      <!-- Linear / GitHub Style Filter Popover Dropdown -->
+      <div class="relative inline-block text-left" id="category-popover-wrap">
+        <button
+          id="btn-category-dropdown"
+          type="button"
+          aria-expanded="false"
+          class="inline-flex items-center gap-1.5 rounded border border-border-default bg-surface-primary px-2.5 py-0.5 text-[11px] font-medium text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors cursor-pointer"
+        >
+          <Filter class="h-3 w-3 text-text-muted" />
+          <span id="btn-category-label">More Categories</span>
+          <span id="category-badge-count" class="hidden rounded-full bg-accent-primary px-1.5 py-0.2 text-[9px] font-bold text-text-on-accent">0</span>
+          <ChevronDown class="h-3 w-3 text-text-muted transition-transform" id="category-dropdown-arrow" />
+        </button>
+
+        <!-- Floating Popover Panel -->
+        <div
+          id="category-popover"
+          class="hidden absolute left-0 top-full mt-2 w-72 rounded-xl border border-border-default bg-surface-primary/95 p-3 shadow-2xl backdrop-blur-xl z-40 space-y-2.5"
+        >
+          <div class="flex items-center justify-between border-b border-border-subtle pb-2">
+            <span class="text-xs font-semibold text-text-primary">Filter Categories</span>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                id="btn-cat-select-all"
+                class="text-[10px] font-medium text-accent-primary hover:underline cursor-pointer"
+              >
+                Select All
+              </button>
+              <span class="text-text-muted text-[10px]">•</span>
+              <button
+                type="button"
+                id="btn-cat-clear"
+                class="text-[10px] font-medium text-text-muted hover:text-text-primary cursor-pointer"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Search Input in Popover -->
+          <div class="relative">
+            <input
+              type="text"
+              id="cat-search-input"
+              placeholder="Search categories..."
+              class="w-full rounded border border-border-default bg-bg-secondary px-2.5 py-1 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+            />
+          </div>
+
+          <!-- Category Checkboxes List -->
+          <div id="cat-checkbox-list" class="max-h-48 overflow-y-auto space-y-1 pr-1 overscroll-contain"></div>
+
+          <!-- Bottom Actions -->
+          <div class="border-t border-border-subtle pt-2 flex items-center justify-between">
+            <span id="cat-selected-summary" class="text-[11px] text-text-muted font-mono">All selected</span>
+            <button
+              type="button"
+              id="btn-cat-apply"
+              class="rounded bg-accent-primary px-3 py-1 text-[11px] font-semibold text-text-on-accent hover:bg-accent-hover transition-colors cursor-pointer"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Roadmap Content Container -->
@@ -235,7 +309,7 @@ import {
 
   let itemsList: RoadmapItem[] = [];
   let statusFilter = "all";
-  let categoryFilter = "all";
+  let selectedCategories = new Set<string>();
   let searchQuery = "";
 
   const containerGroups = document.getElementById("roadmap-groups");
@@ -244,6 +318,18 @@ import {
   const refreshBtn = document.getElementById("refresh-roadmap-btn");
   const refreshIcon = document.getElementById("refresh-icon");
   const categoryBar = document.getElementById("category-bar");
+  const quickPillsContainer = document.getElementById("quick-category-pills");
+  const categoryPopover = document.getElementById("category-popover");
+  const btnCategoryDropdown = document.getElementById("btn-category-dropdown");
+  const btnCategoryLabel = document.getElementById("btn-category-label");
+  const categoryBadgeCount = document.getElementById("category-badge-count");
+  const catSearchInput = document.getElementById("cat-search-input") as HTMLInputElement | null;
+  const catCheckboxList = document.getElementById("cat-checkbox-list");
+  const catSelectedSummary = document.getElementById("cat-selected-summary");
+  const btnCatSelectAll = document.getElementById("btn-cat-select-all");
+  const btnCatClear = document.getElementById("btn-cat-clear");
+  const btnCatApply = document.getElementById("btn-cat-apply");
+  const categoryPopoverWrap = document.getElementById("category-popover-wrap");
 
   // Spotlight elements
   const spotlightCard = document.getElementById("spotlight-card");
@@ -329,12 +415,13 @@ import {
 
   function updateCategoriesList() {
     if (!categoryBar) return;
-    const categories = new Set<string>();
+    const catCounts = new Map<string, number>();
     itemsList.forEach((item) => {
-      if (item.category) categories.add(item.category.trim());
+      const cat = (item.category || "General").trim();
+      catCounts.set(cat, (catCounts.get(cat) || 0) + 1);
     });
 
-    if (categories.size === 0) {
+    if (catCounts.size === 0) {
       categoryBar.classList.add("hidden");
       categoryBar.classList.remove("flex");
       return;
@@ -343,31 +430,146 @@ import {
     categoryBar.classList.remove("hidden");
     categoryBar.classList.add("flex");
 
-    const categoryArray = ["all", ...Array.from(categories)];
-    categoryBar.innerHTML = `
-      <span class="mr-1 text-[11px] font-medium text-text-muted">Category:</span>
-      ${categoryArray
-        .map(
-          (cat) => `
+    // Sort categories by frequency descending, then alphabetical
+    const sortedCategories = Array.from(catCounts.keys()).sort((a, b) => {
+      const diff = (catCounts.get(b) || 0) - (catCounts.get(a) || 0);
+      if (diff !== 0) return diff;
+      return a.localeCompare(b);
+    });
+
+    // Top 4 categories to show in quick pills
+    const topQuickCategories = sortedCategories.slice(0, 4);
+
+    // Render Quick Pills: "All" + Top 4 categories
+    if (quickPillsContainer) {
+      const isAllActive = selectedCategories.size === 0;
+      let pillsHtml = `
         <button
           type="button"
-          data-category-filter="${escapeHtml(cat)}"
-          class="rounded border border-border-default px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer ${
-            cat.toLowerCase() === categoryFilter.toLowerCase()
-              ? "bg-accent-subtle text-accent-primary font-semibold"
-              : "text-text-secondary hover:bg-surface-hover hover:text-text-primary"
+          data-category-filter="all"
+          class="rounded border px-2 py-0.5 text-[11px] transition-colors cursor-pointer ${
+            isAllActive
+              ? "bg-accent-subtle text-accent-primary font-semibold border-accent-primary/40"
+              : "border-border-default text-text-secondary hover:bg-surface-hover hover:text-text-primary"
           }"
         >
-          ${escapeHtml(cat === "all" ? "All" : cat)}
+          All
         </button>
-      `
-        )
-        .join("")}
-    `;
+      `;
 
-    categoryBar.querySelectorAll("[data-category-filter]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        categoryFilter = btn.getAttribute("data-category-filter") || "all";
+      topQuickCategories.forEach((cat) => {
+        const isSingleSelected =
+          selectedCategories.size === 1 && selectedCategories.has(cat.toLowerCase());
+        pillsHtml += `
+          <button
+            type="button"
+            data-category-filter="${escapeHtml(cat)}"
+            class="rounded border px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer ${
+              isSingleSelected
+                ? "bg-accent-subtle text-accent-primary font-semibold border-accent-primary/40"
+                : "border-border-default text-text-secondary hover:bg-surface-hover hover:text-text-primary"
+            }"
+          >
+            ${escapeHtml(cat)}
+          </button>
+        `;
+      });
+
+      quickPillsContainer.innerHTML = pillsHtml;
+
+      quickPillsContainer.querySelectorAll("[data-category-filter]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const filterVal = btn.getAttribute("data-category-filter");
+          if (!filterVal || filterVal === "all") {
+            selectedCategories.clear();
+          } else {
+            selectedCategories.clear();
+            selectedCategories.add(filterVal.toLowerCase());
+          }
+          updateCategoriesList();
+          renderRoadmap();
+        });
+      });
+    }
+
+    // Render Popover Checkboxes
+    renderCategoryCheckboxes(sortedCategories, catCounts);
+
+    // Update Dropdown Button UI (Active indicator / Badge count)
+    if (btnCategoryDropdown && categoryBadgeCount && btnCategoryLabel) {
+      const count = selectedCategories.size;
+
+      if (count > 0) {
+        btnCategoryDropdown.classList.add("border-accent-primary/50", "bg-accent-subtle", "text-accent-primary");
+        btnCategoryDropdown.classList.remove("text-text-secondary", "bg-surface-primary");
+        categoryBadgeCount.classList.remove("hidden");
+        categoryBadgeCount.textContent = String(count);
+        btnCategoryLabel.textContent = count === 1 ? "1 Category" : `${count} Categories`;
+      } else {
+        btnCategoryDropdown.classList.remove("border-accent-primary/50", "bg-accent-subtle", "text-accent-primary");
+        btnCategoryDropdown.classList.add("text-text-secondary", "bg-surface-primary");
+        categoryBadgeCount.classList.add("hidden");
+        btnCategoryLabel.textContent = "More Categories";
+      }
+    }
+
+    // Update summary text in popover bottom bar
+    if (catSelectedSummary) {
+      if (selectedCategories.size === 0) {
+        catSelectedSummary.textContent = "All categories";
+      } else {
+        catSelectedSummary.textContent = `${selectedCategories.size} selected`;
+      }
+    }
+  }
+
+  function renderCategoryCheckboxes(categories: string[], catCounts: Map<string, number>) {
+    if (!catCheckboxList) return;
+    const filterQuery = (catSearchInput?.value || "").trim().toLowerCase();
+
+    const filtered = categories.filter((c) => !filterQuery || c.toLowerCase().includes(filterQuery));
+
+    if (filtered.length === 0) {
+      catCheckboxList.innerHTML = `<div class="p-3 text-center text-xs text-text-muted">No categories match "${escapeHtml(filterQuery)}"</div>`;
+      return;
+    }
+
+    catCheckboxList.innerHTML = filtered
+      .map((cat) => {
+        const isChecked = selectedCategories.has(cat.toLowerCase());
+        const count = catCounts.get(cat) || 0;
+        return `
+          <label class="flex items-center justify-between gap-2 rounded px-2 py-1.5 text-xs hover:bg-surface-hover cursor-pointer transition-colors select-none ${
+            isChecked ? "bg-accent-subtle/50" : ""
+          }">
+            <div class="flex items-center gap-2 min-w-0">
+              <input
+                type="checkbox"
+                data-cat-checkbox="${escapeHtml(cat.toLowerCase())}"
+                class="h-3.5 w-3.5 rounded border-border-default bg-surface-primary text-accent-primary accent-accent-primary cursor-pointer"
+                ${isChecked ? "checked" : ""}
+              />
+              <span class="truncate text-[11px] font-medium ${isChecked ? "text-accent-primary font-semibold" : "text-text-primary"}">
+                ${escapeHtml(cat)}
+              </span>
+            </div>
+            <span class="font-mono text-[10px] text-text-muted shrink-0">
+              ${count}
+            </span>
+          </label>
+        `;
+      })
+      .join("");
+
+    catCheckboxList.querySelectorAll<HTMLInputElement>("[data-cat-checkbox]").forEach((cb) => {
+      cb.addEventListener("change", () => {
+        const val = cb.getAttribute("data-cat-checkbox");
+        if (!val) return;
+        if (cb.checked) {
+          selectedCategories.add(val);
+        } else {
+          selectedCategories.delete(val);
+        }
         updateCategoriesList();
         renderRoadmap();
       });
@@ -510,7 +712,8 @@ import {
       else if (statusFilter === "planned") matchStatus = s === "planned";
 
       const matchCategory =
-        categoryFilter === "all" || item.category.toLowerCase() === categoryFilter.toLowerCase();
+        selectedCategories.size === 0 ||
+        selectedCategories.has(item.category.trim().toLowerCase());
 
       const matchQuery =
         !q ||
@@ -747,6 +950,45 @@ import {
   });
 
   refreshBtn?.addEventListener("click", fetchRoadmap);
+
+  // Category Popover Controls
+  btnCategoryDropdown?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isHidden = categoryPopover?.classList.toggle("hidden");
+    btnCategoryDropdown.setAttribute("aria-expanded", String(!isHidden));
+  });
+
+  categoryPopover?.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
+  document.addEventListener("click", () => {
+    categoryPopover?.classList.add("hidden");
+    btnCategoryDropdown?.setAttribute("aria-expanded", "false");
+  });
+
+  catSearchInput?.addEventListener("input", () => {
+    updateCategoriesList();
+  });
+
+  btnCatSelectAll?.addEventListener("click", () => {
+    itemsList.forEach((item) => {
+      if (item.category) selectedCategories.add(item.category.trim().toLowerCase());
+    });
+    updateCategoriesList();
+    renderRoadmap();
+  });
+
+  btnCatClear?.addEventListener("click", () => {
+    selectedCategories.clear();
+    updateCategoriesList();
+    renderRoadmap();
+  });
+
+  btnCatApply?.addEventListener("click", () => {
+    categoryPopover?.classList.add("hidden");
+    btnCategoryDropdown?.setAttribute("aria-expanded", "false");
+  });
 
   fetchRoadmap();
 </script>
