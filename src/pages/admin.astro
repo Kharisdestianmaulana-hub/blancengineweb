@@ -219,7 +219,7 @@ import {
       </header>
 
       <!-- Scrollable Workspace Body -->
-      <main class="flex-1 overflow-y-auto p-6 sm:p-8">
+      <main id="admin-main-scroll" class="flex-1 overflow-y-auto p-6 sm:p-8">
         
         <!-- 1. PANEL: BLOG & DEVLOGS -->
         <div id="panel-blog" class="panel-view space-y-4">
@@ -387,8 +387,8 @@ import {
 
         <!-- 4. PANEL: ROADMAP -->
         <div id="panel-roadmap" class="panel-view hidden space-y-4">
-          <div class="overflow-hidden rounded border border-border-default bg-surface-primary">
-            <div class="overflow-x-auto">
+          <div class="rounded border border-border-default bg-surface-primary overflow-hidden">
+            <div class="overflow-x-auto overscroll-y-auto">
               <table class="w-full text-left text-xs">
                 <thead class="border-b border-border-default bg-bg-secondary font-mono text-[11px] text-text-muted">
                   <tr>
@@ -944,14 +944,32 @@ import {
           </div>
 
           <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
-            <a href="/blog/post/?slug=${encodeURIComponent(p.slug)}" target="_blank" class="rounded p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-hover" title="View live article">
-              <Eye class="h-4 w-4" />
+            <a
+              href="/blog/post/?slug=${encodeURIComponent(p.slug)}"
+              target="_blank"
+              class="inline-flex items-center gap-1 rounded border border-border-default bg-surface-primary px-2.5 py-1.5 text-xs font-medium text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors"
+              title="View live article"
+            >
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>View</span>
             </a>
-            <button type="button" onclick="openEditPost(${p.id})" class="rounded p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-hover cursor-pointer" title="Edit article">
-              <Edit3 class="h-4 w-4" />
+            <button
+              type="button"
+              onclick="openEditPost(${p.id})"
+              class="inline-flex items-center gap-1 rounded border border-border-default bg-surface-elevated px-2.5 py-1.5 text-xs font-semibold text-text-primary hover:bg-surface-hover hover:border-text-muted transition-colors cursor-pointer"
+              title="Edit article"
+            >
+              <svg class="h-3.5 w-3.5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              <span>Edit</span>
             </button>
-            <button type="button" onclick="deletePost(${p.id})" class="rounded p-1.5 text-text-muted hover:text-status-error hover:bg-surface-hover cursor-pointer" title="Delete article">
-              <Trash2 class="h-4 w-4" />
+            <button
+              type="button"
+              onclick="deletePost(${p.id})"
+              class="inline-flex items-center gap-1 rounded border border-border-default bg-surface-elevated px-2.5 py-1.5 text-xs font-semibold text-text-secondary hover:bg-rose-950/40 hover:text-rose-400 hover:border-rose-500/40 transition-colors cursor-pointer"
+              title="Delete article"
+            >
+              <svg class="h-3.5 w-3.5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span>Delete</span>
             </button>
           </div>
         </div>
@@ -1042,12 +1060,24 @@ import {
                 ★ ${g.is_featured ? "Featured" : "Feature"}
               </button>
 
-              <div class="flex items-center gap-1">
-                <button type="button" onclick="openEditGame(${g.id})" class="rounded p-1 text-text-muted hover:text-text-primary hover:bg-surface-hover cursor-pointer" title="Edit details">
-                  <Edit3 class="h-3.5 w-3.5" />
+              <div class="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onclick="openEditGame(${g.id})"
+                  class="inline-flex items-center gap-1 rounded border border-border-default bg-surface-elevated px-2 py-1 text-xs font-medium text-text-muted hover:text-text-primary hover:bg-surface-hover cursor-pointer"
+                  title="Edit details"
+                >
+                  <svg class="h-3.5 w-3.5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  <span>Edit</span>
                 </button>
-                <button type="button" onclick="deleteGame(${g.id})" class="rounded p-1 text-text-muted hover:text-status-error hover:bg-surface-hover cursor-pointer" title="Delete">
-                  <Trash2 class="h-3.5 w-3.5" />
+                <button
+                  type="button"
+                  onclick="deleteGame(${g.id})"
+                  class="inline-flex items-center gap-1 rounded border border-border-default bg-surface-elevated px-2 py-1 text-xs font-medium text-text-muted hover:text-rose-400 hover:border-rose-500/40 hover:bg-rose-950/40 cursor-pointer"
+                  title="Delete"
+                >
+                  <svg class="h-3.5 w-3.5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  <span>Delete</span>
                 </button>
               </div>
             </div>
@@ -1108,12 +1138,24 @@ import {
             </select>
           </td>
           <td class="whitespace-nowrap px-4 py-3 text-right">
-            <div class="inline-flex items-center gap-1">
-              <button type="button" onclick="openEditRoadmap(${r.id})" class="rounded p-1 text-text-muted hover:text-text-primary hover:bg-surface-hover cursor-pointer" title="Edit milestone">
-                <Edit3 class="h-3.5 w-3.5" />
+            <div class="inline-flex items-center gap-1.5">
+              <button
+                type="button"
+                onclick="openEditRoadmap(${r.id})"
+                class="inline-flex items-center gap-1 rounded border border-border-default bg-surface-elevated px-2 py-1 text-xs font-medium text-text-primary hover:bg-surface-hover cursor-pointer"
+                title="Edit milestone"
+              >
+                <svg class="h-3.5 w-3.5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                <span>Edit</span>
               </button>
-              <button type="button" onclick="deleteRoadmap(${r.id})" class="rounded p-1 text-text-muted hover:text-status-error hover:bg-surface-hover cursor-pointer" title="Delete milestone">
-                <Trash2 class="h-3.5 w-3.5" />
+              <button
+                type="button"
+                onclick="deleteRoadmap(${r.id})"
+                class="inline-flex items-center gap-1 rounded border border-border-default bg-surface-elevated px-2 py-1 text-xs font-medium text-text-secondary hover:text-rose-400 hover:border-rose-500/40 hover:bg-rose-950/40 cursor-pointer"
+                title="Delete milestone"
+              >
+                <svg class="h-3.5 w-3.5 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span>Delete</span>
               </button>
             </div>
           </td>
@@ -1383,6 +1425,21 @@ import {
       showToast("Error saving milestone");
     }
   });
+
+  // Fix Roadmap & nested table mouse wheel scrolling
+  const mainScroll = document.getElementById("admin-main-scroll");
+  const roadmapPanel = document.getElementById("panel-roadmap");
+  if (roadmapPanel && mainScroll) {
+    roadmapPanel.addEventListener(
+      "wheel",
+      (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          mainScroll.scrollTop += e.deltaY;
+        }
+      },
+      { passive: true }
+    );
+  }
 
   // Init
   checkAuthState();
