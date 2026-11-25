@@ -659,6 +659,9 @@ import {
           updateCategoriesList();
           updateSpotlight();
           renderRoadmap();
+          if (skeletonEl) skeletonEl.classList.add("hidden");
+          if (containerGroups) containerGroups.classList.remove("hidden");
+          if (refreshIcon) refreshIcon.classList.remove("animate-spin");
           return;
         }
       }
