@@ -1,71 +1,67 @@
 ---
-import { Gamepad2, Download } from "lucide-astro";
-
-const previews = [
-  {
-    id: "story-flow",
-    label: "Story Flow",
-    caption: "Node-based branching graph connecting Main Menu, Scenes, Choices, and Endings.",
-    src: "/screenshots/SS_STORYFLOW.png",
-    alt: "Blanc Engine Story Flow Node Graph Editor",
-  },
-  {
-    id: "ui-designer",
-    label: "UI Designer",
-    caption: "Live-preview customization for Title Screen, Dialogue Box, HUD, and Pause/Settings menus.",
-    src: "/screenshots/SS_UI_DESIGNER.png",
-    alt: "Blanc Engine Live Preview UI Designer",
-  },
-  {
-    id: "gameplay",
-    label: "Gameplay Runtime",
-    caption: "Standalone Rust runtime with typewriter reveal, sprite transitions, Auto-Play, and Skip modes.",
-    src: "/screenshots/SS_GAMEPLAY_2_CHARACTER.png",
-    alt: "Blanc Engine Multi-Character Gameplay Runtime",
-  },
-  {
-    id: "installer",
-    label: "Setup Wizard",
-    caption: "Built-in 6-language Windows Setup.exe packager with custom branding and clean uninstaller.",
-    src: "/screenshots/SS_SETUP_WIZARD.png",
-    alt: "Blanc Engine Windows Setup Wizard",
-  },
-];
+import { Download, Sparkles, Gamepad2, ArrowUpRight } from "lucide-astro";
 ---
 
-<section class="flex min-h-[calc(100dvh-4rem)] items-center border-b border-border-default bg-bg-primary py-10 sm:py-12">
-  <div class="mx-auto w-full max-w-7xl px-4 sm:px-6">
-    <div class="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
-      <!-- Left: Copy & Actions -->
-      <div class="min-w-0 lg:col-span-5">
-        <!-- Headline -->
-        <h1 class="text-3xl font-bold leading-tight tracking-tight text-text-primary sm:text-4xl xl:text-5xl">
-          Create &amp; Share Your Own <span class="text-accent-primary">Visual Novel</span>, Zero Code.
-        </h1>
-        <p class="mt-4 text-base leading-relaxed text-text-secondary">
-          Write your story like a screenplay, design your characters and menus visually, and package a ready-to-play Windows game in one simple desktop app.
-        </p>
+<section
+  id="hero-section"
+  class="relative flex min-h-[calc(100dvh-7rem)] items-center border-b border-border-default bg-bg-primary py-10 sm:py-14 lg:py-16 overflow-hidden"
+>
+  <!-- Parallax Slideshow Background (Populated dynamically when approved showcase games exist) -->
+  <div id="hero-bg-wrapper" class="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-1000">
+    <div
+      id="hero-bg-layer-1"
+      class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
+      style="background-attachment: fixed;"
+    ></div>
+    <div
+      id="hero-bg-layer-2"
+      class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-0 transition-opacity duration-1000"
+      style="background-attachment: fixed;"
+    ></div>
 
-        <!-- CTA Buttons -->
-        <div class="mt-7 flex flex-wrap items-center gap-3">
-          <a
-            href="/download"
-            class="inline-flex h-11 items-center gap-2 rounded-md bg-accent-primary px-5 text-sm font-semibold text-text-on-accent transition-colors hover:bg-accent-hover active:bg-accent-pressed"
-          >
-            <Download class="h-4 w-4" />
-            <span>Download Free</span>
-          </a>
-          <a
-            href="/showcase"
-            class="inline-flex h-11 items-center gap-2 rounded-md border border-border-default bg-surface-primary px-5 text-sm font-medium text-text-primary transition-colors hover:bg-surface-hover"
-          >
-            <Gamepad2 class="h-4 w-4 text-text-secondary" />
-            <span>Explore Showcase</span>
-          </a>
-        </div>
+    <!-- Soft Readability Overlays: gentle gradient behind text, clear artwork on the right -->
+    <div class="absolute inset-0 bg-gradient-to-r from-bg-primary/80 via-bg-primary/40 to-transparent"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+  </div>
 
-        <!-- Plain Metadata Text -->
-        <p class="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs text-text-muted">
+  <div class="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
+    <div class="max-w-3xl">
+      <!-- Headline -->
+      <h1 class="text-3xl font-bold leading-tight tracking-tight text-text-primary drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] sm:text-4xl xl:text-5xl">
+        Create &amp; Share Your Own <span class="text-accent-primary">Visual Novel</span>, Zero Code.
+      </h1>
+      <p class="mt-4 max-w-2xl text-base leading-relaxed text-text-secondary drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] sm:text-lg">
+        Write your story like a screenplay, design your characters and menus visually, and package a ready-to-play Windows game in one simple desktop app.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a
+          id="hero-download-btn"
+          href="/download"
+          class="inline-flex h-11 items-center gap-2 rounded-md bg-accent-primary px-4 sm:px-5 text-sm font-semibold text-text-on-accent transition-colors hover:bg-accent-hover active:bg-accent-pressed"
+        >
+          <Download class="h-4 w-4 shrink-0" />
+          <span>Download Latest</span>
+          <span
+            id="hero-version-badge"
+            class="rounded bg-black/25 px-2 py-0.5 font-mono text-xs font-semibold text-text-on-accent"
+          >
+            v0.1.1
+          </span>
+        </a>
+        <a
+          href="/changelog"
+          class="inline-flex h-11 items-center gap-2 rounded-md border border-border-default bg-surface-primary/80 px-4 sm:px-5 text-sm font-medium text-text-primary backdrop-blur-sm transition-colors hover:border-accent-primary hover:bg-surface-hover"
+        >
+          <Sparkles class="h-4 w-4 text-accent-primary shrink-0" />
+          <span>What's New</span>
+        </a>
+      </div>
+
+      <!-- Metadata & Previous Version Links -->
+      <div class="mt-6 space-y-1.5">
+        <p class="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs text-text-muted">
           <span>No-Code Visual Novel Studio</span>
           <span aria-hidden="true">·</span>
           <a href="/download" class="inline-flex items-center gap-1.5 text-text-secondary transition-colors hover:text-accent-primary">
@@ -73,103 +69,88 @@ const previews = [
             <span id="hero-total-downloads">0 downloads</span>
           </a>
         </p>
-      </div>
 
-      <!-- Right: Flat Interactive Screenshot Showcase -->
-      <div class="min-w-0 lg:col-span-7">
-        <div class="rounded-lg border border-border-default bg-surface-primary">
-          <!-- Window Header / Tab Bar -->
-          <div class="flex flex-col gap-3 border-b border-border-default bg-bg-secondary px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex flex-wrap items-center gap-1.5" role="tablist" aria-label="Blanc Engine Editor Previews">
-              {
-                previews.map((item, idx) => (
-                  <button
-                    type="button"
-                    role="tab"
-                    data-preview-tab={item.id}
-                    aria-selected={idx === 0 ? "true" : "false"}
-                    class:list={[
-                      "rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer",
-                      idx === 0
-                        ? "border-accent-primary bg-accent-subtle text-accent-primary"
-                        : "border-transparent bg-transparent text-text-secondary hover:bg-surface-hover hover:text-text-primary",
-                    ]}
-                  >
-                    {item.label}
-                  </button>
-                ))
-              }
-            </div>
-            <span class="font-mono text-xs text-text-muted">Editor Preview</span>
-          </div>
-
-          <!-- Active Image Panels -->
-          <div class="p-3 sm:p-4">
-            {
-              previews.map((item, idx) => (
-                <div data-preview-panel={item.id} class:list={[idx !== 0 && "hidden"]}>
-                  <div class="overflow-hidden rounded-md border border-border-subtle bg-bg-primary">
-                    <img
-                      src={item.src}
-                      alt={item.alt}
-                      class="aspect-video w-full object-cover object-top"
-                      loading={idx === 0 ? "eager" : "lazy"}
-                    />
-                  </div>
-                  <p class="mt-3 text-xs text-text-secondary sm:text-sm">
-                    {item.caption}
-                  </p>
-                </div>
-              ))
-            }
-          </div>
-        </div>
+        <p class="text-xs text-text-muted">
+          Want to see{" "}
+          <a
+            href="/download#previous-versions"
+            class="font-medium text-indigo-400 underline underline-offset-2 transition-colors hover:text-indigo-300"
+          >
+            previous version?
+          </a>
+        </p>
       </div>
     </div>
   </div>
+
+  <!-- Community Showcase Credit Badge (Bottom Right) -->
+  <a
+    id="hero-credit-badge"
+    href="/showcase"
+    class="pointer-events-auto absolute bottom-4 right-4 sm:bottom-5 sm:right-6 z-20 hidden items-center gap-2 rounded-full border border-border-default bg-surface-primary/90 px-3.5 py-1.5 font-mono text-xs text-text-secondary shadow-lg backdrop-blur-md transition-all hover:border-accent-primary hover:bg-surface-hover hover:text-text-primary"
+    title="View this game in showcase"
+  >
+    <Gamepad2 class="h-3.5 w-3.5 text-accent-primary shrink-0" />
+    <span class="text-text-muted">Art:</span>
+    <span id="hero-credit-text" class="truncate max-w-[180px] sm:max-w-xs font-semibold text-text-primary">Featured Game</span>
+    <ArrowUpRight class="h-3.5 w-3.5 text-text-muted shrink-0" />
+  </a>
 </section>
 
 <script>
-  const tabs = document.querySelectorAll<HTMLButtonElement>("[data-preview-tab]");
-  const panels = document.querySelectorAll<HTMLElement>("[data-preview-panel]");
+  interface ShowcaseGame {
+    title: string;
+    author: string;
+    cover: string;
+    url: string;
+  }
 
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      const target = tab.getAttribute("data-preview-tab");
-
-      tabs.forEach((t) => {
-        const active = t.getAttribute("data-preview-tab") === target;
-        t.setAttribute("aria-selected", String(active));
-        t.classList.toggle("border-accent-primary", active);
-        t.classList.toggle("bg-accent-subtle", active);
-        t.classList.toggle("text-accent-primary", active);
-        t.classList.toggle("border-transparent", !active);
-        t.classList.toggle("bg-transparent", !active);
-        t.classList.toggle("text-text-secondary", !active);
-      });
-
-      panels.forEach((panel) => {
-        const match = panel.getAttribute("data-preview-panel") === target;
-        panel.classList.toggle("hidden", !match);
-      });
-    });
-  });
+  const SHEET_URL =
+    "https://docs.google.com/spreadsheets/d/1VCNAuxsX3QyiQtOONYbZYZIUbRRhjrd9oaMddh_8O7g/gviz/tq?tqx=out:json&gid=658897965&headers=1";
 
   const heroDownloadsEl = document.getElementById("hero-total-downloads");
+  const heroVersionBadge = document.getElementById("hero-version-badge");
+  const heroBgWrapper = document.getElementById("hero-bg-wrapper");
+  const heroBgLayer1 = document.getElementById("hero-bg-layer-1");
+  const heroBgLayer2 = document.getElementById("hero-bg-layer-2");
+  const heroCreditBadge = document.getElementById("hero-credit-badge") as HTMLAnchorElement | null;
+  const heroCreditText = document.getElementById("hero-credit-text");
 
   function setDownloadsText(n: number) {
     if (!heroDownloadsEl) return;
     heroDownloadsEl.textContent = `${n.toLocaleString("en-US")} download${n === 1 ? "" : "s"}`;
   }
 
-  async function loadHeroTotalDownloads() {
-    if (!heroDownloadsEl) return;
-
-    const savedLast = localStorage.getItem("blanc-last-total-downloads");
-    if (savedLast !== null && !Number.isNaN(Number(savedLast))) {
-      setDownloadsText(Number(savedLast));
+  async function loadHeroStats() {
+    // 1. Restore cached version if exists
+    const savedVersion = localStorage.getItem("blanc-latest-version");
+    if (savedVersion && heroVersionBadge) {
+      heroVersionBadge.textContent = savedVersion;
     }
 
+    // 2. Restore cached download count
+    const savedDownloads = localStorage.getItem("blanc-last-total-downloads");
+    if (savedDownloads !== null && !Number.isNaN(Number(savedDownloads))) {
+      setDownloadsText(Number(savedDownloads));
+    }
+
+    // 3. Fetch latest release version from GitHub API
+    try {
+      const relRes = await fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases/latest", {
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      if (relRes.ok) {
+        const relData = await relRes.json();
+        if (relData && relData.tag_name && heroVersionBadge) {
+          heroVersionBadge.textContent = relData.tag_name;
+          localStorage.setItem("blanc-latest-version", relData.tag_name);
+        }
+      }
+    } catch {
+      // Keep fallback version
+    }
+
+    // 4. Fetch total downloads
     try {
       const apiRes = await fetch("/api/github-stats");
       if (apiRes.ok) {
@@ -181,7 +162,7 @@ const previews = [
         }
       }
     } catch {
-      // Fallback to direct GitHub API in local dev
+      // Fallback
     }
 
     try {
@@ -209,5 +190,92 @@ const previews = [
     }
   }
 
-  loadHeroTotalDownloads();
+  async function initShowcaseHeroBackground() {
+    if (!heroBgWrapper || !heroBgLayer1 || !heroBgLayer2 || !heroCreditBadge || !heroCreditText) return;
+
+    try {
+      const res = await fetch(SHEET_URL);
+      if (!res.ok) return;
+      const text = await res.text();
+      const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?/);
+      if (!match) return;
+
+      const json = JSON.parse(match[1]);
+      const rows = json?.table?.rows || [];
+      const games: ShowcaseGame[] = [];
+
+      const toSlug = (str: string) =>
+        str
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+
+      for (const row of rows) {
+        const c = row.c || [];
+        const getVal = (idx: number) => (c[idx] && c[idx].v != null ? String(c[idx].v).trim() : "");
+        const approvedRaw = getVal(8).toLowerCase();
+        const isApproved = approvedRaw === "true" || approvedRaw === "1" || approvedRaw === "yes";
+        const title = getVal(1);
+        const cover = getVal(5);
+
+        if (!title || title.toLowerCase() === "game title" || !isApproved || !cover) continue;
+
+        games.push({
+          title,
+          author: getVal(2) || "Community Creator",
+          cover,
+          url: `/showcase/game/?id=${encodeURIComponent(toSlug(title))}`,
+        });
+      }
+
+      if (games.length === 0) {
+        // Fallback: keep clean default hero background
+        return;
+      }
+
+      // Approved showcase games exist: activate background and credit badge
+      heroBgWrapper.classList.remove("opacity-0");
+      heroCreditBadge.classList.remove("hidden");
+      heroCreditBadge.classList.add("inline-flex");
+
+      let currentIndex = 0;
+      let activeLayer = 1;
+
+      const applyGame = (game: ShowcaseGame, targetLayer: number) => {
+        const targetEl = targetLayer === 1 ? heroBgLayer1 : heroBgLayer2;
+        const otherEl = targetLayer === 1 ? heroBgLayer2 : heroBgLayer1;
+
+        targetEl.style.backgroundImage = `url("${game.cover}")`;
+        targetEl.classList.remove("opacity-0");
+        otherEl.classList.add("opacity-0");
+
+        heroCreditText.textContent = `${game.title} by ${game.author}`;
+        heroCreditBadge.href = game.url;
+      };
+
+      // Apply initial game to layer 1
+      applyGame(games[0], 1);
+
+      // If multiple approved games exist, rotate every 30 seconds
+      if (games.length > 1) {
+        setInterval(() => {
+          currentIndex = (currentIndex + 1) % games.length;
+          const nextGame = games[currentIndex];
+
+          // Preload image before crossfading
+          const img = new Image();
+          img.src = nextGame.cover;
+          img.onload = () => {
+            activeLayer = activeLayer === 1 ? 2 : 1;
+            applyGame(nextGame, activeLayer);
+          };
+        }, 30000);
+      }
+    } catch {
+      // Silently fall back to default hero background
+    }
+  }
+
+  loadHeroStats();
+  initShowcaseHeroBackground();
 </script>

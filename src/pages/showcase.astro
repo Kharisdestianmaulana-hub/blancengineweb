@@ -397,6 +397,7 @@ const engineScreenshots = [
           </div>
         </div>
 
+        <!-- Cover & Additional Screenshots -->
         <div>
           <label for="field-cover" class="block text-xs font-medium text-text-primary">
             Cover Image URL (16:9 recommended) <span class="text-status-error">*</span>
@@ -409,33 +410,72 @@ const engineScreenshots = [
             placeholder="https://example.com/cover.png"
             class="mt-1.5 h-9 w-full rounded-md border border-border-default bg-bg-primary px-3 font-mono text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
           />
+
+          <!-- Dynamic Container for Extra Screenshots -->
+          <div id="extra-screenshots-container" class="mt-2 space-y-2"></div>
+
+          <button
+            id="add-screenshot-btn"
+            type="button"
+            class="mt-2.5 inline-flex items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-2.5 py-1 text-xs font-medium text-text-secondary hover:border-accent-primary hover:text-text-primary cursor-pointer transition-colors"
+          >
+            <Plus class="h-3.5 w-3.5 text-accent-primary" />
+            <span>Add Screenshot</span>
+          </button>
+        </div>
+
+        <!-- Download & Store Links (Itch.io & Steam) -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-medium text-text-primary">
+            Game / Download Links <span class="text-status-error">*</span>
+          </label>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label for="field-url-itch" class="block text-[11px] text-text-muted">
+                Itch.io URL <span class="text-text-muted font-normal">(Optional)</span>
+              </label>
+              <input
+                id="field-url-itch"
+                type="url"
+                placeholder="https://yourname.itch.io/game"
+                class="mt-1 h-9 w-full rounded-md border border-border-default bg-bg-primary px-3 font-mono text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+              />
+            </div>
+            <div>
+              <label for="field-url-steam" class="block text-[11px] text-text-muted">
+                Steam Store URL <span class="text-text-muted font-normal">(Optional)</span>
+              </label>
+              <input
+                id="field-url-steam"
+                type="url"
+                placeholder="https://store.steampowered.com/app/..."
+                class="mt-1 h-9 w-full rounded-md border border-border-default bg-bg-primary px-3 font-mono text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+              />
+            </div>
+          </div>
+          <input id="field-url" name="entry.153994697" type="hidden" />
+          <p class="text-[11px] text-text-muted">
+            Provide at least one link (Itch.io or Steam) where players can download or play your game.
+          </p>
         </div>
 
         <div>
-          <label for="field-url" class="block text-xs font-medium text-text-primary">
-            Game / Download URL <span class="text-status-error">*</span>
-          </label>
-          <input
-            id="field-url"
-            name="entry.153994697"
-            type="url"
-            required
-            placeholder="https://yourname.itch.io/your-game"
-            class="mt-1.5 h-9 w-full rounded-md border border-border-default bg-bg-primary px-3 font-mono text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
-          />
-        </div>
-
-        <div>
-          <label for="field-desc" class="block text-xs font-medium text-text-primary">
-            Short Description <span class="text-status-error">*</span>
-          </label>
+          <div class="flex items-center justify-between">
+            <label for="field-desc" class="block text-xs font-medium text-text-primary">
+              Description / Synopsis <span class="text-status-error">*</span>
+            </label>
+            <span id="desc-char-counter" class="font-mono text-[11px] text-text-muted">
+              0 / 1000
+            </span>
+          </div>
           <textarea
             id="field-desc"
             name="entry.255430852"
-            rows="3"
+            rows="4"
+            maxlength="1000"
             required
-            placeholder="A brief 1-2 sentence summary of your visual novel..."
-            class="mt-1.5 w-full rounded-md border border-border-default bg-bg-primary p-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+            placeholder="Tell us about your story: the premise, characters, or key features..."
+            class="mt-1.5 w-full rounded-md border border-border-default bg-bg-primary p-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none resize-y min-h-[90px]"
           ></textarea>
         </div>
 
@@ -651,14 +691,26 @@ const engineScreenshots = [
         const title = getVal(1);
         if (!title || title.toLowerCase() === "game title" || !isApproved) continue;
 
+        const rawCover = getVal(5);
+        const firstCover = rawCover.split(",")[0]?.trim() || rawCover;
+        const rawUrl = getVal(6) || "#";
+        let directUrl = rawUrl;
+        if (rawUrl.includes("itch:")) {
+          const m = rawUrl.match(/itch:\s*([^\s|]+)/);
+          if (m) directUrl = m[1];
+        } else if (rawUrl.includes("steam:")) {
+          const m = rawUrl.match(/steam:\s*([^\s|]+)/);
+          if (m) directUrl = m[1];
+        }
+
         parsed.push({
           slug: toSlug(title),
           title,
           author: getVal(2) || "Unknown Creator",
           status: getVal(3) || "Released",
           genre: getVal(4),
-          cover: getVal(5),
-          url: getVal(6) || "#",
+          cover: firstCover,
+          url: directUrl,
           description: getVal(7),
         });
       }
@@ -735,6 +787,51 @@ const engineScreenshots = [
     submitModal?.classList.remove("flex");
   }
 
+  const addScreenshotBtn = document.getElementById("add-screenshot-btn");
+  const extraScreenshotsContainer = document.getElementById("extra-screenshots-container");
+  let screenshotIndex = 0;
+
+  addScreenshotBtn?.addEventListener("click", () => {
+    if (!extraScreenshotsContainer) return;
+    screenshotIndex++;
+    const row = document.createElement("div");
+    row.className = "flex items-center gap-2";
+    row.innerHTML = `
+      <input
+        type="url"
+        data-extra-screenshot
+        placeholder="https://example.com/screenshot-${screenshotIndex}.png"
+        class="h-9 flex-1 rounded-md border border-border-default bg-bg-primary px-3 font-mono text-xs text-text-primary placeholder:text-text-muted focus:border-accent-primary focus:outline-none"
+      />
+      <button
+        type="button"
+        data-remove-screenshot
+        class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border-default bg-bg-secondary text-text-muted hover:border-status-error hover:text-status-error cursor-pointer transition-colors"
+        title="Remove screenshot"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    `;
+    row.querySelector("[data-remove-screenshot]")?.addEventListener("click", () => {
+      row.remove();
+    });
+    extraScreenshotsContainer.appendChild(row);
+  });
+
+  const descTextarea = document.getElementById("field-desc") as HTMLTextAreaElement | null;
+  const descCharCounter = document.getElementById("desc-char-counter");
+
+  descTextarea?.addEventListener("input", () => {
+    if (!descTextarea || !descCharCounter) return;
+    const len = descTextarea.value.length;
+    descCharCounter.textContent = `${len} / 1000`;
+    if (len >= 950) {
+      descCharCounter.className = "font-mono text-[11px] text-status-warning font-semibold";
+    } else {
+      descCharCounter.className = "font-mono text-[11px] text-text-muted";
+    }
+  });
+
   openSubmitBtn?.addEventListener("click", openSubmitModal);
   closeSubmitBtn?.addEventListener("click", closeSubmitModal);
   cancelSubmitBtn?.addEventListener("click", closeSubmitModal);
@@ -750,8 +847,39 @@ const engineScreenshots = [
     submitBtn.textContent = "Submitting...";
     submitFeedback.classList.add("hidden");
 
+    const itchVal = (document.getElementById("field-url-itch") as HTMLInputElement)?.value.trim();
+    const steamVal = (document.getElementById("field-url-steam") as HTMLInputElement)?.value.trim();
+
+    if (!itchVal && !steamVal) {
+      submitFeedback.className =
+        "rounded-md border border-status-error bg-bg-secondary px-3.5 py-2.5 text-xs text-status-error";
+      submitFeedback.textContent =
+        "Please provide at least one download link (Itch.io or Steam).";
+      submitFeedback.classList.remove("hidden");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Game";
+      return;
+    }
+
+    let combinedUrl = "";
+    if (itchVal && steamVal) {
+      combinedUrl = `itch:${itchVal} | steam:${steamVal}`;
+    } else if (itchVal) {
+      combinedUrl = itchVal;
+    } else {
+      combinedUrl = steamVal;
+    }
+
+    const mainCover = (document.getElementById("field-cover") as HTMLInputElement)?.value.trim();
+    const extraInputs = document.querySelectorAll<HTMLInputElement>("[data-extra-screenshot]");
+    const extraCovers = Array.from(extraInputs).map((el) => el.value.trim()).filter(Boolean);
+    const combinedCovers = [mainCover, ...extraCovers].filter(Boolean).join(", ");
+
     try {
       const formData = new FormData(submitForm);
+      formData.set("entry.908982358", combinedCovers);
+      formData.set("entry.153994697", combinedUrl);
+
       await fetch(FORM_ACTION_URL, {
         method: "POST",
         mode: "no-cors",
@@ -759,6 +887,8 @@ const engineScreenshots = [
       });
 
       submitForm.reset();
+      if (extraScreenshotsContainer) extraScreenshotsContainer.innerHTML = "";
+      if (descCharCounter) descCharCounter.textContent = "0 / 1000";
       submitFeedback.className =
         "rounded-md border border-status-success bg-bg-secondary px-3.5 py-2.5 text-xs text-status-success";
       submitFeedback.textContent =

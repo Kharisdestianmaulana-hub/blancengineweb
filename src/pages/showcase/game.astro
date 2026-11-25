@@ -2,7 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navbar from "../../components/Navbar.astro";
 import Footer from "../../components/Footer.astro";
-import { ArrowLeft, ExternalLink, Share2, Gamepad2 } from "lucide-astro";
+import { ArrowLeft, ExternalLink, Share2, Gamepad2, X } from "lucide-astro";
 ---
 
 <BaseLayout
@@ -16,125 +16,160 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2 } from "lucide-astro";
 >
   <Navbar />
 
-  <main class="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-12">
-    <!-- Top Breadcrumb -->
-    <div>
-      <a
-        href="/showcase/"
-        class="inline-flex items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-accent-primary hover:text-text-primary"
-      >
-        <ArrowLeft class="h-3.5 w-3.5" />
-        <span>Back to Showcase</span>
-      </a>
+  <!-- Fullscreen Image Lightbox Modal for Screenshots -->
+  <div
+    id="game-lightbox"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Image Preview"
+  >
+    <button
+      id="game-lightbox-close"
+      type="button"
+      class="absolute top-5 right-5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white/80 hover:bg-black/90 hover:text-white cursor-pointer transition-colors"
+      aria-label="Close image preview"
+    >
+      <X class="h-5 w-5" />
+    </button>
+    <div class="max-h-[90vh] max-w-[90vw] overflow-hidden rounded-lg border border-white/10 shadow-2xl">
+      <img id="game-lightbox-img" src="" alt="Screenshot Preview" class="max-h-[85vh] max-w-[88vw] object-contain" />
+    </div>
+  </div>
+
+  <main class="w-full">
+    <!-- Loading & Not Found States (Bounded Container) -->
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <!-- Loading State -->
+      <div id="game-loading" class="mt-8 rounded-lg border border-border-default bg-surface-primary p-8 text-sm text-text-secondary">
+        Loading game details...
+      </div>
+
+      <!-- Not Found State -->
+      <div id="game-not-found" class="mt-8 hidden rounded-lg border border-border-default bg-surface-primary p-8 text-center">
+        <p class="text-lg font-semibold text-text-primary">Game not found</p>
+        <p class="mt-2 text-sm text-text-secondary">
+          This project may have been removed or the link is incomplete.
+        </p>
+        <a
+          href="/showcase/"
+          class="mt-5 inline-flex h-10 items-center rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent hover:bg-accent-hover"
+        >
+          Browse All Games
+        </a>
+      </div>
     </div>
 
-    <!-- Loading State -->
-    <div id="game-loading" class="mt-8 rounded-lg border border-border-default bg-surface-primary p-8 text-sm text-text-secondary">
-      Loading game details...
-    </div>
+    <!-- Article Content (Displayed when loaded) -->
+    <article id="game-article" class="hidden w-full">
+      <!-- Full-Width Cinematic Hero Header with Parallax Cover Background -->
+      <header class="relative w-full overflow-hidden border-b border-border-default min-h-[480px] sm:min-h-[560px] lg:min-h-[calc(100dvh-7rem)] flex items-end">
+        <!-- Background Cover Image (Full bleed edge to edge with fixed parallax) -->
+        <div
+          id="art-cover-bg"
+          class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-700"
+          style="background-attachment: fixed;"
+        ></div>
 
-    <!-- Not Found State -->
-    <div id="game-not-found" class="mt-8 hidden rounded-lg border border-border-default bg-surface-primary p-8 text-center">
-      <p class="text-lg font-semibold text-text-primary">Game not found</p>
-      <p class="mt-2 text-sm text-text-secondary">
-        This project may have been removed or the link is incomplete.
-      </p>
-      <a
-        href="/showcase/"
-        class="mt-5 inline-flex h-10 items-center rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent hover:bg-accent-hover"
-      >
-        Browse All Games
-      </a>
-    </div>
+        <!-- Bottom-to-Top Gradient: Dark and solid at bottom, transparent at top -->
+        <div class="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-bg-primary/70 via-bg-primary/25 to-transparent"></div>
 
-    <!-- Article Content -->
-    <article id="game-article" class="mt-8 hidden">
-      <!-- Header -->
-      <header class="border-b border-border-default pb-6">
-        <div class="flex flex-wrap items-center gap-2.5">
-          <span id="art-status" class="rounded border border-border-default bg-surface-primary px-2.5 py-0.5 font-mono text-xs font-medium"></span>
-          <span class="inline-flex items-center gap-1.5 font-mono text-xs text-text-muted">
-            <Gamepad2 class="h-3.5 w-3.5 text-accent-primary" />
-            Made with Blanc Engine
-          </span>
+        <!-- Content inside the dark solid portion of the gradient (Aligned with 7xl grid) -->
+        <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 pb-10 pt-24 sm:pb-12">
+          <!-- Back to Showcase Button -->
+          <a
+            href="/showcase/"
+            class="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-black/60 px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur-md transition-colors hover:border-accent-primary hover:bg-black/80 hover:text-white mb-5"
+          >
+            <ArrowLeft class="h-3.5 w-3.5" />
+            <span>Back to Showcase</span>
+          </a>
+
+          <!-- Status and Made with Blanc Badge -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span id="art-status" class="rounded border px-2.5 py-0.5 font-mono text-xs font-medium bg-black/50 backdrop-blur-sm"></span>
+            <span class="inline-flex items-center gap-1.5 font-mono text-xs text-text-muted">
+              <Gamepad2 class="h-3.5 w-3.5 text-accent-primary" />
+              Made with Blanc Engine
+            </span>
+          </div>
+
+          <!-- Game Title -->
+          <h1
+            id="art-title"
+            class="mt-3 text-3xl font-bold tracking-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:text-4xl xl:text-5xl"
+          ></h1>
+
+          <!-- Author -->
+          <p
+            id="art-author"
+            class="mt-2 font-mono text-sm text-text-secondary drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+          ></p>
+
+          <!-- Genre Tags -->
+          <div id="art-tags" class="mt-4 flex flex-wrap gap-1.5"></div>
+
+          <!-- Action Buttons: Download Links + Copy Link -->
+          <div class="mt-7 flex flex-wrap items-center gap-3">
+            <!-- Dynamic Download / Store Links (Itch.io, Steam, or Direct) -->
+            <div id="art-download-links" class="flex flex-wrap items-center gap-2.5"></div>
+
+            <!-- Copy Link Button -->
+            <button
+              id="art-copy-btn"
+              type="button"
+              class="inline-flex h-10 items-center gap-2 rounded-md border border-white/15 bg-surface-primary/80 px-4 text-xs font-medium text-text-primary backdrop-blur-sm transition-colors hover:border-accent-primary hover:bg-surface-hover cursor-pointer shadow-md"
+            >
+              <Share2 class="h-3.5 w-3.5 text-text-secondary" />
+              <span id="art-copy-label">Copy Link</span>
+            </button>
+          </div>
         </div>
-
-        <h1 id="art-title" class="mt-3 text-3xl font-bold tracking-tight text-text-primary sm:text-4xl"></h1>
-        <p id="art-author" class="mt-1.5 font-mono text-sm text-text-secondary"></p>
-
-        <div id="art-tags" class="mt-4 flex flex-wrap gap-1.5"></div>
       </header>
 
-      <!-- Full-Width Cover Image -->
-      <div class="mt-6 overflow-hidden rounded-lg border border-border-default bg-surface-primary p-2 sm:p-3">
-        <div class="aspect-video w-full overflow-hidden rounded border border-border-subtle bg-bg-primary">
-          <img id="art-cover" src="" alt="" class="h-full w-full object-cover" />
-        </div>
-      </div>
-
-      <!-- 2-Column Article Body + Info Sidebar -->
-      <div class="mt-8 grid gap-8 lg:grid-cols-12">
-        <div class="min-w-0 lg:col-span-8">
-          <h2 class="text-lg font-semibold text-text-primary">About This Visual Novel</h2>
-          <div id="art-desc" class="mt-3 space-y-4 whitespace-pre-line text-sm leading-relaxed text-text-secondary sm:text-base"></div>
-        </div>
-
-        <aside class="min-w-0 lg:col-span-4">
-          <div class="rounded-lg border border-border-default bg-surface-primary p-5">
-            <h2 class="font-mono text-xs font-semibold uppercase tracking-wider text-text-muted">
-              Project Info
-            </h2>
-
-            <dl class="mt-4 space-y-3 border-t border-border-subtle pt-4 text-xs sm:text-sm">
-              <div class="flex items-center justify-between gap-2">
-                <dt class="text-text-muted">Creator</dt>
-                <dd id="side-author" class="font-medium text-text-primary text-right"></dd>
-              </div>
-              <div class="flex items-center justify-between gap-2">
-                <dt class="text-text-muted">Status</dt>
-                <dd id="side-status" class="font-mono text-xs text-text-primary text-right"></dd>
-              </div>
-              <div class="flex items-center justify-between gap-2">
-                <dt class="text-text-muted">Engine</dt>
-                <dd class="font-mono text-xs text-accent-primary text-right">Blanc Engine</dd>
-              </div>
-            </dl>
-
-            <div class="mt-6 space-y-2.5 border-t border-border-subtle pt-4">
-              <a
-                id="art-play-link"
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover"
-              >
-                <span>Play / Download</span>
-                <ExternalLink class="h-3.5 w-3.5" />
-              </a>
-
-              <button
-                id="art-share-btn"
-                type="button"
-                class="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md border border-border-default bg-bg-secondary px-4 text-xs font-medium text-text-primary transition-colors hover:border-accent-primary hover:bg-surface-hover cursor-pointer"
-              >
-                <Share2 class="h-3.5 w-3.5 text-text-secondary" />
-                <span id="art-share-label">Copy Share Link</span>
-              </button>
+      <!-- Main Content: Description (Left) + Gallery & Screenshots (Right) -->
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-14">
+        <div class="grid gap-8 lg:grid-cols-12">
+          <!-- Left: Description and Project Info -->
+          <div class="min-w-0 lg:col-span-7 xl:col-span-8">
+            <div class="rounded-lg border border-border-default bg-surface-primary p-6 sm:p-7">
+              <h2 class="text-lg font-semibold text-text-primary">About This Visual Novel</h2>
+              <div id="art-desc" class="mt-4 whitespace-pre-line text-sm leading-relaxed text-text-secondary sm:text-base"></div>
             </div>
           </div>
-        </aside>
-      </div>
 
-      <!-- More Games Strip -->
-      <section id="more-games-section" class="mt-14 hidden border-t border-border-default pt-10">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-text-primary">More Games Made With Blanc Engine</h2>
-          <a href="/showcase/" class="text-xs font-medium text-accent-primary hover:underline">
-            View All
-          </a>
+          <!-- Right: Gallery & Screenshots -->
+          <div class="min-w-0 lg:col-span-5 xl:col-span-4">
+            <div class="rounded-lg border border-border-default bg-surface-primary p-5 sm:p-6">
+              <div class="flex items-center justify-between border-b border-border-subtle pb-3">
+                <h3 class="font-mono text-xs font-semibold uppercase tracking-wider text-text-muted">
+                  Screenshots &amp; Gallery
+                </h3>
+                <span id="gallery-count" class="font-mono text-xs text-accent-primary font-medium"></span>
+              </div>
+
+              <!-- Screenshots Grid -->
+              <div id="art-gallery-grid" class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1"></div>
+
+              <p class="mt-3 text-[11px] text-text-muted">
+                Click any screenshot to inspect it in full resolution.
+              </p>
+            </div>
+          </div>
         </div>
-        <div id="more-games-grid" class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
-      </section>
+
+        <!-- More Games Strip -->
+        <section id="more-games-section" class="mt-14 hidden border-t border-border-default pt-10">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-text-primary">More Games Made With Blanc Engine</h2>
+            <a href="/showcase/" class="text-xs font-medium text-accent-primary hover:underline">
+              View All
+            </a>
+          </div>
+          <div id="more-games-grid" class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
+        </section>
+      </div>
     </article>
   </main>
 
@@ -177,6 +212,25 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2 } from "lucide-astro";
     if (s === "demo") return "border-accent-primary text-accent-primary";
     return "border-status-warning text-status-warning";
   }
+
+  // Lightbox elements
+  const gameLightbox = document.getElementById("game-lightbox");
+  const lightboxImg = document.getElementById("game-lightbox-img") as HTMLImageElement | null;
+  const lightboxClose = document.getElementById("game-lightbox-close");
+
+  function closeLightbox() {
+    if (!gameLightbox) return;
+    gameLightbox.classList.add("hidden");
+    gameLightbox.classList.remove("flex");
+  }
+
+  lightboxClose?.addEventListener("click", closeLightbox);
+  gameLightbox?.addEventListener("click", (e) => {
+    if (e.target === gameLightbox) closeLightbox();
+  });
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLightbox();
+  });
 
   async function initGamePage() {
     const loadingEl = document.getElementById("game-loading");
@@ -235,31 +289,30 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2 } from "lucide-astro";
     const titleEl = document.getElementById("art-title");
     const authorEl = document.getElementById("art-author");
     const tagsEl = document.getElementById("art-tags");
-    const coverEl = document.getElementById("art-cover") as HTMLImageElement | null;
+    const coverBgEl = document.getElementById("art-cover-bg");
     const descEl = document.getElementById("art-desc");
-    const sideAuthor = document.getElementById("side-author");
-    const sideStatus = document.getElementById("side-status");
-    const playLink = document.getElementById("art-play-link") as HTMLAnchorElement | null;
+    const downloadLinksContainer = document.getElementById("art-download-links");
+    const galleryGrid = document.getElementById("art-gallery-grid");
+    const galleryCount = document.getElementById("gallery-count");
 
     if (statusEl) {
       statusEl.textContent = game.status;
-      statusEl.className = `rounded border ${statusBadgeStyle(game.status)} bg-surface-primary px-2.5 py-0.5 font-mono text-xs font-medium`;
+      statusEl.className = `rounded border ${statusBadgeStyle(game.status)} bg-black/50 backdrop-blur-sm px-2.5 py-0.5 font-mono text-xs font-medium`;
     }
     if (titleEl) titleEl.textContent = game.title;
     if (authorEl) authorEl.textContent = `by ${game.author}`;
-    if (sideAuthor) sideAuthor.textContent = game.author;
-    if (sideStatus) sideStatus.textContent = game.status;
     if (descEl) descEl.textContent = game.description;
-    if (playLink) playLink.href = game.url || "#";
 
-    if (coverEl) {
-      coverEl.src = game.cover || "/screenshots/SS_GAMEPLAY_1_CHARACTER.png";
-      coverEl.alt = game.title;
-      coverEl.onerror = () => {
-        coverEl.src = "/screenshots/SS_GAMEPLAY_1_CHARACTER.png";
-      };
+    // Parse Images: first image is cover, subsequent images are screenshots
+    const rawCover = game.cover || "";
+    const images = rawCover.split(",").map((s) => s.trim()).filter(Boolean);
+    const primaryCover = images[0] || "/screenshots/SS_GAMEPLAY_1_CHARACTER.png";
+
+    if (coverBgEl) {
+      coverBgEl.style.backgroundImage = `url("${primaryCover}")`;
     }
 
+    // Genre Tags
     if (tagsEl) {
       const tags = game.genre
         .split(",")
@@ -268,42 +321,151 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2 } from "lucide-astro";
       tagsEl.innerHTML = tags
         .map(
           (tag) =>
-            `<span class="rounded border border-border-default bg-bg-secondary px-2.5 py-0.5 font-mono text-xs text-text-secondary">${esc(tag)}</span>`
+            `<span class="rounded border border-white/15 bg-black/40 backdrop-blur-sm px-2.5 py-0.5 font-mono text-xs text-text-secondary">${esc(tag)}</span>`
         )
         .join("");
     }
 
+    // Download & Store Links
+    if (downloadLinksContainer) {
+      const rawUrl = game.url || "";
+      const links: Array<{ type: string; label: string; url: string }> = [];
+
+      if (rawUrl.includes("itch:") || rawUrl.includes("steam:")) {
+        const parts = rawUrl.split("|").map((p) => p.trim());
+        for (const part of parts) {
+          if (part.startsWith("itch:")) {
+            links.push({
+              type: "itch",
+              label: "Play on Itch.io",
+              url: part.replace(/^itch:\s*/, ""),
+            });
+          } else if (part.startsWith("steam:")) {
+            links.push({
+              type: "steam",
+              label: "View on Steam",
+              url: part.replace(/^steam:\s*/, ""),
+            });
+          } else if (part && part !== "#") {
+            links.push({ type: "generic", label: "Play / Download", url: part });
+          }
+        }
+      } else if (rawUrl.includes("steampowered.com")) {
+        links.push({ type: "steam", label: "View on Steam", url: rawUrl });
+      } else if (rawUrl.includes("itch.io")) {
+        links.push({ type: "itch", label: "Play on Itch.io", url: rawUrl });
+      } else if (rawUrl && rawUrl !== "#") {
+        links.push({ type: "generic", label: "Play / Download", url: rawUrl });
+      }
+
+      if (links.length === 0) {
+        downloadLinksContainer.innerHTML = `
+          <span class="inline-flex h-10 items-center gap-1.5 rounded-md border border-white/10 bg-surface-primary/80 px-4 text-xs font-medium text-text-muted backdrop-blur-sm">
+            Download link coming soon
+          </span>
+        `;
+      } else {
+        downloadLinksContainer.innerHTML = links
+          .map((link) => {
+            const isSteam = link.type === "steam";
+            const btnClass = isSteam
+              ? "bg-[#171a21] hover:bg-[#2a475e] text-white border border-[#2a475e]"
+              : "bg-accent-primary hover:bg-accent-hover text-text-on-accent";
+            return `
+              <a
+                href="${esc(link.url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex h-10 items-center gap-2 rounded-md px-5 text-xs font-semibold shadow-md transition-colors ${btnClass}"
+              >
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                <span>${esc(link.label)}</span>
+              </a>
+            `;
+          })
+          .join("");
+      }
+    }
+
+    // Gallery & Screenshots Rendering
+    if (galleryGrid) {
+      const displayImages = images.length > 0 ? images : [primaryCover];
+      if (galleryCount) {
+        galleryCount.textContent = `${displayImages.length} image${displayImages.length === 1 ? "" : "s"}`;
+      }
+
+      galleryGrid.innerHTML = displayImages
+        .map(
+          (imgUrl, idx) => `
+          <button
+            type="button"
+            data-lightbox-src="${esc(imgUrl)}"
+            class="group relative aspect-video w-full overflow-hidden rounded-md border border-border-default bg-bg-primary transition-all hover:border-accent-primary cursor-pointer text-left"
+          >
+            <img
+              src="${esc(imgUrl)}"
+              alt="${esc(game.title)} screenshot ${idx + 1}"
+              class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
+              onerror="this.src='/screenshots/SS_GAMEPLAY_1_CHARACTER.png'"
+            />
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+              <span class="rounded bg-black/75 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm">
+                View Full Size
+              </span>
+            </div>
+          </button>
+        `
+        )
+        .join("");
+
+      galleryGrid.querySelectorAll<HTMLButtonElement>("[data-lightbox-src]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const src = btn.getAttribute("data-lightbox-src");
+          if (src && lightboxImg && gameLightbox) {
+            lightboxImg.src = src;
+            gameLightbox.classList.remove("hidden");
+            gameLightbox.classList.add("flex");
+          }
+        });
+      });
+    }
+
+    // More Games Strip
     const others = games.filter((g) => g.slug !== game.slug).slice(0, 3);
     const moreSec = document.getElementById("more-games-section");
     const moreGrid = document.getElementById("more-games-grid");
     if (others.length > 0 && moreSec && moreGrid) {
       moreGrid.innerHTML = others
         .map(
-          (other) => `
-          <a
-            href="/showcase/game/?id=${encodeURIComponent(other.slug)}"
-            class="flex flex-col overflow-hidden rounded-lg border border-border-default bg-surface-primary transition-colors hover:border-accent-primary"
-          >
-            <div class="aspect-video w-full overflow-hidden border-b border-border-subtle bg-bg-primary">
-              <img
-                src="${esc(other.cover)}"
-                alt="${esc(other.title)}"
-                class="h-full w-full object-cover"
-                loading="lazy"
-                onerror="this.src='/screenshots/SS_GAMEPLAY_1_CHARACTER.png'"
-              />
-            </div>
-            <div class="p-4">
-              <div class="flex items-center justify-between gap-2">
-                <h3 class="truncate text-sm font-semibold text-text-primary">${esc(other.title)}</h3>
-                <span class="shrink-0 rounded border ${statusBadgeStyle(other.status)} bg-bg-secondary px-2 py-0.5 font-mono text-[10px]">
-                  ${esc(other.status)}
-                </span>
-              </div>
-              <p class="mt-0.5 font-mono text-xs text-text-muted">by ${esc(other.author)}</p>
-            </div>
-          </a>
-        `
+          (other) => {
+            const otherCover = other.cover.split(",")[0]?.trim() || other.cover;
+            return `
+              <a
+                href="/showcase/game/?id=${encodeURIComponent(other.slug)}"
+                class="flex flex-col overflow-hidden rounded-lg border border-border-default bg-surface-primary transition-colors hover:border-accent-primary"
+              >
+                <div class="aspect-video w-full overflow-hidden border-b border-border-subtle bg-bg-primary">
+                  <img
+                    src="${esc(otherCover)}"
+                    alt="${esc(other.title)}"
+                    class="h-full w-full object-cover"
+                    loading="lazy"
+                    onerror="this.src='/screenshots/SS_GAMEPLAY_1_CHARACTER.png'"
+                  />
+                </div>
+                <div class="p-4">
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="truncate text-sm font-semibold text-text-primary">${esc(other.title)}</h3>
+                    <span class="shrink-0 rounded border ${statusBadgeStyle(other.status)} bg-bg-secondary px-2 py-0.5 font-mono text-[10px]">
+                      ${esc(other.status)}
+                    </span>
+                  </div>
+                  <p class="mt-0.5 font-mono text-xs text-text-muted">by ${esc(other.author)}</p>
+                </div>
+              </a>
+            `;
+          }
         )
         .join("");
       moreSec.classList.remove("hidden");
@@ -312,17 +474,18 @@ import { ArrowLeft, ExternalLink, Share2, Gamepad2 } from "lucide-astro";
     articleEl?.classList.remove("hidden");
   }
 
-  const shareBtn = document.getElementById("art-share-btn");
-  const shareLabel = document.getElementById("art-share-label");
-  shareBtn?.addEventListener("click", async () => {
+  // Copy Link Button
+  const copyBtn = document.getElementById("art-copy-btn");
+  const copyLabel = document.getElementById("art-copy-label");
+  copyBtn?.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      if (shareLabel) shareLabel.textContent = "Link Copied!";
+      if (copyLabel) copyLabel.textContent = "Link Copied!";
       setTimeout(() => {
-        if (shareLabel) shareLabel.textContent = "Copy Share Link";
+        if (copyLabel) copyLabel.textContent = "Copy Link";
       }, 2000);
     } catch {
-      // Ignore clipboard errors
+      // Ignore
     }
   });
 
