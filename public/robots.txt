@@ -1,27 +1,37 @@
 User-agent: *
 Disallow: /admin
 Disallow: /admin/
+Disallow: /manage-cms-blang
+Disallow: /manage-cms-blang/
 Allow: /
 
 # AI Crawlers and Search Engines
 User-agent: GPTBot
 Disallow: /admin
 Disallow: /admin/
+Disallow: /manage-cms-blang
+Disallow: /manage-cms-blang/
 Allow: /
 
 User-agent: PerplexityBot
 Disallow: /admin
 Disallow: /admin/
+Disallow: /manage-cms-blang
+Disallow: /manage-cms-blang/
 Allow: /
 
 User-agent: ClaudeBot
 Disallow: /admin
 Disallow: /admin/
+Disallow: /manage-cms-blang
+Disallow: /manage-cms-blang/
 Allow: /
 
 User-agent: Google-Extended
 Disallow: /admin
 Disallow: /admin/
+Disallow: /manage-cms-blang
+Disallow: /manage-cms-blang/
 Allow: /
 
 Sitemap: https://getblanc.web.id/sitemap.xml
