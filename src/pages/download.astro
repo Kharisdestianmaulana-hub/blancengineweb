@@ -2,183 +2,571 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
-import { Download, Terminal, Package, ExternalLink, RefreshCw, PlayCircle } from "lucide-astro";
+import {
+  Download,
+  Terminal,
+  Package,
+  ExternalLink,
+  RefreshCw,
+  Sparkles,
+  Archive,
+  Check,
+  Copy,
+  ShieldAlert,
+  Monitor,
+  Laptop,
+  BookOpen,
+  Gamepad2,
+  ArrowUpRight,
+  ChevronRight,
+  Info,
+  Layers,
+  FolderArchive,
+  ArrowRight,
+} from "lucide-astro";
 ---
 
 <BaseLayout
-  title="Download: Blanc Engine Releases"
-  description="Download the latest Stable, Beta/Preview, and previous versions of Blanc Engine from GitHub Releases."
+  title="Download Blanc Engine: Official Windows Release & Tools"
+  description="Download the latest official release of Blanc Engine for Windows 64-bit. Available as an easy Windows Installer (.exe) or standalone Portable build, with zero code required."
   ogImage="/screenshots/SS_SETUP_WIZARD.png"
   breadcrumbs={[{ name: "Home", path: "/" }, { name: "Download", path: "/download/" }]}
 >
   <Navbar />
 
-  <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12">
-    <!-- Header -->
-    <div class="flex flex-col justify-between gap-4 border-b border-border-default pb-6 sm:flex-row sm:items-end">
-      <div>
-        <div class="flex items-center gap-2">
-          <Download class="h-4 w-4 text-text-muted" />
-          <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-muted">
-            GitHub Releases
-          </span>
-        </div>
-        <h1 class="mt-2 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
-          Download Blanc Engine
-        </h1>
-        <p class="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary sm:text-base">
-          Get the latest stable release, test upcoming beta/preview builds, or browse previous versions directly from GitHub Releases.
-        </p>
+  <!-- 1. Hero Section (Cinematic Artwork Background ala Godot) -->
+  <section
+    id="download-hero"
+    class="relative w-full overflow-hidden border-b border-border-default min-h-[480px] sm:min-h-[540px] lg:min-h-[580px] flex items-center justify-center"
+  >
+    <!-- Background Slideshow / Fallback Gameplay Artwork -->
+    <div
+      id="hero-bg-wrapper"
+      class="pointer-events-none absolute inset-0 z-0 bg-cover bg-center transition-all duration-1000"
+      style="background-image: url('/screenshots/SS_GAMEPLAY_2_CHARACTER.png');"
+    >
+      <div
+        id="hero-bg-layer-1"
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 opacity-100"
+        style="background-image: url('/screenshots/SS_GAMEPLAY_2_CHARACTER.png');"
+      ></div>
+      <div
+        id="hero-bg-layer-2"
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-0 transition-opacity duration-1000"
+      ></div>
+    </div>
+
+    <!-- Dark Cinematic Gradient Overlays -->
+    <div class="absolute inset-0 z-[1] bg-gradient-to-t from-bg-primary via-bg-primary/85 to-bg-primary/50"></div>
+    <div class="absolute inset-0 z-[1] bg-radial from-transparent via-bg-primary/30 to-bg-primary/80"></div>
+
+    <!-- Hero Content (Centered) -->
+    <div class="relative z-10 mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 text-center">
+      <!-- Platform Badge Pill -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-accent-primary/40 bg-surface-primary/80 px-3.5 py-1 backdrop-blur-md shadow-sm">
+        <Monitor class="h-3.5 w-3.5 text-accent-primary" />
+        <span class="font-mono text-xs font-semibold text-text-primary">Windows 64-bit (x86_64)</span>
+        <span class="h-1.5 w-1.5 rounded-full bg-status-success animate-pulse"></span>
       </div>
 
-      <div class="flex items-center gap-2">
-        <button
-          id="refresh-releases"
-          type="button"
-          class="inline-flex h-9 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
-        >
-          <RefreshCw class="h-3.5 w-3.5" />
-          <span>Refresh</span>
-        </button>
+      <!-- Main Heading -->
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:text-4xl lg:text-5xl leading-tight">
+        Download Blanc Engine for Windows
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-text-secondary drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] sm:text-base">
+        Free, open-source, no-code visual novel studio. Create your story, design custom interfaces visually, and package a ready-to-play Windows game.
+      </p>
+
+      <!-- Dual Split Download Buttons (Opsi 1: Installer vs Portable) -->
+      <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
+        <!-- Button 1: Windows Installer (.exe) - Recommended Primary -->
+        <div class="group flex flex-col items-center">
+          <div class="inline-flex rounded-lg shadow-xl shadow-accent-primary/10 transition-transform active:scale-[0.99]">
+            <a
+              id="hero-btn-installer"
+              href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/releases/download/v0.1.1/BlancEngine-0.1.1-Setup.exe"
+              class="inline-flex h-12 items-center gap-2.5 rounded-l-lg bg-accent-primary px-5 text-sm font-bold text-text-on-accent transition-colors hover:bg-accent-hover cursor-pointer"
+            >
+              <Download class="h-4 w-4" />
+              <span>Download Installer</span>
+            </a>
+            <span
+              id="hero-version-tag-installer"
+              class="inline-flex h-12 items-center justify-center rounded-r-lg bg-accent-hover px-3.5 font-mono text-xs font-bold text-text-on-accent border-l border-white/15"
+            >
+              v0.1.1
+            </span>
+          </div>
+          <span
+            id="hero-subtext-installer"
+            class="mt-2 font-mono text-[11px] text-text-muted drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+          >
+            Windows Setup (.exe) · ~27.7 MB · Recommended
+          </span>
+        </div>
+
+        <!-- Button 2: Standalone Portable (.exe/.zip) - Secondary Frosted Glass -->
+        <div class="group flex flex-col items-center">
+          <div class="inline-flex rounded-lg shadow-xl transition-transform active:scale-[0.99]">
+            <a
+              id="hero-btn-portable"
+              href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/releases/download/v0.1.1/BlancEngine-0.1.1-Portable.exe"
+              class="inline-flex h-12 items-center gap-2.5 rounded-l-lg border border-border-default bg-surface-primary/90 px-5 text-sm font-bold text-text-primary backdrop-blur-md transition-colors hover:bg-surface-hover hover:border-accent-primary/50 cursor-pointer"
+            >
+              <Package class="h-4 w-4 text-text-muted group-hover:text-accent-primary transition-colors" />
+              <span>Download Portable</span>
+            </a>
+            <span
+              id="hero-version-tag-portable"
+              class="inline-flex h-12 items-center justify-center rounded-r-lg border-y border-r border-border-default bg-surface-primary/90 px-3.5 font-mono text-xs font-semibold text-text-secondary backdrop-blur-md"
+            >
+              v0.1.1
+            </span>
+          </div>
+          <span
+            id="hero-subtext-portable"
+            class="mt-2 font-mono text-[11px] text-text-muted drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+          >
+            Single-file executable · ~128 MB · No install needed
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Nav Helpers Below Hero Buttons -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-text-muted">
         <a
-          href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/releases"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex h-9 items-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-3 text-xs font-medium text-text-primary transition-colors hover:bg-surface-hover"
+          href="/download/archive/"
+          class="inline-flex items-center gap-1.5 font-medium text-accent-primary hover:underline"
         >
-          <span>GitHub Releases</span>
-          <ExternalLink class="h-3.5 w-3.5 text-text-muted" />
+          <FolderArchive class="h-3.5 w-3.5" />
+          <span>Browse Blanc Archive (Previous Versions & Changelogs)</span>
+          <ArrowRight class="h-3 w-3" />
+        </a>
+        <span class="text-border-default" aria-hidden="true">•</span>
+        <a href="#supported-platforms" class="hover:text-text-primary transition-colors">
+          Other Platforms (Linux & macOS Roadmap)
         </a>
       </div>
     </div>
 
-    <!-- Latest Release Highlight -->
-    <section class="mt-8" aria-label="Latest Release">
-      <div id="latest-release-container" class="rounded-lg border border-border-default bg-surface-primary p-6">
-        <!-- Loading State -->
-        <div class="flex items-center gap-3 text-sm text-text-secondary">
-          <span class="inline-block h-2.5 w-2.5 rounded-full bg-accent-primary"></span>
-          <span>Fetching latest release from GitHub...</span>
+    <!-- Community Showcase Credit Badge (Bottom Right) -->
+    <a
+      id="hero-credit-badge"
+      href="/showcase"
+      class="pointer-events-auto absolute bottom-4 right-4 sm:bottom-5 sm:right-6 z-20 hidden items-center gap-2 rounded-full border border-border-default bg-surface-primary/90 px-3.5 py-1.5 font-mono text-xs text-text-secondary shadow-lg backdrop-blur-md transition-all hover:border-text-secondary hover:bg-surface-hover hover:text-text-primary"
+      title="Artwork from featured community visual novel in showcase"
+    >
+      <Gamepad2 class="h-3.5 w-3.5 text-text-muted shrink-0" />
+      <span class="text-text-muted">Artwork:</span>
+      <span id="hero-credit-text" class="truncate max-w-[180px] sm:max-w-xs font-semibold text-text-primary">Featured Game</span>
+      <ArrowUpRight class="h-3.5 w-3.5 text-text-muted shrink-0" />
+    </a>
+  </section>
+
+  <!-- 2. Main Content Container -->
+  <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 space-y-12">
+
+    <!-- Section A: System Requirements Matrix (Card ala Godot) -->
+    <section class="rounded-xl border border-border-default bg-surface-primary p-6 sm:p-7 shadow-sm">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-border-subtle pb-4">
+        <div>
+          <h2 class="text-base font-bold text-text-primary sm:text-lg flex items-center gap-2">
+            <Laptop class="h-4 w-4 text-accent-primary" />
+            <span>System Requirements</span>
+          </h2>
+          <p class="mt-0.5 text-xs text-text-secondary">
+            Blanc Engine is lightweight and engineered in native Rust for fast startup and minimal memory usage.
+          </p>
+        </div>
+        <span class="inline-flex items-center gap-1.5 rounded bg-bg-secondary px-2.5 py-1 font-mono text-[11px] text-text-muted border border-border-default shrink-0">
+          Arch: 64-bit Only
+        </span>
+      </div>
+
+      <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <!-- Minimum Requirements -->
+        <div class="space-y-2.5 rounded-lg border border-border-subtle bg-bg-secondary/60 p-4">
+          <div class="font-mono text-[11px] font-bold uppercase tracking-wider text-text-muted">
+            Minimum Specifications
+          </div>
+          <ul class="space-y-1.5 text-text-secondary">
+            <li class="flex items-start gap-2">
+              <span class="text-accent-primary font-bold">•</span>
+              <span><strong>Operating System:</strong> Windows 10 (64-bit) or Windows 11</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-accent-primary font-bold">•</span>
+              <span><strong>Processor:</strong> Dual-Core Intel/AMD x86_64 CPU (1.8 GHz+)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-accent-primary font-bold">•</span>
+              <span><strong>Memory:</strong> 4 GB RAM</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-accent-primary font-bold">•</span>
+              <span><strong>Graphics:</strong> OpenGL 3.3 or DirectX 11 compatible GPU</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-accent-primary font-bold">•</span>
+              <span><strong>Storage:</strong> 500 MB free space for editor & starter templates</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Recommended Requirements -->
+        <div class="space-y-2.5 rounded-lg border border-accent-primary/20 bg-accent-subtle/30 p-4">
+          <div class="font-mono text-[11px] font-bold uppercase tracking-wider text-accent-primary">
+            Recommended Specifications
+          </div>
+          <ul class="space-y-1.5 text-text-secondary">
+            <li class="flex items-start gap-2">
+              <span class="text-accent-primary font-bold">•</span>
+              <span><strong>Operating System:</strong> Windows 11 (64-bit, latest updates)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-accent-primary font-bold">•</span>
+              <span><strong>Processor:</strong> Quad-Core 2.5 GHz+ CPU for instant timeline scrubbing</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-accent-primary font-bold">•</span>
+              <span><strong>Memory:</strong> 8 GB RAM or more for high-res 4K sprites and audio editing</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-accent-primary font-bold">•</span>
+              <span><strong>Graphics:</strong> Dedicated GPU with Vulkan / DX11 for 60 FPS runtime preview</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-accent-primary font-bold">•</span>
+              <span><strong>Storage:</strong> Fast SSD for rapid audio and image asset previews</span>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <!-- Previous Versions & Beta/Preview Archive -->
-    <section id="previous-versions" class="mt-10 scroll-mt-24" aria-label="Release History">
-      <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h2 class="text-lg font-semibold text-text-primary">Previous Versions & Archive</h2>
-          <p class="mt-1 text-xs text-text-secondary sm:text-sm">
-            Filter between Stable releases and Beta / Preview builds. Click a version to view downloadable files.
+    <!-- Section B: Two-Column Details (All Downloads vs Instructions) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left Column: All Downloads & Direct Binaries (7 Cols) -->
+      <div class="lg:col-span-7 space-y-4">
+        <div class="flex items-center justify-between border-b border-border-default pb-3">
+          <div>
+            <h2 class="text-base font-bold text-text-primary">All Downloads &amp; Binaries</h2>
+            <p class="text-xs text-text-secondary">Choose the format that fits your workflow.</p>
+          </div>
+          <a
+            href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/releases"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors"
+          >
+            <span>GitHub Releases</span>
+            <ExternalLink class="h-3 w-3" />
+          </a>
+        </div>
+
+        <!-- Download Cards List -->
+        <div class="space-y-3" id="downloads-list">
+          <!-- Card 1: Installer -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-border-default bg-surface-primary p-4 hover:border-accent-primary/60 transition-colors">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="rounded bg-accent-subtle px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent-primary">
+                  Installer
+                </span>
+                <span class="font-mono text-xs font-semibold text-text-primary" id="binary-name-installer">
+                  BlancEngine-0.1.1-Setup.exe
+                </span>
+              </div>
+              <p class="text-xs text-text-secondary">
+                Standard Windows setup with Start Menu shortcuts and automatic file associations (.blanc).
+              </p>
+            </div>
+            <a
+              id="binary-link-installer"
+              href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/releases/download/v0.1.1/BlancEngine-0.1.1-Setup.exe"
+              class="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover cursor-pointer"
+            >
+              <Download class="h-3.5 w-3.5" />
+              <span>Download (.exe)</span>
+            </a>
+          </div>
+
+          <!-- Card 2: Portable -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-border-default bg-surface-primary p-4 hover:border-accent-primary/60 transition-colors">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="rounded bg-surface-hover px-1.5 py-0.5 font-mono text-[10px] font-semibold text-text-secondary">
+                  Portable
+                </span>
+                <span class="font-mono text-xs font-semibold text-text-primary" id="binary-name-portable">
+                  BlancEngine-0.1.1-Portable.exe
+                </span>
+              </div>
+              <p class="text-xs text-text-secondary">
+                Single-file portable executable. Unzip and run directly from anywhere, including flash drives.
+              </p>
+            </div>
+            <a
+              id="binary-link-portable"
+              href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/releases/download/v0.1.1/BlancEngine-0.1.1-Portable.exe"
+              class="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-4 text-xs font-semibold text-text-primary transition-colors hover:bg-surface-hover hover:border-accent-primary/50 cursor-pointer"
+            >
+              <Download class="h-3.5 w-3.5 text-text-muted" />
+              <span>Download (.exe)</span>
+            </a>
+          </div>
+
+          <!-- Card 3: Source Code -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-border-default bg-surface-primary p-4 hover:border-accent-primary/60 transition-colors">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="rounded bg-surface-hover px-1.5 py-0.5 font-mono text-[10px] font-semibold text-text-secondary">
+                  Source
+                </span>
+                <span class="font-mono text-xs font-semibold text-text-primary">
+                  Source code (v0.1.1.zip)
+                </span>
+              </div>
+              <p class="text-xs text-text-secondary">
+                Complete Rust workspace source code licensed under GNU GPLv3.
+              </p>
+            </div>
+            <a
+              href="https://github.com/Kharisdestianmaulana-hub/blanc-engine/archive/refs/tags/v0.1.1.zip"
+              class="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-md border border-border-default bg-surface-primary px-4 text-xs font-semibold text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+            >
+              <Download class="h-3.5 w-3.5 text-text-muted" />
+              <span>Source (.zip)</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- SHA-256 Hash Copy Box -->
+        <div class="rounded-lg border border-border-subtle bg-bg-secondary p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-[11px] font-semibold text-text-muted uppercase">SHA-256 Verification</span>
+            <span class="text-[10px] text-text-muted">v0.1.1 Setup Digest</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input
+              type="text"
+              readonly
+              value="0444d82108fbe8c6f6ac4af37aca99e7b0f5337f4deaa4c2475593732522b4db"
+              class="flex-1 rounded border border-border-default bg-bg-primary px-2.5 py-1 font-mono text-[11px] text-text-muted select-all focus:outline-none"
+              id="sha256-input"
+            />
+            <button
+              type="button"
+              id="btn-copy-sha256"
+              class="inline-flex h-7 items-center gap-1 rounded border border-border-default bg-surface-primary px-2.5 text-[11px] font-medium text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors cursor-pointer"
+            >
+              <Copy class="h-3 w-3" />
+              <span>Copy</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Instructions & First-Run Notes (5 Cols) -->
+      <div class="lg:col-span-5 space-y-4">
+        <div class="border-b border-border-default pb-3">
+          <h2 class="text-base font-bold text-text-primary">First-Run Instructions</h2>
+          <p class="text-xs text-text-secondary">Important notes for getting started smoothly.</p>
+        </div>
+
+        <!-- Extract & Run Card -->
+        <div class="rounded-lg border border-border-default bg-surface-primary p-4 space-y-2 text-xs text-text-secondary leading-relaxed">
+          <div class="flex items-center gap-2 font-semibold text-text-primary">
+            <Package class="h-4 w-4 text-accent-primary" />
+            <span>Extract &amp; Run Workflow</span>
+          </div>
+          <p>
+            Blanc Engine Portable is completely self-contained. You do not need admin privileges or external runtime installers. Simply extract the files into any folder and double click <code>BlancEngine-Portable.exe</code>.
           </p>
         </div>
 
-        <!-- Filter Tabs -->
-        <div class="inline-flex rounded-md border border-border-default bg-bg-secondary p-1" role="tablist" aria-label="Filter releases">
-          <button
-            type="button"
-            data-release-filter="all"
-            aria-selected="true"
-            class="rounded px-3 py-1.5 text-xs font-semibold bg-surface-elevated text-text-primary shadow-sm cursor-pointer"
-          >
-            All
-          </button>
-          <button
-            type="button"
-            data-release-filter="stable"
-            aria-selected="false"
-            class="rounded px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer"
-          >
-            Stable
-          </button>
-          <button
-            type="button"
-            data-release-filter="preview"
-            aria-selected="false"
-            class="rounded px-3 py-1.5 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer"
-          >
-            Beta / Preview
-          </button>
-        </div>
-      </div>
-
-      <div id="release-list-container" class="mt-4 space-y-2.5">
-        <div class="rounded-lg border border-border-default bg-surface-primary p-5 text-sm text-text-secondary">
-          Loading release archive...
-        </div>
-      </div>
-    </section>
-
-    <!-- Quick Start & Distribution Formats -->
-    <section class="mt-12 grid gap-6 border-t border-border-default pt-10 lg:grid-cols-2">
-      <div class="min-w-0 rounded-lg border border-border-default bg-surface-primary p-5">
-        <div class="flex items-center gap-2">
-          <PlayCircle class="h-4 w-4 text-text-muted" />
-          <h2 class="text-base font-semibold text-text-primary">Quick Start After Downloading</h2>
-        </div>
-        <ol class="mt-4 space-y-3 text-xs leading-relaxed text-text-secondary sm:text-sm">
-          <li class="flex items-start gap-2.5 rounded-md border border-border-subtle bg-bg-secondary p-3">
-            <span class="font-mono font-semibold text-text-primary">1.</span>
-            <span>Run <strong class="text-text-primary">Setup.exe</strong> to install Blanc Engine, or open <strong class="text-text-primary">Portable.exe</strong> directly.</span>
-          </li>
-          <li class="flex items-start gap-2.5 rounded-md border border-border-subtle bg-bg-secondary p-3">
-            <span class="font-mono font-semibold text-text-primary">2.</span>
-            <span>Click <strong class="text-text-primary">New Project</strong> and import your backgrounds, character sprites, and music.</span>
-          </li>
-          <li class="flex items-start gap-2.5 rounded-md border border-border-subtle bg-bg-secondary p-3">
-            <span class="font-mono font-semibold text-text-primary">3.</span>
-            <span>Write your story, preview it live, and export a playable game to share with others.</span>
-          </li>
-        </ol>
-      </div>
-
-      <div class="min-w-0 rounded-lg border border-border-default bg-surface-primary p-5">
-        <div class="flex items-center gap-2">
-          <Package class="h-4 w-4 text-text-muted" />
-          <h2 class="text-base font-semibold text-text-primary">Which File Should I Download?</h2>
-        </div>
-        <div class="mt-4 space-y-3">
-          <div class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-semibold text-text-primary">Setup.exe (Windows Installer)</span>
-              <span class="font-mono text-[11px] text-status-success">Recommended</span>
-            </div>
-            <p class="mt-1 text-xs text-text-secondary">
-              Standard installer with Start Menu shortcuts, app icon, and a clean uninstaller. Best for most users.
-            </p>
+        <!-- Windows SmartScreen Help Card -->
+        <div class="rounded-lg border border-status-warning/30 bg-status-warning/5 p-4 space-y-2 text-xs leading-relaxed">
+          <div class="flex items-center gap-2 font-semibold text-status-warning">
+            <ShieldAlert class="h-4 w-4" />
+            <span>Windows SmartScreen Notice</span>
           </div>
-          <div class="rounded-md border border-border-subtle bg-bg-secondary p-3.5">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-semibold text-text-primary">Portable.exe (Single File)</span>
-              <span class="font-mono text-[11px] text-text-muted">No Install</span>
-            </div>
-            <p class="mt-1 text-xs text-text-secondary">
-              Run directly from any folder or USB drive without installing anything on Windows.
-            </p>
+          <p class="text-text-secondary">
+            Because Blanc Engine is a community open-source release without an expensive commercial EV certificate, Windows may show a <em>"Windows protected your PC"</em> prompt on first run:
+          </p>
+          <ol class="list-decimal pl-4 space-y-1 text-text-secondary">
+            <li>Click <strong>More info</strong> on the prompt dialog.</li>
+            <li>Click <strong>Run anyway</strong> to launch Blanc Studio.</li>
+          </ol>
+          <p class="font-mono text-[10px] text-text-muted pt-1">
+            All binaries are compiled directly from public GitHub Actions and verifiable with SHA-256.
+          </p>
+        </div>
+
+        <!-- Creator Ownership Card -->
+        <div class="rounded-lg border border-border-default bg-surface-primary p-4 space-y-2 text-xs text-text-secondary leading-relaxed">
+          <div class="flex items-center gap-2 font-semibold text-text-primary">
+            <Sparkles class="h-4 w-4 text-status-success" />
+            <span>100% Creator-Owned Games</span>
           </div>
+          <p>
+            Blanc Engine is licensed under <strong>GNU GPLv3</strong>. Any visual novel, art, script, and story you create and package with Blanc Engine belongs 100% to you to distribute, sell on Steam/Itch.io, or share freely with zero royalties.
+          </p>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- Collapsible Developer Build Instructions -->
-    <details class="mt-6 rounded-lg border border-border-default bg-surface-primary">
-      <summary class="flex cursor-pointer list-none items-center justify-between gap-2 px-5 py-3.5 text-xs font-medium text-text-secondary hover:bg-surface-hover hover:text-text-primary">
-        <span class="inline-flex items-center gap-2">
-          <Terminal class="h-4 w-4 text-text-muted" />
-          <span>For Developers: Build from source with Rust &amp; Cargo</span>
-        </span>
-        <span class="font-mono text-[11px] text-text-muted">Expand</span>
-      </summary>
-      <div class="border-t border-border-subtle p-5">
-        <p class="text-xs leading-relaxed text-text-secondary sm:text-sm">
-          Requires Rust 2021 edition (stable toolchain). Building the full workspace ensures the editor can bundle the runtime and installer:
+    <!-- Section C: Supported Platforms Bar -->
+    <section id="supported-platforms" class="rounded-xl border border-border-default bg-surface-primary p-6 shadow-sm">
+      <div class="text-center max-w-xl mx-auto mb-6">
+        <h2 class="text-base font-bold text-text-primary sm:text-lg">Supported Platforms</h2>
+        <p class="mt-1 text-xs text-text-secondary">
+          Blanc Engine editor and runtime roadmap across desktop and mobile platforms.
         </p>
-        <pre class="mt-3 overflow-x-auto rounded-md border border-border-subtle bg-bg-primary p-3.5 font-mono text-xs leading-relaxed text-text-primary"><code>git clone https://github.com/Kharisdestianmaulana-hub/blanc-engine.git
-cd blanc-engine
-cargo build --workspace --release
-cargo run -p blanc_editor --release</code></pre>
       </div>
-    </details>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <!-- Windows (Active) -->
+        <div class="rounded-lg border border-status-success/50 bg-status-success/5 p-4 text-center space-y-1.5">
+          <div class="inline-flex p-2 rounded-full bg-status-success/10 text-status-success">
+            <Monitor class="h-5 w-5" />
+          </div>
+          <div class="font-bold text-xs text-text-primary">Windows</div>
+          <span class="inline-block rounded-full bg-status-success/20 px-2 py-0.5 font-mono text-[10px] font-semibold text-status-success">
+            Available Now
+          </span>
+          <p class="text-[10px] text-text-muted">Installer &amp; Portable 64-bit</p>
+        </div>
+
+        <!-- macOS (Roadmap) -->
+        <div class="rounded-lg border border-border-subtle bg-bg-secondary p-4 text-center space-y-1.5 opacity-80">
+          <div class="inline-flex p-2 rounded-full bg-surface-hover text-text-muted">
+            <Laptop class="h-5 w-5" />
+          </div>
+          <div class="font-bold text-xs text-text-primary">macOS</div>
+          <span class="inline-block rounded-full bg-surface-hover px-2 py-0.5 font-mono text-[10px] font-medium text-text-muted">
+            Planned v0.2.0
+          </span>
+          <p class="text-[10px] text-text-muted">Universal .dmg &amp; .app</p>
+        </div>
+
+        <!-- Linux (Roadmap) -->
+        <div class="rounded-lg border border-border-subtle bg-bg-secondary p-4 text-center space-y-1.5 opacity-80">
+          <div class="inline-flex p-2 rounded-full bg-surface-hover text-text-muted">
+            <Terminal class="h-5 w-5" />
+          </div>
+          <div class="font-bold text-xs text-text-primary">Linux</div>
+          <span class="inline-block rounded-full bg-surface-hover px-2 py-0.5 font-mono text-[10px] font-medium text-text-muted">
+            Planned v0.2.0
+          </span>
+          <p class="text-[10px] text-text-muted">AppImage &amp; Tarball</p>
+        </div>
+
+        <!-- Web Runtime (Roadmap) -->
+        <div class="rounded-lg border border-border-subtle bg-bg-secondary p-4 text-center space-y-1.5 opacity-80">
+          <div class="inline-flex p-2 rounded-full bg-surface-hover text-text-muted">
+            <Gamepad2 class="h-5 w-5" />
+          </div>
+          <div class="font-bold text-xs text-text-primary">Web Player</div>
+          <span class="inline-block rounded-full bg-surface-hover px-2 py-0.5 font-mono text-[10px] font-medium text-text-muted">
+            Planned
+          </span>
+          <p class="text-[10px] text-text-muted">HTML5 WebGL Export</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section D: Extra Resources (Starter Templates & Documentation) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Starter VN Template Card -->
+      <div class="flex flex-col justify-between rounded-xl border border-border-default bg-surface-primary p-6 space-y-4 hover:border-accent-primary/50 transition-colors">
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <Layers class="h-4 w-4 text-accent-primary" />
+            <span class="font-mono text-xs font-bold uppercase tracking-wider text-accent-primary">Community Starter Kit</span>
+          </div>
+          <h3 class="text-base font-bold text-text-primary">Starter Visual Novel Project</h3>
+          <p class="text-xs text-text-secondary leading-relaxed">
+            Need inspiration? Download our starter visual novel project featuring character sprites, expressions, background scenes, BGM, and pre-configured dialogue choices.
+          </p>
+        </div>
+        <div>
+          <a
+            href="/docs#getting-started"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-accent-primary hover:underline"
+          >
+            <span>Learn with Starter Template</span>
+            <ChevronRight class="h-3.5 w-3.5" />
+          </a>
+        </div>
+      </div>
+
+      <!-- 5-Minute Quickstart Guide Card -->
+      <div class="flex flex-col justify-between rounded-xl border border-border-default bg-surface-primary p-6 space-y-4 hover:border-accent-primary/50 transition-colors">
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <BookOpen class="h-4 w-4 text-accent-primary" />
+            <span class="font-mono text-xs font-bold uppercase tracking-wider text-accent-primary">Documentation</span>
+          </div>
+          <h3 class="text-base font-bold text-text-primary">5-Minute Quickstart Guide</h3>
+          <p class="text-xs text-text-secondary leading-relaxed">
+            New to Blanc Engine? Learn how to write your first screenplay scene, connect story branches on the node canvas, and customize dialogue boxes in 5 minutes.
+          </p>
+        </div>
+        <div>
+          <a
+            href="/docs#getting-started"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-accent-primary hover:underline"
+          >
+            <span>Read Quickstart Guide</span>
+            <ChevronRight class="h-3.5 w-3.5" />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section E: Compile from Source & Archive Banner -->
+    <section class="rounded-xl border border-border-default bg-surface-primary p-6 sm:p-8 space-y-6">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="space-y-2 max-w-xl">
+          <div class="flex items-center gap-2">
+            <Terminal class="h-4 w-4 text-accent-primary" />
+            <span class="font-mono text-xs font-bold uppercase tracking-wider text-accent-primary">Rust Developers</span>
+          </div>
+          <h3 class="text-base sm:text-lg font-bold text-text-primary">
+            Compile Blanc Engine from Source
+          </h3>
+          <p class="text-xs text-text-secondary leading-relaxed">
+            Prefer compiling directly with Rust and Cargo? Clone the repository and run the editor in release mode:
+          </p>
+          <div class="mt-2 rounded-md border border-border-default bg-bg-secondary p-3 font-mono text-[11px] text-text-primary overflow-x-auto">
+            <code>git clone https://github.com/Kharisdestianmaulana-hub/blanc-engine.git<br/>cd blanc-engine<br/>cargo run -p blanc_editor --release</code>
+          </div>
+        </div>
+
+        <!-- Banner to Blanc Archive -->
+        <div class="lg:w-80 shrink-0 rounded-lg border border-accent-primary/30 bg-accent-subtle/30 p-5 space-y-3">
+          <div class="flex items-center gap-2 font-bold text-xs text-accent-primary">
+            <FolderArchive class="h-4 w-4" />
+            <span>Looking for Past Versions?</span>
+          </div>
+          <p class="text-xs text-text-secondary leading-relaxed">
+            Browse our dedicated archive portal for previous stable releases, changelogs, and beta preview builds.
+          </p>
+          <a
+            href="/download/archive/"
+            class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent-primary py-2 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover cursor-pointer"
+          >
+            <span>Open Blanc Archive</span>
+            <ArrowRight class="h-3.5 w-3.5" />
+          </a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <Footer />
@@ -190,6 +578,7 @@ cargo run -p blanc_editor --release</code></pre>
     size: number;
     browser_download_url: string;
     download_count: number;
+    digest?: string;
   }
 
   interface GitHubRelease {
@@ -203,24 +592,38 @@ cargo run -p blanc_editor --release</code></pre>
     assets: GitHubAsset[];
   }
 
-  const API_URL = "https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases";
-  const RELEASES_PAGE = "https://github.com/Kharisdestianmaulana-hub/blanc-engine/releases";
-
-  const latestContainer = document.getElementById("latest-release-container");
-  const listContainer = document.getElementById("release-list-container");
-  const refreshBtn = document.getElementById("refresh-releases");
-  const filterBtns = document.querySelectorAll<HTMLButtonElement>("[data-release-filter]");
-
-  let allReleases: GitHubRelease[] = [];
-  let activeFilter: "all" | "stable" | "preview" = "all";
-
-  function escapeHtml(str: string): string {
-    return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+  interface ShowcaseGame {
+    title: string;
+    author: string;
+    cover: string;
+    url: string;
   }
+
+  const SHEET_URL =
+    "https://docs.google.com/spreadsheets/d/1VCNAuxsX3QyiQtOONYbZYZIUbRRhjrd9oaMddh_8O7g/gviz/tq?tqx=out:json&gid=658897965&headers=1";
+
+  // Elements
+  const heroBtnInstaller = document.getElementById("hero-btn-installer") as HTMLAnchorElement | null;
+  const heroVersionTagInstaller = document.getElementById("hero-version-tag-installer");
+  const heroSubtextInstaller = document.getElementById("hero-subtext-installer");
+
+  const heroBtnPortable = document.getElementById("hero-btn-portable") as HTMLAnchorElement | null;
+  const heroVersionTagPortable = document.getElementById("hero-version-tag-portable");
+  const heroSubtextPortable = document.getElementById("hero-subtext-portable");
+
+  const binaryNameInstaller = document.getElementById("binary-name-installer");
+  const binaryLinkInstaller = document.getElementById("binary-link-installer") as HTMLAnchorElement | null;
+
+  const binaryNamePortable = document.getElementById("binary-name-portable");
+  const binaryLinkPortable = document.getElementById("binary-link-portable") as HTMLAnchorElement | null;
+
+  const btnCopySha = document.getElementById("btn-copy-sha256");
+  const shaInput = document.getElementById("sha256-input") as HTMLInputElement | null;
+
+  const heroBgLayer1 = document.getElementById("hero-bg-layer-1");
+  const heroBgLayer2 = document.getElementById("hero-bg-layer-2");
+  const heroCreditBadge = document.getElementById("hero-credit-badge") as HTMLAnchorElement | null;
+  const heroCreditText = document.getElementById("hero-credit-text");
 
   function formatBytes(bytes: number): string {
     if (!bytes) return "0 MB";
@@ -237,329 +640,146 @@ cargo run -p blanc_editor --release</code></pre>
     });
   }
 
-  function renderMarkdown(md: string): string {
-    if (!md) return "";
-    const lines = md.replace(/\r\n/g, "\n").split("\n");
-    const out: string[] = [];
-    let inList = false;
-
-    const inlineFormat = (text: string) => {
-      let s = escapeHtml(text);
-      s = s.replace(/`([^`]+)`/g, '<code class="rounded border border-border-subtle bg-bg-secondary px-1 py-0.5 font-mono text-[11px] text-text-primary">$1</code>');
-      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-text-primary">$1</strong>');
-      s = s.replace(/\*([^*]+)\*/g, '<em class="italic">$1</em>');
-      return s;
-    };
-
-    for (const rawLine of lines) {
-      const line = rawLine.trim();
-      if (!line) {
-        if (inList) {
-          out.push("</ul>");
-          inList = false;
-        }
-        continue;
-      }
-      if (/^---+$/.test(line)) {
-        if (inList) {
-          out.push("</ul>");
-          inList = false;
-        }
-        out.push('<hr class="my-3 border-border-subtle" />');
-        continue;
-      }
-      if (line.startsWith("### ")) {
-        if (inList) {
-          out.push("</ul>");
-          inList = false;
-        }
-        out.push(`<h4 class="mt-3 mb-1.5 text-xs font-semibold uppercase tracking-wider text-accent-primary">${inlineFormat(line.slice(4))}</h4>`);
-        continue;
-      }
-      if (line.startsWith("## ") || line.startsWith("# ")) {
-        if (inList) {
-          out.push("</ul>");
-          inList = false;
-        }
-        const content = line.replace(/^#+\s+/, "");
-        out.push(`<h3 class="mt-2 mb-1.5 text-sm font-semibold text-text-primary">${inlineFormat(content)}</h3>`);
-        continue;
-      }
-      if (line.startsWith("- ") || line.startsWith("* ")) {
-        if (!inList) {
-          out.push('<ul class="my-1.5 list-disc space-y-1 pl-5 text-xs leading-relaxed text-text-secondary">');
-          inList = true;
-        }
-        out.push(`<li>${inlineFormat(line.slice(2))}</li>`);
-        continue;
-      }
-      if (inList) {
-        out.push("</ul>");
-        inList = false;
-      }
-      out.push(`<p class="my-1.5 text-xs leading-relaxed text-text-secondary">${inlineFormat(line)}</p>`);
-    }
-
-    if (inList) out.push("</ul>");
-    return out.join("");
-  }
-
-  function renderAssetsHtml(assets: GitHubAsset[], releaseUrl: string): string {
-    if (!assets || assets.length === 0) {
-      return `
-        <div class="rounded-md border border-border-subtle bg-bg-secondary px-3.5 py-2.5 text-xs text-text-secondary">
-          No binary assets attached to this release yet.
-          <a href="${escapeHtml(releaseUrl)}" target="_blank" rel="noopener noreferrer" class="ml-1 font-medium text-accent-primary hover:underline">View on GitHub</a>
-        </div>
-      `;
-    }
-
-    return assets
-      .map((asset) => {
-        const lower = asset.name.toLowerCase();
-        const typeBadge = lower.includes("setup")
-          ? '<span class="rounded border border-status-success bg-bg-primary px-1.5 py-0.5 font-mono text-[10px] text-status-success">Installer</span>'
-          : lower.includes("portable")
-          ? '<span class="rounded border border-border-default bg-bg-primary px-1.5 py-0.5 font-mono text-[10px] text-text-muted">Portable</span>'
-          : "";
-
-        return `
-        <a
-          href="${escapeHtml(asset.browser_download_url)}"
-          class="flex min-w-0 flex-wrap items-center justify-between gap-2 rounded-md border border-border-default bg-bg-secondary px-3.5 py-2.5 text-xs transition-colors hover:border-accent-primary hover:bg-surface-hover sm:flex-nowrap sm:gap-3"
-        >
-          <span class="flex min-w-0 flex-1 items-center gap-2">
-            <span class="truncate font-mono font-medium text-text-primary">${escapeHtml(asset.name)}</span>
-            ${typeBadge}
-          </span>
-          <span class="flex shrink-0 items-center gap-2">
-            <span class="font-mono text-[11px] text-text-muted">
-              ${formatBytes(asset.size)} · ${(asset.download_count ?? 0).toLocaleString("en-US")} dl
-            </span>
-            <span class="rounded bg-accent-primary px-2 py-0.5 font-semibold text-text-on-accent">Download</span>
-          </span>
-        </a>
-      `;
-      })
-      .join("");
-  }
-
-  function renderLatest(releases: GitHubRelease[]) {
-    if (!latestContainer) return;
-
-    if (releases.length === 0) {
-      latestContainer.className = "rounded-lg border border-border-default bg-surface-primary p-6";
-      latestContainer.innerHTML = `
-        <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <span class="inline-block rounded border border-status-warning bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium text-status-warning">
-              Preparing Release
-            </span>
-            <h2 class="mt-2 text-lg font-semibold text-text-primary">No pre-built .exe releases published yet</h2>
-            <p class="mt-1 text-sm text-text-secondary">
-              Once a release is published on GitHub Releases, downloadable Windows installers and portable builds will appear here automatically.
-            </p>
-          </div>
-          <a
-            href="${RELEASES_PAGE}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex h-10 shrink-0 items-center justify-center rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover"
-          >
-            Check GitHub Releases
-          </a>
-        </div>
-      `;
-      return;
-    }
-
-    const latestStable = releases.find((r) => !r.prerelease) || releases[0];
-    const isPreview = latestStable.prerelease;
-    const badgeClass = isPreview
-      ? "border-status-warning text-status-warning"
-      : "border-status-success text-status-success";
-    const badgeText = isPreview ? "Beta / Preview" : "Stable";
-
-    latestContainer.className = "rounded-lg border border-accent-primary bg-surface-primary p-6";
-    latestContainer.innerHTML = `
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle pb-4">
-        <div class="flex flex-wrap items-center gap-2.5">
-          <span class="rounded border border-border-default bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-semibold text-text-primary">
-            Latest
-          </span>
-          <span class="rounded border ${badgeClass} bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium">
-            ${badgeText}
-          </span>
-          <h2 class="font-mono text-xl font-bold text-text-primary">${escapeHtml(latestStable.tag_name)}</h2>
-          ${latestStable.name && latestStable.name !== latestStable.tag_name ? `<span class="text-sm text-text-secondary">${escapeHtml(latestStable.name)}</span>` : ""}
-        </div>
-        <span class="font-mono text-xs text-text-muted">${formatDate(latestStable.published_at)}</span>
-      </div>
-
-      <div class="mt-4 grid gap-2.5 sm:grid-cols-2">
-        ${renderAssetsHtml(latestStable.assets, latestStable.html_url)}
-      </div>
-
-      ${
-        latestStable.body
-          ? `<details class="mt-4 rounded-md border border-border-subtle bg-bg-primary">
-              <summary class="cursor-pointer px-3.5 py-2 text-xs font-medium text-text-secondary hover:text-text-primary">
-                Release Notes
-              </summary>
-              <div class="border-t border-border-subtle px-4 py-3">
-                ${renderMarkdown(latestStable.body)}
-              </div>
-            </details>`
-          : ""
-      }
-    `;
-  }
-
-  function renderList() {
-    if (!listContainer) return;
-
-    const latestShown = allReleases.find((r) => !r.prerelease) || allReleases[0];
-    const previousOnly =
-      activeFilter === "all" && latestShown
-        ? allReleases.filter((r) => r.tag_name !== latestShown.tag_name)
-        : allReleases;
-
-    const filtered = previousOnly.filter((r) => {
-      if (activeFilter === "stable") return !r.prerelease;
-      if (activeFilter === "preview") return r.prerelease;
-      return true;
-    });
-
-    if (filtered.length === 0) {
-      const msg =
-        activeFilter === "all" && allReleases.length <= 1
-          ? "No previous versions yet. Future releases will be archived here automatically."
-          : "No releases found in this category yet.";
-      listContainer.innerHTML = `
-        <div class="rounded-lg border border-border-default bg-surface-primary p-5 text-sm text-text-secondary">
-          ${msg}
-        </div>
-      `;
-      return;
-    }
-
-    listContainer.innerHTML = filtered
-      .map((rel) => {
-        const badgeClass = rel.prerelease
-          ? "border-status-warning text-status-warning"
-          : "border-status-success text-status-success";
-        const badgeText = rel.prerelease ? "Beta / Preview" : "Stable";
-        const assetCount = rel.assets ? rel.assets.length : 0;
-
-        return `
-          <details class="group rounded-lg border border-border-default bg-surface-primary">
-            <summary class="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-surface-hover">
-              <div class="flex flex-wrap items-center gap-2.5">
-                <span class="font-mono text-sm font-bold text-text-primary">${escapeHtml(rel.tag_name)}</span>
-                <span class="rounded border ${badgeClass} bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium">
-                  ${badgeText}
-                </span>
-                ${rel.name && rel.name !== rel.tag_name ? `<span class="text-xs text-text-secondary">${escapeHtml(rel.name)}</span>` : ""}
-              </div>
-              <div class="flex items-center gap-4 font-mono text-xs text-text-muted">
-                <span>${assetCount} file${assetCount === 1 ? "" : "s"}</span>
-                <span>${formatDate(rel.published_at)}</span>
-              </div>
-            </summary>
-
-            <div class="space-y-3 border-t border-border-subtle p-4">
-              <div class="grid gap-2 sm:grid-cols-2">
-                ${renderAssetsHtml(rel.assets, rel.html_url)}
-              </div>
-              ${
-                rel.body
-                  ? `<div class="max-h-60 overflow-auto rounded border border-border-subtle bg-bg-primary px-4 py-3">${renderMarkdown(rel.body)}</div>`
-                  : ""
-              }
-            </div>
-          </details>
-        `;
-      })
-      .join("");
-  }
-
-  async function loadReleases() {
+  async function loadLatestRelease() {
     try {
-      let data: GitHubRelease[] = [];
+      const res = await fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases", {
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      if (!res.ok) return;
+      const releases: GitHubRelease[] = await res.json();
+      if (!Array.isArray(releases) || releases.length === 0) return;
 
-      try {
-        const statsRes = await fetch("/api/github-stats");
-        if (statsRes.ok) {
-          const stats = await statsRes.json();
-          if (Array.isArray(stats.releases) && stats.releases.length > 0) {
-            data = stats.releases;
-          }
+      const latestStable = releases.find((r) => !r.prerelease && !r.draft) || releases[0];
+      if (!latestStable) return;
+
+      const tag = latestStable.tag_name || "v0.1.1";
+      const dateStr = formatDate(latestStable.published_at);
+
+      // Find assets
+      const installerAsset = latestStable.assets?.find((a) =>
+        a.name.toLowerCase().includes("setup")
+      );
+      const portableAsset = latestStable.assets?.find((a) =>
+        a.name.toLowerCase().includes("portable")
+      );
+
+      if (installerAsset && heroBtnInstaller) {
+        heroBtnInstaller.href = installerAsset.browser_download_url;
+        if (heroVersionTagInstaller) heroVersionTagInstaller.textContent = tag;
+        if (heroSubtextInstaller) {
+          heroSubtextInstaller.textContent = `Windows Setup (.exe) · ${formatBytes(installerAsset.size)} · ${dateStr}`;
         }
-      } catch {
-        // Fallback to direct GitHub API in local dev
+        if (binaryNameInstaller) binaryNameInstaller.textContent = installerAsset.name;
+        if (binaryLinkInstaller) binaryLinkInstaller.href = installerAsset.browser_download_url;
       }
 
-      if (data.length === 0) {
-        const res = await fetch(API_URL, {
-          headers: { Accept: "application/vnd.github+json" },
-        });
-        if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
-        data = await res.json();
+      if (portableAsset && heroBtnPortable) {
+        heroBtnPortable.href = portableAsset.browser_download_url;
+        if (heroVersionTagPortable) heroVersionTagPortable.textContent = tag;
+        if (heroSubtextPortable) {
+          heroSubtextPortable.textContent = `Single-file executable · ${formatBytes(portableAsset.size)} · ${dateStr}`;
+        }
+        if (binaryNamePortable) binaryNamePortable.textContent = portableAsset.name;
+        if (binaryLinkPortable) binaryLinkPortable.href = portableAsset.browser_download_url;
       }
-
-      allReleases = data.filter((r) => !r.draft);
-      renderLatest(allReleases);
-      renderList();
     } catch {
-      if (latestContainer) {
-        latestContainer.className = "rounded-lg border border-border-default bg-surface-primary p-6";
-        latestContainer.innerHTML = `
-          <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-              <span class="inline-block rounded border border-status-info bg-bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium text-status-info">
-                GitHub Releases
-              </span>
-              <h2 class="mt-2 text-base font-semibold text-text-primary">Unable to load releases from GitHub API</h2>
-              <p class="mt-1 text-sm text-text-secondary">
-                You can browse and download all Stable and Beta/Preview releases directly on GitHub.
-              </p>
-            </div>
-            <a
-              href="${RELEASES_PAGE}"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex h-10 shrink-0 items-center justify-center rounded-md bg-accent-primary px-4 text-xs font-semibold text-text-on-accent transition-colors hover:bg-accent-hover"
-            >
-              Open GitHub Releases
-            </a>
-          </div>
-        `;
-      }
-      if (listContainer) {
-        listContainer.innerHTML = "";
-      }
+      // Keep static defaults
     }
   }
 
-  filterBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const val = btn.getAttribute("data-release-filter") as "all" | "stable" | "preview";
-      activeFilter = val;
-
-      filterBtns.forEach((b) => {
-        const active = b.getAttribute("data-release-filter") === val;
-        b.setAttribute("aria-selected", String(active));
-        b.classList.toggle("bg-surface-elevated", active);
-        b.classList.toggle("text-text-primary", active);
-        b.classList.toggle("font-semibold", active);
-        b.classList.toggle("shadow-sm", active);
-        b.classList.toggle("text-text-secondary", !active);
-      });
-
-      renderList();
-    });
+  // Copy SHA-256 logic
+  btnCopySha?.addEventListener("click", async () => {
+    if (!shaInput) return;
+    try {
+      await navigator.clipboard.writeText(shaInput.value);
+      const span = btnCopySha.querySelector("span");
+      if (span) {
+        const orig = span.textContent;
+        span.textContent = "Copied!";
+        setTimeout(() => {
+          span.textContent = orig;
+        }, 2000);
+      }
+    } catch {
+      // Fallback
+    }
   });
 
-  refreshBtn?.addEventListener("click", loadReleases);
-  loadReleases();
+  // Dynamic Showcase Artwork Slideshow
+  async function initShowcaseHeroBackground() {
+    if (!heroBgLayer1 || !heroBgLayer2 || !heroCreditBadge || !heroCreditText) return;
+
+    try {
+      const res = await fetch(SHEET_URL);
+      if (!res.ok) return;
+      const text = await res.text();
+      const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?/);
+      if (!match) return;
+
+      const json = JSON.parse(match[1]);
+      const rows = json?.table?.rows || [];
+      const games: ShowcaseGame[] = [];
+
+      const toSlug = (str: string) =>
+        str
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+
+      for (const row of rows) {
+        const c = row.c || [];
+        const status = c[6]?.v?.toString()?.toLowerCase() || "";
+        if (status !== "approved") continue;
+
+        const title = c[1]?.v?.toString() || "";
+        const author = c[2]?.v?.toString() || "";
+        const cover = c[5]?.v?.toString() || "";
+
+        if (title && cover) {
+          games.push({
+            title,
+            author,
+            cover,
+            url: `/showcase/game?id=${encodeURIComponent(toSlug(title))}`,
+          });
+        }
+      }
+
+      if (games.length === 0) return;
+
+      let currentIndex = 0;
+      let activeLayer = 1;
+
+      const applyGame = (game: ShowcaseGame) => {
+        const targetLayer = activeLayer === 1 ? heroBgLayer2 : heroBgLayer1;
+        const currentLayer = activeLayer === 1 ? heroBgLayer1 : heroBgLayer2;
+
+        targetLayer.style.backgroundImage = `url('${game.cover}')`;
+        targetLayer.style.opacity = "1";
+        currentLayer.style.opacity = "0";
+
+        activeLayer = activeLayer === 1 ? 2 : 1;
+
+        heroCreditText.textContent = `${game.title} by ${game.author}`;
+        heroCreditBadge.href = game.url;
+        heroCreditBadge.classList.remove("hidden");
+        heroCreditBadge.classList.add("inline-flex");
+      };
+
+      // Set initial showcase game
+      applyGame(games[0]);
+
+      if (games.length > 1) {
+        setInterval(() => {
+          currentIndex = (currentIndex + 1) % games.length;
+          applyGame(games[currentIndex]);
+        }, 7000);
+      }
+    } catch {
+      // Keep default gameplay screenshot
+    }
+  }
+
+  loadLatestRelease();
+  initShowcaseHeroBackground();
 </script>
