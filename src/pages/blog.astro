@@ -12,6 +12,72 @@ import {
   ChevronDown,
   User,
 } from "lucide-astro";
+
+const INITIAL_POSTS = [
+  {
+    id: 4,
+    slug: "blanc-engine-v020-devlog-free-form-ui-canvas-studio-custom-ui-skins-and-visual-logic",
+    title: "Blanc Engine v0.2.0 Devlog: Free-Form UI Canvas Studio, Custom UI Skins, and Visual Logic",
+    excerpt: "A deep dive into Blanc Engine v0.2.0: bringing a 3-panel Godot/Unity-style Free-Form UI Designer, custom PNG skins for every widget, Visual Variables & Conditions, and cross-platform expansion.",
+    cover_url: "/screenshots/SS_OVERVIEW.png",
+    author: "Blanc Core Team",
+    tags: "Devlog, v0.2.0, UI Designer, Major Update",
+    published_at: "2026-11-25 12:28:41",
+  },
+  {
+    id: 3,
+    slug: "blanc-engine-v011-security-hardening-atomic-saves-and-runtime-stability",
+    title: "Blanc Engine v0.1.1: Security Hardening, Atomic Saves, and Runtime Stability",
+    excerpt: "A focused maintenance release introducing atomic file writes, path-traversal protection, Story Flow cycle guards, and smoother keyboard/gamepad navigation.",
+    cover_url: "/screenshots/SS_OVERVIEW.png",
+    author: "Blanc Core Team",
+    tags: "Release, v0.1.1, Patch Notes",
+    published_at: "2026-11-25 12:28:08",
+  },
+  {
+    id: 2,
+    slug: "blanc-engine-v010-released-write-design-and-ship-visual-novels-with-zero-code",
+    title: "Blanc Engine v0.1.0 Released: Write, Design, and Ship Visual Novels With Zero Code",
+    excerpt: "Our first public release! Blanc Engine v0.1.0 brings the complete no-code pipeline from screenplay writing and Story Flow graphs to encrypted .bpack exports and standalone Windows installers.",
+    cover_url: "/screenshots/SS_OVERVIEW.png",
+    author: "Blanc Core Team",
+    tags: "Release, v0.1.0, Announcements",
+    published_at: "2026-11-25 12:27:37",
+  },
+  {
+    id: 1,
+    slug: "welcome-to-blanc-engine",
+    title: "Welcome to Blanc Engine: The Next-Gen No-Code Visual Novel Engine",
+    excerpt: "Introducing Blanc Engine, a modern visual screenplay and timeline editor designed for indie visual novel creators and storytellers.",
+    cover_url: "/screenshots/SS_OVERVIEW.png",
+    author: "Blanc Core Team",
+    tags: "Announcements, Devlog",
+    published_at: "2026-11-25 11:43:15",
+  },
+];
+
+const featuredPost = INITIAL_POSTS[0];
+const gridPosts = INITIAL_POSTS.slice(1);
+
+const blogSchema = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: "Blanc Engine Devlogs & News",
+  description: "Official development logs, release announcements, feature breakdowns, and engine updates from the Blanc Engine team.",
+  url: "https://getblanc.web.id/blog/",
+  blogPost: INITIAL_POSTS.map((post) => ({
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    url: `https://getblanc.web.id/blog/post/?slug=${post.slug}`,
+    datePublished: post.published_at.slice(0, 10),
+    author: {
+      "@type": "Organization",
+      name: post.author,
+    },
+    image: `https://getblanc.web.id${post.cover_url}`,
+  })),
+};
 ---
 
 <BaseLayout
@@ -19,18 +85,20 @@ import {
   description="Read official devlogs, release announcements, feature breakdowns, and engine updates from the Blanc Engine team."
   ogImage="/screenshots/SS_OVERVIEW.png"
   breadcrumbs={[{ name: "Home", path: "/" }, { name: "Blog", path: "/blog/" }]}
+  schema={blogSchema}
 >
   <Navbar />
 
   <!-- 1. Full-Width Cinematic Hero Header (Spotlight on latest devlog ala Detail Blog) -->
   <section
     id="blog-featured-hero"
-    class="hidden relative w-full overflow-hidden border-b border-border-default min-h-[380px] sm:min-h-[440px] lg:min-h-[500px] flex items-end"
+    class="relative w-full overflow-hidden border-b border-border-default min-h-[380px] sm:min-h-[440px] lg:min-h-[500px] flex items-end"
   >
     <!-- Background Cover Image -->
     <div
       id="hero-cover-bg"
       class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-700"
+      style={`background-image: url('${featuredPost.cover_url}');`}
     ></div>
 
     <!-- Dark Gradient Overlays (Solid bottom to transparent top, plus lateral shading) -->
@@ -50,17 +118,17 @@ import {
           id="hero-tag"
           class="rounded border border-border-default bg-surface-primary/80 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-text-primary backdrop-blur-sm"
         >
-          Devlog
+          {featuredPost.tags.split(",")[0].trim()}
         </span>
 
         <span class="inline-flex items-center gap-1.5 font-mono text-xs text-text-muted bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm">
           <Calendar class="h-3.5 w-3.5 text-text-muted" />
-          <span id="hero-date">-</span>
+          <span id="hero-date">{featuredPost.published_at.slice(0, 10)}</span>
         </span>
 
         <span class="inline-flex items-center gap-1.5 font-mono text-xs text-text-muted bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm">
           <User class="h-3.5 w-3.5 text-text-muted" />
-          <span id="hero-author">Blanc Core Team</span>
+          <span id="hero-author">{featuredPost.author}</span>
         </span>
       </div>
 
@@ -69,8 +137,8 @@ import {
         id="hero-title"
         class="mt-4 text-2xl font-bold tracking-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:text-3xl lg:text-4xl leading-tight max-w-4xl"
       >
-        <a id="hero-link-title" href="#" class="hover:text-accent-primary transition-colors">
-          Loading latest devlog...
+        <a id="hero-link-title" href={`/blog/post/?slug=${encodeURIComponent(featuredPost.slug)}`} class="hover:text-accent-primary transition-colors">
+          {featuredPost.title}
         </a>
       </h1>
 
@@ -79,14 +147,14 @@ import {
         id="hero-excerpt"
         class="mt-2.5 max-w-3xl text-xs sm:text-sm text-text-secondary leading-relaxed line-clamp-2"
       >
-        ...
+        {featuredPost.excerpt}
       </p>
 
       <!-- Action Button -->
       <div class="mt-5">
         <a
           id="hero-link-btn"
-          href="#"
+          href={`/blog/post/?slug=${encodeURIComponent(featuredPost.slug)}`}
           class="inline-flex items-center gap-2 rounded-md bg-accent-primary px-4 py-2 text-xs sm:text-sm font-semibold text-text-on-accent transition-colors hover:bg-accent-hover shadow-lg shadow-accent-primary/20 cursor-pointer"
         >
           <span>Read Full Devlog</span>
@@ -201,9 +269,52 @@ import {
     <!-- Posts Grid: Flat Godot-style Layout without Cards -->
     <div class="mt-8">
       <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-        <div class="col-span-full rounded-lg border border-border-default bg-surface-primary p-12 text-center text-sm text-text-secondary">
-          Loading latest devlogs and announcements...
-        </div>
+        {gridPosts.map((p) => (
+          <article class="group flex flex-col justify-between transition-all duration-200">
+            <div>
+              <!-- 16:9 Thumbnail Cover (Independent Rounded Frame ala Godot) -->
+              <a href={`/blog/post/?slug=${encodeURIComponent(p.slug)}`} class="block aspect-video w-full overflow-hidden rounded-xl bg-surface-elevated border border-border-default/60 transition-colors group-hover:border-accent-primary/40">
+                <img
+                  src={p.cover_url || "/screenshots/SS_OVERVIEW.png"}
+                  alt={p.title}
+                  class="h-full w-full object-cover"
+                  loading="lazy"
+                  onerror="this.src='/screenshots/SS_OVERVIEW.png'"
+                />
+              </a>
+
+              <!-- Author Avatar + Name + Date Meta Line -->
+              <div class="mt-3.5 flex items-center justify-between gap-2 text-xs text-text-muted">
+                <div class="flex items-center gap-2 min-w-0">
+                  <div class="flex h-5 w-5 items-center justify-center rounded-full bg-accent-subtle text-[10px] font-bold text-accent-primary uppercase shrink-0">
+                    {p.author ? p.author.charAt(0) : "B"}
+                  </div>
+                  <span class="font-medium text-text-secondary truncate">{p.author || "Blanc Core Team"}</span>
+                  <span class="text-text-muted">•</span>
+                  <time class="font-mono text-[11px] text-text-muted shrink-0">{p.published_at.slice(0, 10)}</time>
+                </div>
+
+                {p.tags && (
+                  <span class="rounded bg-surface-elevated border border-border-default px-2 py-0.5 font-mono text-[10px] text-text-muted shrink-0">
+                    {p.tags.split(",")[0].trim()}
+                  </span>
+                )}
+              </div>
+
+              <!-- Title -->
+              <h2 class="mt-2.5 text-base sm:text-lg font-bold tracking-tight text-text-primary group-hover:text-accent-primary transition-colors leading-snug">
+                <a href={`/blog/post/?slug=${encodeURIComponent(p.slug)}`}>
+                  {p.title}
+                </a>
+              </h2>
+
+              <!-- Excerpt (2 lines clean flat) -->
+              <p class="mt-1.5 text-xs sm:text-sm leading-relaxed text-text-secondary line-clamp-2">
+                {p.excerpt}
+              </p>
+            </div>
+          </article>
+        ))}
       </div>
     </div>
   </main>
@@ -225,6 +336,36 @@ import {
 
   const DEFAULT_POSTS: BlogPost[] = [
     {
+      id: 4,
+      slug: "blanc-engine-v020-devlog-free-form-ui-canvas-studio-custom-ui-skins-and-visual-logic",
+      title: "Blanc Engine v0.2.0 Devlog: Free-Form UI Canvas Studio, Custom UI Skins, and Visual Logic",
+      excerpt: "A deep dive into Blanc Engine v0.2.0: bringing a 3-panel Godot/Unity-style Free-Form UI Designer, custom PNG skins for every widget, Visual Variables & Conditions, and cross-platform expansion.",
+      cover_url: "/screenshots/SS_OVERVIEW.png",
+      author: "Blanc Core Team",
+      tags: "Devlog, v0.2.0, UI Designer, Major Update",
+      published_at: "2026-11-25 12:28:41",
+    },
+    {
+      id: 3,
+      slug: "blanc-engine-v011-security-hardening-atomic-saves-and-runtime-stability",
+      title: "Blanc Engine v0.1.1: Security Hardening, Atomic Saves, and Runtime Stability",
+      excerpt: "A focused maintenance release introducing atomic file writes, path-traversal protection, Story Flow cycle guards, and smoother keyboard/gamepad navigation.",
+      cover_url: "/screenshots/SS_OVERVIEW.png",
+      author: "Blanc Core Team",
+      tags: "Release, v0.1.1, Patch Notes",
+      published_at: "2026-11-25 12:28:08",
+    },
+    {
+      id: 2,
+      slug: "blanc-engine-v010-released-write-design-and-ship-visual-novels-with-zero-code",
+      title: "Blanc Engine v0.1.0 Released: Write, Design, and Ship Visual Novels With Zero Code",
+      excerpt: "Our first public release! Blanc Engine v0.1.0 brings the complete no-code pipeline from screenplay writing and Story Flow graphs to encrypted .bpack exports and standalone Windows installers.",
+      cover_url: "/screenshots/SS_OVERVIEW.png",
+      author: "Blanc Core Team",
+      tags: "Release, v0.1.0, Announcements",
+      published_at: "2026-11-25 12:27:37",
+    },
+    {
       id: 1,
       slug: "welcome-to-blanc-engine",
       title: "Welcome to Blanc Engine: The Next-Gen No-Code Visual Novel Engine",
@@ -232,7 +373,7 @@ import {
       cover_url: "/screenshots/SS_OVERVIEW.png",
       author: "Blanc Core Team",
       tags: "Announcements, Devlog",
-      published_at: "2026-11-25",
+      published_at: "2026-11-25 11:43:15",
     },
   ];
 
@@ -265,6 +406,7 @@ import {
 
   function esc(str: string): string {
     return (str || "")
+      .replace(/\u2014/g, " - ")
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")

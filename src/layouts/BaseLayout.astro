@@ -18,6 +18,8 @@ interface Props {
   ogImage?: string;
   noindex?: boolean;
   breadcrumbs?: BreadcrumbItem[];
+  canonicalUrl?: string | null;
+  schema?: any;
 }
 
 const {
@@ -26,6 +28,8 @@ const {
   ogImage = "/screenshots/SS_STORYFLOW.png",
   noindex = false,
   breadcrumbs = [],
+  canonicalUrl: propCanonicalUrl,
+  schema: customSchema,
 } = Astro.props;
 
 const siteOrigin = Astro.site?.toString().replace(/\/$/, "") || "https://getblanc.web.id";
@@ -37,7 +41,8 @@ function normalizePath(p: string): string {
 }
 
 const normalizedPath = normalizePath(Astro.url.pathname);
-const canonicalUrl = `${siteOrigin}${normalizedPath}`;
+const defaultCanonicalUrl = `${siteOrigin}${normalizedPath}`;
+const finalCanonicalUrl = propCanonicalUrl === null ? null : (propCanonicalUrl || defaultCanonicalUrl);
 const ogImageUrl = new URL(ogImage, siteOrigin).toString();
 const isHome = normalizedPath === "/";
 
@@ -110,14 +115,18 @@ const breadcrumbSchema =
     <meta name="google-site-verification" content="X60FW2jNmPnz-gT65tlUcSe--ZAQoFq4nAEWVWUn0dY" />
     <meta name="theme-color" content="#17191D" />
     <meta name="description" content={description} />
-    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonicalUrl} />}
+    {noindex ? (
+      <meta name="robots" content="noindex, nofollow" />
+    ) : finalCanonicalUrl ? (
+      <link rel="canonical" href={finalCanonicalUrl} />
+    ) : null}
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Blanc Engine" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:url" content={finalCanonicalUrl || defaultCanonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -140,6 +149,11 @@ const breadcrumbSchema =
           <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
           <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
         </>
+      )
+    }
+    {
+      customSchema && (
+        <script type="application/ld+json" set:html={JSON.stringify(customSchema)} />
       )
     }
     {

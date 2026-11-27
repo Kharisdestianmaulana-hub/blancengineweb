@@ -9,6 +9,7 @@ import { ArrowLeft, Calendar, User, Copy, Check, Share2, Sparkles } from "lucide
   title="Article | Blanc Engine Blog"
   description="Read official devlog and release announcements from the Blanc Engine core team."
   breadcrumbs={[{ name: "Home", path: "/" }, { name: "Blog", path: "/blog/" }, { name: "Post", path: "#" }]}
+  canonicalUrl={null}
 >
   <Navbar />
 
@@ -212,11 +213,123 @@ import { ArrowLeft, Calendar, User, Copy, Check, Share2, Sparkles } from "lucide
     return html;
   }
 
+  const FALLBACK_POSTS: Record<string, any> = {
+    "blanc-engine-v020-devlog-free-form-ui-canvas-studio-custom-ui-skins-and-visual-logic": {
+      title: "Blanc Engine v0.2.0 Devlog: Free-Form UI Canvas Studio, Custom UI Skins, and Visual Logic",
+      excerpt: "A deep dive into Blanc Engine v0.2.0: bringing a 3-panel Godot/Unity-style Free-Form UI Designer, custom PNG skins for every widget, Visual Variables & Conditions, and cross-platform expansion.",
+      author: "Blanc Core Team",
+      tags: "Devlog, v0.2.0, UI Designer, Major Update",
+      published_at: "2026-11-25",
+      cover_url: "/screenshots/SS_OVERVIEW.png",
+      content: `With \`v0.1.x\`, creators could build and ship visual novels quickly using built-in templates. For **Blanc Engine v0.2.0**, our theme is simple: **"True Creative Freedom, Zero Code."**
+
+We are upgrading Blanc Engine from a template-based tool into a full **free-form visual novel studio**: giving you pixel-accurate UI control and branching story logic without writing a single line of code.
+
+### 1. Free-Form UI Designer (3-Panel Canvas Studio)
+Instead of being locked into fixed layouts, the new **UI Designer** works like Unity Canvas / Godot Control Nodes:
+- **Left - Scene Hierarchy:** Manage parent-child widget trees across all 8 system screens (\`Main Menu\`, \`Dialogue HUD\`, \`Pause Menu\`, \`Settings\`, \`Save/Load\`, \`History\`, \`Credits\`, \`Game Over\`) with visibility, lock, and Z-order controls.
+- **Center - Interactive 1920x1080 Viewport:** Drag-and-drop widgets freely, resize with 8-point gizmo handles (\`Shift\` for aspect ratio, \`Alt\` for center scaling), use smart center snap guides, auto-arrange \`VBox\`/\`HBox\` containers, and test buttons directly with **Live Test** mode.
+- **Right - Context-Aware Inspector & Custom Skins:** Customize **every** widget with your own PNG artwork and \`.ttf\`/\`.otf\` fonts: including **Dialogue Box**, **Speaker Nameplate**, **Advance Prompt Icon**, **Choice Button Group**, **Save/Load Slot Cards**, **Sliders** (track, fill, handle), **Toggle Switches**, **Panels**, **9-Slice Margins**, and **4 Button States** (*Normal*, *Hover*, *Pressed*, *Disabled*).
+
+### 2. Visual Logic & Variable Manager
+Tell complex branching stories with memory:
+- **Variable Manager:** Define global \`Boolean\` flags, \`Number\` stats/affection counters, and \`String\` values.
+- **Modify Variable & Condition Nodes:** Update variables inside scenes and route players through visual \`If / Else\` branches (\`AND\` / \`OR\`) in Story Flow, plus lock or hide dialogue choices based on requirements.
+
+### 3. Dynamic Dialogue, 2D Camera & Extras (Roadmap)
+- **Inline Text Effects:** Typewriter pauses (\`{w=0.5}\`), speed overrides, \`{shake}\`, \`{wave}\`, and inline \`{color}\` formatting via a visual editor toolbar.
+- **Dynamic Camera & VFX:** Smooth camera zoom, pan, screen shake, and ambient color tints.
+- **CG Gallery & Music Room:** Persistent unlockable CGs and BGM tracks (\`persistent_data.bdata\`) alongside **macOS (\`.app\` / \`.dmg\`)** export support.
+
+We are actively building and polishing \`v0.2.0\`: thank you for supporting **Blanc Engine**!`,
+    },
+    "blanc-engine-v011-security-hardening-atomic-saves-and-runtime-stability": {
+      title: "Blanc Engine v0.1.1: Security Hardening, Atomic Saves, and Runtime Stability",
+      excerpt: "A focused maintenance release introducing atomic file writes, path-traversal protection, Story Flow cycle guards, and smoother keyboard/gamepad navigation.",
+      author: "Blanc Core Team",
+      tags: "Release, v0.1.1, Patch Notes",
+      published_at: "2026-11-25",
+      cover_url: "/screenshots/SS_OVERVIEW.png",
+      content: `**Blanc Engine v0.1.1** (November 20, 2026) is now available! This maintenance update focuses on data safety, runtime stability, and polish across the Editor, Runtime, and Installer.
+
+### What's New & Improved
+
+#### Core Data Safety (\`blanc_core\`)
+- **Atomic File Writes:** \`.blanc\`, \`.bscene\`, \`.bgraph\`, \`.bconfig\`, localization files, and runtime saves now write via temporary files + atomic rename to prevent corruption during unexpected shutdowns.
+- **Archive & Path Hardening:** Added \`safe_join_relative\` path-traversal protection, bounds validation when reading \`.bpack\` archives, and directory safety guards (\`validate_project_folder_for_deletion\`) when deleting projects.
+
+#### Runtime Fixes & Navigation (\`blanc_runtime\`)
+- **Settings Tab Navigation:** Full keyboard and gamepad support for switching Settings tabs (\`Audio\`, \`Gameplay\`, \`System\`) using \`Left\`/\`Right\`, \`Tab\`, \`Q\`, and \`E\`.
+- **Cycle Protection:** Added \`MAX_SCENE_TRANSITION_DEPTH\` to prevent infinite loops or freezes on cyclic Story Flow links.
+- **Save Restoration Fixes:** Improved \`Load Save Game\` (\`restore_to_point\`) so intermediate \`PlayBgm\` blocks don't stack in a single frame, and unified \`HideCharacter\` matching.
+
+#### Editor & Installer Polish
+- **Safe Project Deletion:** Hub deletion now lets you choose between **Remove from Hub Only** or **Delete Project & Folder**.
+- **Cleaner Exports:** \`Builds/\` and \`Backups/\` folders are automatically excluded from \`game.bpack\` payloads.
+- **Tracked Uninstallation:** The installer now records installed files in \`.blanc_uninstall.json\` so uninstalling only removes game-owned files.`,
+    },
+    "blanc-engine-v010-released-write-design-and-ship-visual-novels-with-zero-code": {
+      title: "Blanc Engine v0.1.0 Released: Write, Design, and Ship Visual Novels With Zero Code",
+      excerpt: "Our first public release! Blanc Engine v0.1.0 brings the complete no-code pipeline from screenplay writing and Story Flow graphs to encrypted .bpack exports and standalone Windows installers.",
+      author: "Blanc Core Team",
+      tags: "Release, v0.1.0, Announcements",
+      published_at: "2026-11-25",
+      cover_url: "/screenshots/SS_OVERVIEW.png",
+      content: `We are excited to announce the first official release of **Blanc Engine v0.1.0** (November 16, 2026)!
+
+Version \`0.1.0\` establishes the complete end-to-end no-code workflow for creating, previewing, localizing, and shipping commercial-ready visual novels.
+
+### Key Highlights in v0.1.0
+
+#### 1. Complete Visual Studio (\`blanc_editor\`)
+- **Project Hub & Overview:** Manage projects, browse built-in **Learn & Docs** guides, and track readiness with a real-time project checklist.
+- **Asset Manager:** Import backgrounds, character sprites, BGM, SFX, and UI artwork with category filtering and one-click **Relink Missing Asset**.
+- **Story Setup & Scene Editor:** Write screenplays in \`.bst\` format and convert them into modular Action Blocks (\`ShowCharacter\`, \`Dialogue\`, \`Choice\`, \`PlayBgm\`, \`FadeIn\`/\`FadeOut\`, \`FlashWhite\`, \`Shake\`).
+- **Story Flow Graph:** Connect scenes and branching choices visually on a node-based canvas, backed by a **Project Validator** that catches missing assets or broken links before you play or export.
+- **Safety & QoL:** Includes \`Ctrl+S\` save guard, periodic Auto-Save (\`1/3/5/10 min\`), \`Ctrl+Z\` / \`Ctrl+Y\` Undo/Redo, and instant **Play Preview**.
+
+#### 2. Native Runtime Player (\`blanc_runtime\`)
+- **Smooth Stage & Audio:** Typewriter dialogue reveal, non-speaker sprite dimming, screen effects, and \`rodio\` BGM/SFX playback.
+- **Player Features Out-of-the-Box:** Save/Load slots with scene thumbnails, Quick Save (\`F5\`), Quick Load (\`F9\`), Dialogue History (\`B\`), Auto-Play (\`A\`), Skip (\`S\` with Read-Only & All-Text modes), plus dedicated **Credits Roll** and **Game Over** screens.
+- **Controls:** Full mouse, keyboard, and gamepad (\`gilrs\`) navigation, plus Windows CJK font support.
+
+#### 3. Multi-Language Localization & Standalone Installer
+- **Localization System:** Manage string tables per language with RFC-4180 CSV export/import and dynamic in-game language switching.
+- **Encrypted Export & Setup Wizard (\`blanc_installer\`):** Pack assets into encrypted \`.bpack\` archives and generate a standalone Windows Setup Wizard supporting 6 languages (\`en\`, \`id\`, \`ja\`, \`es\`, \`zh\`, \`ko\`), Start Menu/Desktop shortcuts, custom icons, and an uninstaller.`,
+    },
+    "welcome-to-blanc-engine": {
+      title: "Welcome to Blanc Engine: The Next-Gen No-Code Visual Novel Engine",
+      excerpt: "Introducing Blanc Engine, a modern visual screenplay and timeline editor designed for indie visual novel creators and storytellers.",
+      author: "Blanc Core Team",
+      tags: "Announcements, Devlog",
+      published_at: "2026-11-25",
+      cover_url: "/screenshots/SS_OVERVIEW.png",
+      content: `Welcome to the official Blanc Engine devlog! Blanc Engine was created to make visual novel game development fast, visual, and accessible without writing complex script code.
+
+### What Makes Blanc Engine Unique?
+
+- **Screenplay-to-Scene Workflow**: Write character dialogues in a screenplay format, and scenes generate automatically.
+- **Interactive Story Flow**: Visual node canvas connecting scenes, branch choices, and multi-route endings.
+- **Native Packaging**: Package portable builds and standalone installers with one click.
+
+Stay tuned for our upcoming v0.2.0 updates featuring the Free-Form UI Canvas Studio and Variable Manager!`,
+    },
+  };
+
   async function loadPost() {
     const slug = new URLSearchParams(window.location.search).get("slug") || "welcome-to-blanc-engine";
     const loadingEl = document.getElementById("post-loading");
     const notFoundEl = document.getElementById("post-not-found");
     const articleEl = document.getElementById("post-article");
+
+    // Canonical link dynamic update for SEO and social indexing
+    let canonical = document.querySelector<HTMLLinkElement>("link[rel='canonical']");
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
+    canonical.href = window.location.href;
 
     let post: any = null;
 
@@ -227,19 +340,11 @@ import { ArrowLeft, Calendar, User, Copy, Check, Share2, Sparkles } from "lucide
         if (data.post) post = data.post;
       }
     } catch {
-      // Fallback
+      // Fallback below
     }
 
-    if (!post && slug === "welcome-to-blanc-engine") {
-      post = {
-        title: "Welcome to Blanc Engine: The Next-Gen No-Code Visual Novel Engine",
-        excerpt: "Introducing Blanc Engine, a modern visual screenplay and timeline editor designed for indie visual novel creators and storytellers.",
-        author: "Blanc Core Team",
-        tags: "Announcements, Devlog",
-        published_at: "2026-11-25",
-        cover_url: "/screenshots/SS_OVERVIEW.png",
-        content: "Welcome to the official Blanc Engine devlog! Blanc Engine was created to make visual novel game development fast, visual, and accessible without writing complex script code.\n\n### What Makes Blanc Engine Unique?\n\n- **Screenplay-to-Scene Workflow**: Write character dialogues in a screenplay format, and scenes generate automatically.\n- **Interactive Story Flow**: Visual node canvas connecting scenes, branch choices, and multi-route endings.\n- **Native Packaging**: Package portable builds and standalone installers with one click.\n\nStay tuned for our upcoming v0.2.0 updates featuring the Free-Form UI Canvas Studio and Variable Manager!",
-      };
+    if (!post && FALLBACK_POSTS[slug]) {
+      post = FALLBACK_POSTS[slug];
     }
 
     if (loadingEl) loadingEl.classList.add("hidden");
