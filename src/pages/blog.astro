@@ -146,7 +146,6 @@ import {
           <!-- Floating Popover Panel -->
           <div
             id="blog-cat-popover"
-            data-lenis-prevent
             class="hidden absolute left-0 top-full mt-2 w-72 rounded-xl border border-border-default bg-surface-primary/95 p-3 shadow-2xl backdrop-blur-xl z-40 space-y-2.5"
           >
             <div class="flex items-center justify-between border-b border-border-subtle pb-2">
@@ -181,7 +180,7 @@ import {
             </div>
 
             <!-- Checkbox List -->
-            <div id="blog-cat-checkbox-list" data-lenis-prevent class="max-h-48 overflow-y-auto space-y-1 pr-1 overscroll-contain"></div>
+            <div id="blog-cat-checkbox-list" class="max-h-48 overflow-y-auto space-y-1 pr-1 overscroll-contain"></div>
 
             <!-- Bottom Summary & Apply -->
             <div class="border-t border-border-subtle pt-2 flex items-center justify-between">
@@ -518,11 +517,11 @@ import {
         <article class="group flex flex-col justify-between transition-all duration-200">
           <div>
             <!-- 16:9 Thumbnail Cover (Independent Rounded Frame ala Godot) -->
-            <a href="/blog/post/?slug=${encodeURIComponent(p.slug)}" class="block aspect-video w-full overflow-hidden rounded-xl bg-surface-elevated border border-border-default/60 shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:border-accent-primary/40">
+            <a href="/blog/post/?slug=${encodeURIComponent(p.slug)}" class="block aspect-video w-full overflow-hidden rounded-xl bg-surface-elevated border border-border-default/60 transition-colors group-hover:border-accent-primary/40">
               <img
                 src="${esc(p.cover_url || "/screenshots/SS_OVERVIEW.png")}"
                 alt="${esc(p.title)}"
-                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                class="h-full w-full object-cover"
                 loading="lazy"
                 onerror="this.src='/screenshots/SS_OVERVIEW.png'"
               />
@@ -568,22 +567,44 @@ import {
       .join("");
   }
 
+  function updateBlogPopoverPosition() {
+    if (!blogCatPopover || !btnBlogCatDropdown) return;
+    const rect = btnBlogCatDropdown.getBoundingClientRect();
+    const popoverHeight = blogCatPopover.offsetHeight || 320;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    if (spaceBelow < popoverHeight + 16 && spaceAbove > spaceBelow) {
+      blogCatPopover.classList.remove("top-full", "mt-2");
+      blogCatPopover.classList.add("bottom-full", "mb-2");
+    } else {
+      blogCatPopover.classList.remove("bottom-full", "mb-2");
+      blogCatPopover.classList.add("top-full", "mt-2");
+    }
+
+    if (rect.left + 300 > window.innerWidth) {
+      blogCatPopover.classList.remove("left-0");
+      blogCatPopover.classList.add("right-0");
+    } else {
+      blogCatPopover.classList.remove("right-0");
+      blogCatPopover.classList.add("left-0");
+    }
+  }
+
   // Category Popover Controls
   btnBlogCatDropdown?.addEventListener("click", (e) => {
     e.stopPropagation();
-    const isHidden = blogCatPopover?.classList.toggle("hidden");
-    btnBlogCatDropdown.setAttribute("aria-expanded", String(!isHidden));
+    const isOpening = blogCatPopover?.classList.contains("hidden");
+    if (isOpening) {
+      blogCatPopover?.classList.remove("hidden");
+      updateBlogPopoverPosition();
+    } else {
+      blogCatPopover?.classList.add("hidden");
+    }
+    btnBlogCatDropdown.setAttribute("aria-expanded", String(isOpening));
   });
 
   blogCatPopover?.addEventListener("click", (e) => {
-    e.stopPropagation();
-  });
-
-  blogCatPopover?.addEventListener("wheel", (e) => {
-    e.stopPropagation();
-  });
-
-  blogCatCheckboxList?.addEventListener("wheel", (e) => {
     e.stopPropagation();
   });
 

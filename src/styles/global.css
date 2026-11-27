@@ -75,6 +75,8 @@
 }
 
 html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
   overflow-x: clip;
   background-color: var(--bg-primary);
   color: var(--text-primary);
