@@ -128,20 +128,20 @@ import { Download, Sparkles, Gamepad2, ArrowUpRight } from "lucide-astro";
     heroDownloadsEl.textContent = `${n.toLocaleString("en-US")} download${n === 1 ? "" : "s"}`;
   }
 
-  async function loadHeroStats() {
-    // 1. Restore cached version if exists
+  function restoreCachedHeroStats() {
     const savedVersion = localStorage.getItem("blanc-latest-version");
     if (savedVersion && heroVersionBadge) {
       heroVersionBadge.textContent = savedVersion;
     }
 
-    // 2. Restore cached download count
     const savedDownloads = localStorage.getItem("blanc-last-total-downloads");
     if (savedDownloads !== null && !Number.isNaN(Number(savedDownloads))) {
       setDownloadsText(Number(savedDownloads));
     }
+  }
 
-    // 3. Fetch latest release version from GitHub API
+  async function fetchHeroStatsNetwork() {
+    // 1. Fetch latest release version from GitHub API
     try {
       const relRes = await fetch("https://api.github.com/repos/Kharisdestianmaulana-hub/blanc-engine/releases/latest", {
         headers: { Accept: "application/vnd.github+json" },
@@ -157,7 +157,7 @@ import { Download, Sparkles, Gamepad2, ArrowUpRight } from "lucide-astro";
       // Keep fallback version
     }
 
-    // 4. Fetch total downloads
+    // 2. Fetch total downloads
     try {
       const apiRes = await fetch("/api/github-stats");
       if (apiRes.ok) {
@@ -283,6 +283,18 @@ import { Download, Sparkles, Gamepad2, ArrowUpRight } from "lucide-astro";
     }
   }
 
-  loadHeroStats();
-  initShowcaseHeroBackground();
+  // Instant local cache restore (0ms main thread blocking, instant paint)
+  restoreCachedHeroStats();
+
+  // Defer background network telemetry until main thread is idle
+  const deferHeroNetworkTasks = () => {
+    fetchHeroStatsNetwork();
+    initShowcaseHeroBackground();
+  };
+
+  if ("requestIdleCallback" in window) {
+    (window as any).requestIdleCallback(deferHeroNetworkTasks, { timeout: 2000 });
+  } else {
+    setTimeout(deferHeroNetworkTasks, 300);
+  }
 </script>

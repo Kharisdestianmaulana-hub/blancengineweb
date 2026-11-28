@@ -457,5 +457,28 @@ const mobileNavLinks = [
   }
 
   updateNavbarMode();
-  loadNavbarMeta();
+
+  // Instant local cache restore for 0ms initial paint
+  try {
+    const cachedRaw = sessionStorage.getItem("blanc-gh-meta-v3");
+    if (cachedRaw) {
+      const parsed = JSON.parse(cachedRaw) as { stars?: number; tag?: string };
+      if (typeof parsed.stars === "number" && starWrap && starCount) {
+        starCount.textContent = String(parsed.stars);
+        starWrap.classList.remove("hidden");
+        starWrap.classList.add("inline-flex");
+      }
+      if (parsed.tag) {
+        if (navVersionTag) navVersionTag.textContent = parsed.tag;
+        showReleaseBannerIfNeeded(parsed.tag);
+      }
+    }
+  } catch {}
+
+  // Defer live GitHub metadata fetch until main thread is idle
+  if ("requestIdleCallback" in window) {
+    (window as any).requestIdleCallback(loadNavbarMeta, { timeout: 2000 });
+  } else {
+    setTimeout(loadNavbarMeta, 350);
+  }
 </script>

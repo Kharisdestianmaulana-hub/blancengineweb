@@ -199,6 +199,7 @@ import { Gamepad2, ArrowRight } from "lucide-astro";
                 alt="${esc(game.title)}"
                 class="h-full w-full object-cover"
                 loading="lazy"
+                decoding="async"
                 onerror="this.src='/screenshots/SS_GAMEPLAY_1_CHARACTER.png'"
               />
             </div>
@@ -223,5 +224,9 @@ import { Gamepad2, ArrowRight } from "lucide-astro";
     }
   }
 
-  loadFeaturedGames();
+  if ("requestIdleCallback" in window) {
+    (window as any).requestIdleCallback(loadFeaturedGames, { timeout: 2000 });
+  } else {
+    setTimeout(loadFeaturedGames, 500);
+  }
 </script>

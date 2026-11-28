@@ -67,8 +67,11 @@ const SAMPLE_DEVLOGS: BlogPost[] = [
                 <img
                   src={post.cover_url}
                   alt={post.title}
+                  width="1280"
+                  height="720"
                   class="h-full w-full object-cover"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
               <h3 class="mt-3 text-lg sm:text-xl font-bold tracking-tight text-text-primary group-hover:text-accent-primary transition-colors leading-snug">
@@ -248,7 +251,11 @@ const SAMPLE_DEVLOGS: BlogPost[] = [
               <img
                 src="${escapeHtml(featured.cover_url || '/screenshots/SS_OVERVIEW.png')}"
                 alt="${escapeHtml(featured.title)}"
+                width="1280"
+                height="720"
                 class="h-full w-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <h3 class="mt-3 text-xl sm:text-2xl font-bold tracking-tight text-text-primary group-hover:text-accent-primary transition-colors leading-snug">
@@ -337,5 +344,9 @@ const SAMPLE_DEVLOGS: BlogPost[] = [
     }
   }
 
-  loadLiveDevlogs();
+  if ("requestIdleCallback" in window) {
+    (window as any).requestIdleCallback(loadLiveDevlogs, { timeout: 2000 });
+  } else {
+    setTimeout(loadLiveDevlogs, 450);
+  }
 </script>
